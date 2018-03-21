@@ -1,0 +1,76 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">數位內容</a></li>
+              <li class="active">動圖</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">Table List</strong>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">網址</th>
+                      <th scope="col">刪除</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @type_gif_ten.each do |gif|%>
+                      <tr>
+                        <th scope="row"><%= gif.id %></th>
+                        <td><%= link_to gif.resource.url, gif.resource.url, :target => "_blank" %></td>
+                        <td><%= link_to "[del]", gif_del_path(gif.id), :method => :delete %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <table cellpadding="4" cellspacing="1" width="50%">
+              <tr class="even">
+                <%= render :partial => "upload_tools/jquery_fileupload", :locals => {:option => {:resource_type => @type.class.to_s}, :table_params => { } } %>
+              </tr>
+              <div role="tabpanel" class="tab-pane active" id="pic-all">
+                <div class="row my-2">
+                </div>
+              </div>
+              <tr class="odd">
+                <td>
+                  1.上傳的原圖格式，長寬請勿過大。<br />
+                  2.檔案大小不可以超過 150KB。<br />
+                  3.檔案的檔名為英文、數字，副檔名為 gif檔 。<br />
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

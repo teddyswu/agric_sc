@@ -10,14 +10,18 @@ gem "fog"              # 存取 AWS 服務的套件(圖片上傳至 s3, 遠端�
 gem "devise", '3.4.0' # 先定版本號, 3.1.x 版有 bug, 未來穩定之後再把版本號拿掉
 gem "cancan", '1.6.10'
 gem "ckeditor", "4.2.3"
+gem "paperclip", '4.3.0'
+
 # 圖片上傳相關
 gem "carrierwave", '0.10.0'     # 上傳圖片必要套件
 gem "mini_magick", "3.6.0"      # 圖片處理的套件(縮圖、浮水印)
 gem "flash_cookie_session"      # 多圖上傳必要套件
+
 gem "activerecord-import", "~> 0.4.1" # 一次新增多筆資料
 gem "actionpack-action_caching", '1.1.1'
 gem 'jquery-fileupload-rails', '0.4.6'
 gem 'aws-sdk', '~> 1.66' # 連線 AWS 的 gem, 目前 paperclip 會使用
+gem 'turbolinks'
 
 group :assets do
 	gem 'sass-rails', '~> 5.0'

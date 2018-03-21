@@ -1,0 +1,170 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">數位內容</a></li>
+              <li class="active">漫畫</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">Table List</strong>
+              </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">標題</th>
+                        <th scope="col">網頁網址</th>
+                        <th scope="col">第一格漫畫</th>
+                        <th scope="col">第二格漫畫</th>
+                        <th scope="col">第三格漫畫</th>
+                        <th scope="col">第四格漫畫</th>
+                        <th scope="col">刪除</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @type_comic_ten.each do |comic|%>
+                        <tr>
+                          <th scope="row"><%= comic.id %></th>
+                          <td><%= comic.title %></td>
+                          <td><%= comic.resource.web_url %></td>
+                          <td><%= link_to comic.resource.pic_1_url, comic.resource.pic_1_url, :target => "_blank" %></td>
+                          <td><%= link_to comic.resource.pic_2_url, comic.resource.pic_2_url, :target => "_blank" %></td>
+                          <td><%= link_to comic.resource.pic_3_url, comic.resource.pic_3_url, :target => "_blank" %></td>
+                          <td><%= link_to comic.resource.pic_4_url, comic.resource.pic_4_url, :target => "_blank" %></td>
+                          <td><%= link_to "[del]", movie_del_path(comic.id) %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <%= form_for @type_comic, :url => comic_create_agris_path(@type_comic), :method => :post do |f| %>
+                <div class="card-header"><strong>新增</strong></div>
+                <div class="card-body card-block">
+                  <div class="form-group">
+                    <%= f.label("影片名稱", :class => 'form-control-label') %><%= text_field_tag(:title, nil, :class => "form-control", placeholder: "輸入漫畫名稱")%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("網頁網址", :class => 'form-control-label') %><%= f.text_field(:web_url, :class => "form-control", placeholder: "輸入網址")%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("第一格漫畫", :class => 'form-control-label') %><%= f.text_field(:pic_1_url, :class => "form-control", placeholder: "輸入圖片網址")%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("第二格漫畫", :class => 'form-control-label') %><%= f.text_field(:pic_2_url, :class => "form-control", placeholder: "輸入圖片網址") %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("第三格漫畫", :class => 'form-control-label') %><%= f.text_field(:pic_3_url, :class => "form-control", placeholder: "輸入圖片網址")%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("第四格漫畫", :class => 'form-control-label') %><%= f.text_field(:pic_4_url, :class => "form-control", placeholder: "輸入圖片網址")%>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                  </button>
+                  <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Reset
+                  </button>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <strong>上傳</strong>
+              </div>
+              <div class="card-body card-block">
+                <table cellpadding="4" cellspacing="1" class="form-horizontal">
+                  <tr class="even">
+                    <%= render :partial => "upload_tools/jquery_pic", :locals => {:option => {:resource_type => @type.class.to_s}, :table_params => { } } %>
+                  </tr>
+                  <div role="tabpanel" class="tab-pane active" id="pic-all">
+                    <div class="row my-2">
+                    </div>
+                  </div>
+                  <tr class="odd">
+                    <td>
+                      1.上傳的原圖格式，長寬請勿過大。<br />
+                      2.檔案大小不可以超過 5MB。<br />
+                      3.檔案的檔名為英文、數字，副檔名為 gif、 jpep、 png檔 。<br />
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <strong>上傳後網址</strong>
+              </div>
+              <div class="card-body card-block">
+                <div class="form-group">
+                  <label class="form-control-label" for="uploadurl">網址</label><input class="form-control" disabled="disabled" type="text" name="uploadurl" id="uploadurl">
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="button" id="to_pic_1_url" class="btn btn-primary">
+                  移到第一格漫畫
+                </button>
+                <button type="button" id="to_pic_2_url" class="btn btn-secondary">
+                  移到第二格漫畫
+                </button>
+                <button type="button" id="to_pic_3_url" class="btn btn-success">
+                  移到第三格漫畫
+                </button>
+                <button type="button" id="to_pic_4_url" class="btn btn-warning">
+                  移到第四格漫畫
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $( "#to_pic_1_url" ).click(function() {
+      $('#type_comic_pic_1_url').val($('#uploadurl').val());
+      $('#uploadurl').val("")
+    });
+    $( "#to_pic_2_url" ).click(function() {
+      $('#type_comic_pic_2_url').val($('#uploadurl').val());
+      $('#uploadurl').val("")
+    });
+    $( "#to_pic_3_url" ).click(function() {
+      $('#type_comic_pic_3_url').val($('#uploadurl').val());
+      $('#uploadurl').val("")
+    });
+    $( "#to_pic_4_url" ).click(function() {
+      $('#type_comic_pic_4_url').val($('#uploadurl').val());
+      $('#uploadurl').val("")
+    });
+  </script>
+</body>
