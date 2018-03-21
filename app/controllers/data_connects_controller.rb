@@ -62,11 +62,11 @@ class DataConnectsController < ApplicationController
     		resource.save!
     	end
 		when "delete"
-			type = DigitalResourceShip.find(params[:encyption])
+			type = DigitalResourceShip.find_by_encryption(params[:encryption])
 			type.resource.destroy
 			type.destroy
 		when "edit"
-			type_ship = DigitalResourceShip.find(params[:encyption])
+			type_ship = DigitalResourceShip.find_by_encryption(params[:encryption])
 			case type_ship.resource_type
 			when "TypeArticle"
 				type_ship.title = params[:title] if params[:title].present?
