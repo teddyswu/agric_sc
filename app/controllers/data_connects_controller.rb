@@ -15,8 +15,6 @@ class DataConnectsController < ApplicationController
 				resource.title = params[:title]
 				resource.encryption = "ss"
 				resource.save!
-				resource.encryption = Digest::SHA256.hexdigest "id#{resource.id}" 
-    		resource.save!
 			when "type_gif"
 				type_gif = TypeGif.new
 				type_gif.url = params[:url]
@@ -28,8 +26,6 @@ class DataConnectsController < ApplicationController
 				resource.title = "gif"
 				resource.encryption = "ss"
 				resource.save!
-				resource.encryption = Digest::SHA256.hexdigest "id#{resource.id}" 
-    		resource.save!
 			when "type_movie"
 				type_movie = TypeMovie.new
 				type_movie.pic_url = params[:pic_url]
@@ -42,8 +38,6 @@ class DataConnectsController < ApplicationController
 				resource.title = params[:title]
 				resource.encryption = "ss"
 				resource.save!
-				resource.encryption = Digest::SHA256.hexdigest "id#{resource.id}" 
-    		resource.save!
 			when "type_comic"
 				type_comic = TypeComic.new
 				type_comic.web_url = params[:web_url]
@@ -58,8 +52,6 @@ class DataConnectsController < ApplicationController
 				resource.title = params[:title]
 				resource.encryption = "ss"
 				resource.save!
-				resource.encryption = Digest::SHA256.hexdigest "id#{resource.id}" 
-    		resource.save!
     	end
 		when "delete"
 			type = DigitalResourceShip.find_by_encryption(params[:encryption])
@@ -80,14 +72,14 @@ class DataConnectsController < ApplicationController
 				type_ship.save!
 				type_ship.resource.url = params[:url] if params[:url].present?
 				type_ship.resource.save!
-			when "type_movie"
+			when "TypeMovie"
 				type_ship.title = params[:title] if params[:title].present?
 				type_ship.save!
 				type_ship.resource.pic_url = params[:pic_url]
 				type_ship.resource.movie_url = params[:movie_url]
 				type_ship.resource.description = params[:description]
 				typetype_ship.resource_ship.save!
-			when "type_comic"
+			when "TypeComic"
 				type_ship.title = params[:title] if params[:title].present?
 				type_ship.save!
 				type_ship.resource.web_url = params[:web_url] if params[:web_url].present?
@@ -97,6 +89,16 @@ class DataConnectsController < ApplicationController
 				type_ship.resource.pic_4_url = params[:pic_4_url] if params[:pic_4_url].present?
 				type_ship.resource.save!
     	end
+    when "user"
+    	user = User.new
+    	user.email = params[:email]
+    	user.password = "user_temp"
+    	user.encrypted_password = "user_temp"
+    	user.save!
+      render json: "#{user.email} create ok!" and return
+    when "user_datum"
+    	user = User.find_by_encryption(params[:encryption])
+    	render json: user.user_datums.select(:user_data,:id) and return
 		end
 		render json: "OK"
 	end

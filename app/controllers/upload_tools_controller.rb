@@ -34,8 +34,6 @@ class UploadToolsController < ApplicationController
         gif_ship.encryption = "ss"
         gif_ship.title = "gif"
         gif_ship.save!
-        gif_ship.encryption = Digest::SHA256.hexdigest "id#{gif_ship.id}" 
-        gif_ship.save!
         render json: {:thumb => gif.file.url, :big => gif.file.url, :original => gif.file.url}
       when 'filelist'
         filelist = FileList.new(@table_params.except!(:watermark))

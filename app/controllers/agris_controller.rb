@@ -19,8 +19,6 @@ class AgrisController < ApplicationController
     comic_ship.title = params[:title]
     comic_ship.encryption = "ss"
     comic_ship.save!
-    comic_ship.encryption = Digest::SHA256.hexdigest "id#{comic_ship.id}" 
-    comic_ship.save!
     redirect_to :action => :comic
   end
 
@@ -41,8 +39,6 @@ class AgrisController < ApplicationController
     movie_ship.resource_id = type_movie.id
     movie_ship.title = params[:title]
     movie_ship.encryption = "ss"
-    movie_ship.save!
-    movie_ship.encryption = Digest::SHA256.hexdigest "id#{movie_ship.id}" 
     movie_ship.save!
     redirect_to :action => :movie
   end
@@ -79,8 +75,6 @@ class AgrisController < ApplicationController
     article_ship.resource_id = type_article.id
     article_ship.title = params[:title]
     article_ship.encryption = "ss"
-    article_ship.save!
-    article_ship.encryption = Digest::SHA256.hexdigest "id#{article_ship.id}" 
     article_ship.save!
     redirect_to :action => :article
 
