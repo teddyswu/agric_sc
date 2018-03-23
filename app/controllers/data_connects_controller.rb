@@ -52,6 +52,13 @@ class DataConnectsController < ApplicationController
 				resource.title = params[:title]
 				resource.encryption = "ss"
 				resource.save!
+			when "user_datum"
+				user = User.find_by_encryption(params[:encryption])
+				user_datum = UserDatum.new
+				user_datum.user_id = user.id
+				user_datum.user_data = params[:user_data]
+				user_datum.save!
+				render json: "#{user_datum.user_data} create ok!" and return
     	end
 		when "delete"
 			type = DigitalResourceShip.find_by_encryption(params[:encryption])
