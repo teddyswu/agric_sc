@@ -29,6 +29,7 @@
               <div class="card-header">
                 <strong class="card-title">Table List</strong>
               </div>
+              
               <div class="card-body">
                 <table class="table">
                   <thead class="thead-dark">
@@ -42,7 +43,11 @@
                     <% @type_gif_ten.each do |gif|%>
                       <tr>
                         <th scope="row"><%= gif.id %></th>
-                        <td><%= link_to gif.resource.url, gif.resource.url, :target => "_blank" %></td>
+                        <td>
+                          <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#<%= "gif_#{gif.id}"%>">
+                            <%= image_tag(gif.resource.url, height: "100" )%>
+                          </button>
+                        </td>
                         <td><%= link_to "[del]", gif_del_path(gif.id), :method => :delete %></td>
                       </tr>
                     <% end %>
@@ -73,4 +78,23 @@
       </div>
     </div>
   </div>
+  <% @type_gif_ten.each do |gif|%>
+    <div class="modal fade" id="<%= "gif_#{gif.id}"%>" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="largeModalLabel">預覽</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              <%= image_tag(gif.resource.url)%>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </body>

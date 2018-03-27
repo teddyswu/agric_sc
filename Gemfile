@@ -11,6 +11,7 @@ gem "devise", '3.4.0' # 先定版本號, 3.1.x 版有 bug, 未來穩定之後再
 gem "cancan", '1.6.10'
 gem "ckeditor", "4.2.3"
 gem "paperclip", '4.3.0'
+gem 'rails-html-sanitizer', '>= 1.0.4'
 
 # 圖片上傳相關
 gem "carrierwave", '0.10.0'     # 上傳圖片必要套件
