@@ -36,10 +36,6 @@
                         <th scope="col">#</th>
                         <th scope="col">標題</th>
                         <th scope="col">網頁網址</th>
-                        <th scope="col">第一格漫畫</th>
-                        <th scope="col">第二格漫畫</th>
-                        <th scope="col">第三格漫畫</th>
-                        <th scope="col">第四格漫畫</th>
                         <th scope="col">刪除</th>
                       </tr>
                     </thead>
@@ -47,12 +43,12 @@
                       <% @type_comic_ten.each do |comic|%>
                         <tr>
                           <th scope="row"><%= comic.id %></th>
-                          <td><%= comic.title %></td>
+                          <td>
+                            <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#<%= "comic_#{comic.id}"%>">
+                              <%= comic.title %>
+                            </button>
+                          </td>
                           <td><%= comic.resource.web_url %></td>
-                          <td><%= link_to comic.resource.pic_1_url, comic.resource.pic_1_url, :target => "_blank" %></td>
-                          <td><%= link_to comic.resource.pic_2_url, comic.resource.pic_2_url, :target => "_blank" %></td>
-                          <td><%= link_to comic.resource.pic_3_url, comic.resource.pic_3_url, :target => "_blank" %></td>
-                          <td><%= link_to comic.resource.pic_4_url, comic.resource.pic_4_url, :target => "_blank" %></td>
                           <td><%= link_to "[del]", movie_del_path(comic.id) %></td>
                         </tr>
                       <% end %>
@@ -149,6 +145,28 @@
       </div>
     </div>
   </div>
+  <% @type_comic_ten.each do |comic|%>
+    <div class="modal fade" id="<%= "comic_#{comic.id}"%>" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="largeModalLabel">預覽</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              <%= image_tag(comic.resource.pic_1_url)%><br />
+              <%= image_tag(comic.resource.pic_2_url)%><br />
+              <%= image_tag(comic.resource.pic_3_url)%><br />
+              <%= image_tag(comic.resource.pic_4_url)%>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
   <script>
     $( "#to_pic_1_url" ).click(function() {
       $('#type_comic_pic_1_url').val($('#uploadurl').val());

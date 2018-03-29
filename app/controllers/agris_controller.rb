@@ -1,5 +1,6 @@
 class AgrisController < ApplicationController
-	before_action :authenticate_user!
+	before_action :is_admin
+  before_action :authenticate_user!
 	skip_before_action :verify_authenticity_token
   def index
 	end
@@ -78,6 +79,13 @@ class AgrisController < ApplicationController
     article_ship.save!
     redirect_to :action => :article
 
+  end
+
+  def is_admin
+    if current_user.is_admin == false
+      flash[:alert] = "您無此權限, 請洽詢相關工作人員"
+      sign_out(current_user)
+    end
   end
 
 

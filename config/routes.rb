@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   root :to => "agris#index"
   resources :upload_tools
   resources :stories
+  resources :user_manages
   resources :data_connects do
     get "story", :on => :collection
   end

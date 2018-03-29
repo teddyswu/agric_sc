@@ -1,0 +1,66 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">資料</a></li>
+              <li class="active">會員</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">Table List</strong>
+              </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">管理員</th>
+                        <th scope="col">友善農友</th>
+                        <th scope="col">確認為農友</th>
+                        <th scpoe="col">確認</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <%= form_for @user, :url => {:controller => 'user_manages', :action => 'update', :id => @user} do |f| %>
+                          <th scope="row"><%= @user.id %></th>
+                          <td><%= @user.email%></td>
+                          <td><%= f.check_box :is_admin %></td>
+                          <td><%= f.check_box :is_farmer, :readonly => true %></td>
+                          <td><%= f.check_box :is_check_farmer %></td>
+                          <td>
+                            <%= f.submit "送出"%>
+                          </td>
+                        <% end %>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
