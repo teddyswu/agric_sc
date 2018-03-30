@@ -15,6 +15,7 @@ class DataConnectsController < ApplicationController
 				resource.title = params[:title]
 				resource.encryption = "ss"
 				resource.save!
+				render json: "[{'encryption':" + "#{resource.encryption}" + "},{'status':'create ok'}]" and return
 			when "type_gif"
 				type_gif = TypeGif.new
 				type_gif.url = params[:url]
@@ -26,6 +27,7 @@ class DataConnectsController < ApplicationController
 				resource.title = "gif"
 				resource.encryption = "ss"
 				resource.save!
+				render json: "[{'encryption':" + "#{resource.encryption}" + "},{'status':'create ok'}]" and return
 			when "type_movie"
 				type_movie = TypeMovie.new
 				type_movie.pic_url = params[:pic_url]
@@ -38,6 +40,7 @@ class DataConnectsController < ApplicationController
 				resource.title = params[:title]
 				resource.encryption = "ss"
 				resource.save!
+				render json: "[{'encryption':" + "#{resource.encryption}" + "},{'status':'create ok'}]" and return
 			when "type_comic"
 				type_comic = TypeComic.new
 				type_comic.web_url = params[:web_url]
@@ -52,18 +55,20 @@ class DataConnectsController < ApplicationController
 				resource.title = params[:title]
 				resource.encryption = "ss"
 				resource.save!
+				render json: "[{'encryption':" + "#{resource.encryption}" + "},{'status':'create ok'}]" and return
 			when "user_datum"
 				user = User.find_by_encryption(params[:encryption])
 				user_datum = UserDatum.new
 				user_datum.user_id = user.id
 				user_datum.user_data = params[:user_data]
 				user_datum.save!
-				render json: "#{user_datum.user_data} create ok!" and return
+				render json: "[{'encryption':" + "#{resource.encryption}" + "},{'status':'create ok'}]" and return
     	end
 		when "delete"
 			type = DigitalResourceShip.find_by_encryption(params[:encryption])
 			type.resource.destroy
 			type.destroy
+			render json: "[{'encryption':" + "#{params[:encryption]}" + "},{'status':'delete ok'}]" and return
 		when "edit"
 			type_ship = DigitalResourceShip.find_by_encryption(params[:encryption])
 			case type_ship.resource_type
@@ -74,18 +79,21 @@ class DataConnectsController < ApplicationController
 				type_ship.resource.content = params[:content] if params[:content].present?
 				type_ship.resource.description = params[:description] if params[:description].present?
 				type_ship.resource.save!
+				render json: "[{'encryption':" + "#{params[:encryption]}" + "},{'status':'edit ok'}]" and return
 			when "TypeGif"
 				type_ship.title = params[:title] if params[:title].present?
 				type_ship.save!
 				type_ship.resource.url = params[:url] if params[:url].present?
 				type_ship.resource.save!
+				render json: "[{'encryption':" + "#{params[:encryption]}" + "},{'status':'edit ok'}]" and return
 			when "TypeMovie"
 				type_ship.title = params[:title] if params[:title].present?
 				type_ship.save!
-				type_ship.resource.pic_url = params[:pic_url]
-				type_ship.resource.movie_url = params[:movie_url]
-				type_ship.resource.description = params[:description]
+				type_ship.resource.pic_url = params[:pic_url] if params[:pic_url].present?
+				type_ship.resource.movie_url = params[:movie_url] if params[:movie_url].present?
+				type_ship.resource.description = params[:description] if params[:description].present?
 				typetype_ship.resource_ship.save!
+				render json: "[{'encryption':" + "#{params[:encryption]}" + "},{'status':'edit ok'}]" and return
 			when "TypeComic"
 				type_ship.title = params[:title] if params[:title].present?
 				type_ship.save!
@@ -95,6 +103,7 @@ class DataConnectsController < ApplicationController
 				type_ship.resource.pic_3_url = params[:pic_3_url] if params[:pic_3_url].present?
 				type_ship.resource.pic_4_url = params[:pic_4_url] if params[:pic_4_url].present?
 				type_ship.resource.save!
+				render json: "[{'encryption':" + "#{params[:encryption]}" + "},{'status':'edit ok'}]" and return
     	end
     when "user"
     	user = User.new
@@ -102,11 +111,10 @@ class DataConnectsController < ApplicationController
     	user.password = "user_temp"
     	user.encrypted_password = "user_temp"
     	user.save!
-      render json: "#{user.email} create ok!" and return
+      render json: "[{'encryption':" + "#{user.encryption}" + "},{'status':'user create ok'}]" and return
     when "user_datum"
     	user = User.find_by_encryption(params[:encryption])
     	render json: user.user_datums.select(:user_data,:id) and return
 		end
-		render json: "OK"
 	end
 end
