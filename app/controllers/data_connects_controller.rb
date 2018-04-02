@@ -61,8 +61,9 @@ class DataConnectsController < ApplicationController
 				user_datum = UserDatum.new
 				user_datum.user_id = user.id
 				user_datum.user_data = params[:user_data]
+				user_datum.file_type = params[:file_type]
 				user_datum.save!
-				render json: "[{'encryption':" + "#{resource.encryption}" + "},{'status':'create ok'}]" and return
+				render json: "[{'encryption':" + "#{user.encryption}" + "},{'status':'create ok'}]" and return
     	end
 		when "delete"
 			type = DigitalResourceShip.find_by_encryption(params[:encryption])
