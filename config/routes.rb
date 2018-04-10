@@ -9,13 +9,13 @@ Rails.application.routes.draw do
     post "movie_create", :on => :collection
     get "article", :on => :collection
     post "article_create", :on => :collection
-
   end
   get "agris/comic_del/:id", :to => "agris#comic_del", :as => "comic_del"
   delete "agris/gif_del/:id", :to => "agris#gif_del", :as => "gif_del"
   get "agris/movie_del/:id", :to => "agris#movie_del", :as => "movie_del"
   root :to => "agris#index"
   resources :upload_tools
+  resources :user_profiles
   resources :stories
   resources :user_manages
   resources :data_connects do

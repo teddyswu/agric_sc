@@ -64,6 +64,26 @@ class DataConnectsController < ApplicationController
 				user_datum.file_type = params[:file_type]
 				user_datum.save!
 				render json: "[{'encryption':" + "#{user.encryption}" + "},{'status':'create ok'}]" and return
+    	when "farmer"
+    		check_uid = UserProfile.find_by_fb_uid(params[:uid])
+    		if check_uid.blank?
+    			user = User.new
+    			user.email = "#{Time.now.to_i}@temp.com.tw"
+    			user.password = "user_temp"
+		    	user.encrypted_password = "user_temp"
+		    	user.is_farmer = true
+		    	user.save!
+          user_profile = UserProfile.new
+          user_profile.user_id = user.id
+          user_profile.fb_uid = params[:uid]
+          user_profile.name = params[:name]
+          user_profile.cell_phone = params[:cell_phone]
+          user_profile.certificate_photo = params[:certificate]
+          user_profile.save!
+          render json: "[{'encryption':" + "#{user.encryption}" + "},{'status':'farmer create ok'}]" and return
+    		else
+    			render json: "[{'uid':" + "#{params[:uid]}" + "},{'status':'uid already exists'}]" and return
+    		end
     	end
 		when "delete"
 			type = DigitalResourceShip.find_by_encryption(params[:encryption])

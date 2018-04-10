@@ -1,0 +1,121 @@
+<div class="card">
+  <div class="card-header">
+    <strong>友善農民基本資料</strong>
+  </div>
+  <div class="card-body card-block">
+    <%= form_for @user.user_profile, :url => {:controller => 'user_profiles', :action => 'update', :id => @user}, :html => {:class => 'form-horizontal'} do |f| %>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("會員編號", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:user_id, :class => "form-control", :value => @user.id, :readonly => true)%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("FB Uid", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:fb_uid, :class => "form-control", :value => @user.user_profile.fb_uid, :readonly => true)%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("FB專頁", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:fb_url, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("產銷班或農場名稱", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:farm_name, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("經營農戶姓名", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:name, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("聯絡電話", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:tel, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("手機號碼", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:cell_phone, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("住址", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:address, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("驗證機構", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:certification_body, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("驗證作物種類", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:category, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("農作名稱", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:crop_name, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("有機證書", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:certificate_photo, :class => "form-control", :value => @user.user_profile.certificate_photo, :readonly => true)%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("有效期限", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:validity_period, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="fa fa-dot-circle-o"></i> Submit
+        </button>
+        <button type="reset" class="btn btn-danger btn-sm">
+          <i class="fa fa-ban"></i> Reset
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>

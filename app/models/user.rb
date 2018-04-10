@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   after_save :create_encryption
   has_many :user_datums
+  has_one :user_profile, :foreign_key => "user_id"
 
   def create_encryption
   	update_column(:encryption, Digest::SHA256.hexdigest(email))
