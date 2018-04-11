@@ -30,7 +30,15 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("產銷班或農場名稱", :class => 'form-control-label') %>
+          <%= f.label("產銷班", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:ps_group, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("農場名稱", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
           <%= f.text_field(:farm_name, :class => "form-control")%>
@@ -102,10 +110,26 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
+          <%= f.label("有機證書2", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:certificate_photo_2, :class => "form-control", :value => @user.user_profile.certificate_photo_2, :readonly => true)%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("有機驗證字號", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:oc_num, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
           <%= f.label("有效期限", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_field(:validity_period, :class => "form-control")%>
+          <%= f.datetime_local_field(:validity_period, :class => "form-control")%>
         </div>
       </div>
       <div class="card-footer">
