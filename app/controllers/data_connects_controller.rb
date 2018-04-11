@@ -79,6 +79,7 @@ class DataConnectsController < ApplicationController
           user_profile.name = params[:name]
           user_profile.cell_phone = params[:cell_phone]
           user_profile.certificate_photo = params[:certificate]
+          user_profile.certificate_photo_2 = params[:certificate_2]
           user_profile.save!
           render json: "[{'encryption':" + "#{user.encryption}" + "},{'status':'farmer create ok'}]" and return
     		else
