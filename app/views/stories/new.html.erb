@@ -70,6 +70,7 @@
 							      CKEDITOR.replace( 'story_content' );
 							      CKEDITOR.config.height = 400;
 							    </script>
+                  <%= render "upload" %>
                   <div class="form-group">
                     <%= f.label("擁有者", :class => 'form-control-label') %><%= f.text_field(:owner, :class => "form-control", placeholder: "輸入文章描述", :value => current_user.email, :readonly => true)%>
                   </div>
@@ -90,3 +91,37 @@
     </div>
   </div>
 </body>
+  <script>
+    $(function () {
+      $('#insert_all_original').on('click', function () {
+        insertAllOriginalImage();
+      })
+    });
+
+    function insertAllOriginalImage () {
+      originalImages().each(function () {
+        var aa = $(this).data('img') + "|" + $(this).data('img').replace('big_', '');
+        originalInsertImageToFck(aa);
+      });
+    }
+
+
+    function originalImages () {
+      return $('#pic-upload > .row.my-2 > .col-6.col-md-3 > a');
+    }
+
+    function originalInsertImageToFck (FileSrc) {
+      if (FileSrc.length > 0) {
+        var original_img = BuildOriginalImg(FileSrc);
+        CKEDITOR.instances.story_content.insertHtml(original_img);
+      }
+    }
+
+    function BuildOriginalImg (FileSrc) {
+      var file_src   = FileSrc.split("|");
+      var big_src    = file_src[0];
+      var origin_src = file_src[1];
+
+      return '<a href ="' + origin_src + '" target="_blank" ><img src="' + big_src + '" class="img-responsive" /></a>';
+    }
+  </script>

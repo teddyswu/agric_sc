@@ -1,3 +1,34 @@
+<link rel="stylesheet" media="screen" href="https://d2yqzfalywhrf9.cloudfront.net/assets/jquery_fileupload_rails.css" />
+<style>
+  .btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+  }
+  .btn {
+    display: inline-block;
+    font-weight: normal;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease-in-out;
+  }
+  .progress {
+    display: flex;
+    overflow: hidden;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    text-align: center;
+    background-color: #eceeef;
+    border-radius: 0.25rem;
+  }
+</style>
 <body>
   <%= render "shared/left_panel" %>
   <div id="right-panel" class="right-panel">
@@ -65,3 +96,149 @@
     </div>
   </div>
 </body>
+<script src="https://d2yqzfalywhrf9.cloudfront.net/assets/jquery_fileupload_rails.js"></script>
+<script>
+  $(function () {
+    $('#fileupload').fileupload({
+
+      // AJAX Options
+      url: '<%= upload_tools_path %>',
+      dataType: 'json',
+
+      // General Options
+      paramName: 'file',
+      formAcceptCharset: 'utf-8',
+      sequentialUploads: true,
+
+      // Validation
+      acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|avi|mov)$/i,
+      maxFileSize: 6000000 // 6MB
+
+    }).on('fileuploadsubmit', function (_, data) {
+
+      var watermark = $('input[name=radio_watermark]:checked');
+
+      <%# 指定 `formData` 可以避免預設整個 Form 被 Serialize，只 Serialize 圖片本身與指定的參數 %>
+      data.formData = {
+        option: "{&quot;resource_type&quot;:&quot;Article&quot;,&quot;resource_id&quot;:null}",
+        table_params: "{}",
+        watermark: watermark.val() == 'true'
+      };
+
+    }).on('fileuploadprocessalways', function (_, data) {
+
+      var currentFile = data.files[data.index];
+
+      if (data.files.error && currentFile.error) {
+
+        var error_message = '`' + currentFile.name + '`' + ' ' + currentFile.error
+
+        errorHandler(error_message);
+
+      }
+
+    }).on('fileuploadprogressall', function (_, data) {
+
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('#progress .bar').css('width', progress + '%');
+
+    }).on('fileuploaddone', function (_, data) {
+
+      //location.reload();
+      appendImage(data.result);
+
+    }).on('fileuploadfail', function (_, data) {
+
+      $.each(data.files, function (index, file) {
+
+        var error_message = '`' + file.name + '`' + ' 上傳失敗.'
+
+        errorHandler(error_message);
+
+      });
+
+    });
+
+  });
+  function errorHandler (error_message) {
+    var error = $('<span class="text-danger"/>').text(error_message);
+
+    $('#progress').after('<br>').after(error);
+  }
+
+  function appendImage (src) {
+    $('#user_profile_certificate_photo').val("清除中...");
+    $('#user_profile_certificate_photo').val(src.original);
+  }
+  $(function () {
+    $('#fileupload_2').fileupload({
+
+      // AJAX Options
+      url: '<%= upload_tools_path %>',
+      dataType: 'json',
+
+      // General Options
+      paramName: 'file',
+      formAcceptCharset: 'utf-8',
+      sequentialUploads: true,
+
+      // Validation
+      acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|avi|mov)$/i,
+      maxFileSize: 6000000 // 6MB
+
+    }).on('fileuploadsubmit', function (_, data) {
+
+      var watermark = $('input[name=radio_watermark]:checked');
+
+      <%# 指定 `formData` 可以避免預設整個 Form 被 Serialize，只 Serialize 圖片本身與指定的參數 %>
+      data.formData = {
+        option: "{&quot;resource_type&quot;:&quot;Article&quot;,&quot;resource_id&quot;:null}",
+        table_params: "{}",
+        watermark: watermark.val() == 'true'
+      };
+
+    }).on('fileuploadprocessalways', function (_, data) {
+
+      var currentFile = data.files[data.index];
+
+      if (data.files.error && currentFile.error) {
+
+        var error_message = '`' + currentFile.name + '`' + ' ' + currentFile.error
+
+        errorHandler_2(error_message);
+
+      }
+
+    }).on('fileuploadprogressall', function (_, data) {
+
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('#progress .bar').css('width', progress + '%');
+
+    }).on('fileuploaddone', function (_, data) {
+
+      //location.reload();
+      appendImage_2(data.result);
+
+    }).on('fileuploadfail', function (_, data) {
+
+      $.each(data.files, function (index, file) {
+
+        var error_message = '`' + file.name + '`' + ' 上傳失敗.'
+
+        errorHandler_2(error_message);
+
+      });
+
+    });
+
+  });
+  function errorHandler_2 (error_message) {
+    var error = $('<span class="text-danger"/>').text(error_message);
+
+    $('#progress').after('<br>').after(error);
+  }
+  function appendImage_2 (src) {
+    $('#user_profile_certificate_photo_2').val("清除中...");
+    $('#user_profile_certificate_photo_2').val(src.original);
+  }
+</script>

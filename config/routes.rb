@@ -17,7 +17,9 @@ Rails.application.routes.draw do
   resources :upload_tools
   resources :user_profiles
   resources :stories
-  resources :user_manages
+  resources :user_manages do
+    get "farmer", :on => :collection
+  end
   resources :data_connects do
     get "story", :on => :collection
   end

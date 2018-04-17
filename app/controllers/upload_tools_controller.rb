@@ -42,6 +42,13 @@ class UploadToolsController < ApplicationController
         filelist.url = filelist.file.url
         filelist.save!
         render json: {:thumb => filelist.file.url, :big => filelist.file.url, :original => filelist.file.url}
+      when 'article'
+        filelist = FileList.new(@table_params.except!(:watermark))
+        filelist.file = params[:file]
+        filelist.save!
+        filelist.url = filelist.file.url
+        filelist.save!
+        render json: {:thumb => filelist.file.url, :big => filelist.file.url, :original => filelist.file.url}
       end
     else
       media = current_user.upload_photos.new(@table_params)

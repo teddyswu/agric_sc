@@ -106,6 +106,11 @@
         </div>
         <div class="col-12 col-md-9">
           <%= f.text_field(:certificate_photo, :class => "form-control", :value => @user.user_profile.certificate_photo, :readonly => true)%>
+          <span class="btn btn-success fileinput-button">
+            <span>上傳檔案</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files[]">
+          </span>
         </div>
       </div>
       <div class="row form-group">
@@ -114,6 +119,11 @@
         </div>
         <div class="col-12 col-md-9">
           <%= f.text_field(:certificate_photo_2, :class => "form-control", :value => @user.user_profile.certificate_photo_2, :readonly => true)%>
+          <span class="btn btn-success fileinput-button">
+            <span>上傳檔案</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload_2" type="file" name="files[]">
+          </span>
         </div>
       </div>
       <div class="row form-group">
@@ -126,7 +136,7 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("有效期限", :class => 'form-control-label') %>
+          <%= f.label("證書有效期限", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
           <%= f.datetime_local_field(:validity_period, :class => "form-control")%>

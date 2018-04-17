@@ -7,4 +7,13 @@ module UserManagesHelper
 			return "否"
 		end
 	end
+
+	def render_is_farmer(a, b)
+		if a == true && b == true
+			return "是"
+		else
+			return "否"
+		end
+	end
+
 end

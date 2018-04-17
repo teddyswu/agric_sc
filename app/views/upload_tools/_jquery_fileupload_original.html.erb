@@ -1,0 +1,178 @@
+<%# content_for :stylesheet do %>
+  <link rel="stylesheet" media="screen" href="https://d2yqzfalywhrf9.cloudfront.net/assets/jquery_fileupload_rails.css" />
+  <style>
+  .btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+  }
+  .btn {
+    display: inline-block;
+    font-weight: normal;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease-in-out;
+  }
+  .progress {
+    display: flex;
+    overflow: hidden;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    text-align: center;
+    background-color: #eceeef;
+    border-radius: 0.25rem;
+  }
+  .progress-bar {
+    height: 1rem;
+    color: #fff;
+    background-color: #337ab7;
+  }
+  </style>
+<%# end %>
+
+<span class="btn btn-success fileinput-button">
+  <span>上傳檔案</span>
+  <!-- The file input field used as target for the file upload widget -->
+  <input id="fileupload_original" type="file" name="files[]" multiple>
+</span>
+
+<br>
+<br>
+
+<!-- The global progress bar -->
+<div id="progress_original" class="progress">
+  <div class="progress-bar progress-bar-success bar"></div>
+</div>
+
+<script src="https://d2yqzfalywhrf9.cloudfront.net/assets/jquery_fileupload_rails.js"></script>
+
+<script>
+  $(function () {
+    $('#fileupload_original').fileupload({
+
+      // AJAX Options
+      url: '<%= upload_tools_path %>',
+      dataType: 'json',
+
+      // General Options
+      paramName: 'file',
+      formAcceptCharset: 'utf-8',
+      sequentialUploads: true,
+
+      // Validation
+      acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+      maxFileSize: 6000000 // 6MB
+
+    }).on('fileuploadsubmit', function (_, data) {
+
+      var watermark = $('input[name=radio_watermark]:checked');
+
+      <%# 指定 `formData` 可以避免預設整個 Form 被 Serialize，只 Serialize 圖片本身與指定的參數 %>
+      data.formData = {
+        option: "<%= option.to_json %>",
+        table_params: "<%= table_params.to_json %>",
+        watermark: watermark.val() == 'true'
+      };
+
+    }).on('fileuploadprocessalways', function (_, data) {
+
+      var currentFile = data.files[data.index];
+
+      if (data.files.error && currentFile.error) {
+
+        var error_message = '`' + currentFile.name + '`' + ' ' + currentFile.error
+
+        errorHandler(error_message);
+
+      }
+
+    }).on('fileuploadprogressall', function (_, data) {
+
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('#progress_original .bar').css('width', progress + '%');
+
+    }).on('fileuploaddone', function (_, data) {
+
+      appendImage_o(data.result);
+
+    }).on('fileuploadfail', function (_, data) {
+
+      $.each(data.files, function (index, file) {
+
+        var error_message = '`' + file.name + '`' + ' 上傳失敗.'
+
+        errorHandler(error_message);
+
+      });
+
+    });
+
+  });
+
+  function errorHandler (error_message) {
+    var error = $('<span class="text-danger"/>').text(error_message);
+
+    $('#progress_original').after('<br>').after(error);
+  }
+
+  function appendImage_o (src) {
+
+    var div = document.createElement("div");
+    div.className = "col-6 col-md-3";
+
+    var a = document.createElement("a");
+    a.className = 'd-block my-1 text-center';
+    a.href = "javascript:originalInsertImageToFck('" + src.big + "|" + src.original + "');";
+    a.dataset.img = src.big;
+
+    var img = document.createElement("img");
+    img.className = "img-thumbnail img-fit";
+    img.src = src.big;
+
+    a.appendChild(img);
+    div.appendChild(a);
+    $('#pic-upload > .row.my-2').append(div);
+
+    img.onload = function () {
+      fadeIn(img, 0);
+    };
+  }
+
+  function fadeIn (element, opacity) {
+
+    var reduceOpacityBy = 5;
+    var rate = 15;  // 15 fps
+
+    if (opacity < 100) {
+      opacity += reduceOpacityBy;
+      if (opacity > 100) {
+        opacity = 100;
+      }
+
+      if (element.filters) {
+        try {
+          element.filters.item("DXImageTransform.Microsoft.Alpha").opacity = opacity;
+        } catch (e) {
+          // If it is not set initially, the browser will throw an error.  This will set it if it is not set yet.
+          element.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(opacity=' + opacity + ')';
+        }
+      } else {
+        element.style.opacity = opacity / 100;
+      }
+    }
+
+    if (opacity < 100) {
+      setTimeout(function () {
+        fadeIn(element, opacity);
+      }, rate);
+    }
+  }
+
+</script>

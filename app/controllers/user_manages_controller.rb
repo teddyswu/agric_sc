@@ -14,6 +14,10 @@ class UserManagesController < ApplicationController
 		redirect_to :action => :index
 	end
 
+	def farmer
+		@users = User.where(:is_farmer => true ).paginate(:page => params[:page], per_page: 10)
+	end
+
 
 	def user_params
 		params.require(:user).permit(:is_admin, :is_check_farmer)
