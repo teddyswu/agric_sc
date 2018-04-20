@@ -7,7 +7,7 @@ class AgrisController < ApplicationController
 	def comic
 		@type = FileList.new
     @type_comic = TypeComic.new
-    @type_comic_ten = DigitalResourceShip.where(:resource_type => "TypeComic").order(id: :desc).limit(10)
+    @type_comics = DigitalResourceShip.where(:resource_type => "TypeComic").order(id: :desc).paginate(:page => params[:page], per_page: 10)
 
 	end
 
@@ -29,7 +29,7 @@ class AgrisController < ApplicationController
   def movie
     @type = FileList.new
     @type_movie = TypeMovie.new
-    @type_movie_ten = DigitalResourceShip.where(:resource_type => "TypeMovie").order(id: :desc).limit(10)
+    @type_movies = DigitalResourceShip.where(:resource_type => "TypeMovie").order(id: :desc).paginate(:page => params[:page], per_page: 10)
   end
 
   def movie_create
@@ -53,7 +53,7 @@ class AgrisController < ApplicationController
 
   def gif
   	@type = TypeGif.new
-  	@type_gif_ten = DigitalResourceShip.where(:resource_type => "TypeGif").order(id: :desc).limit(10)
+  	@type_gifs = DigitalResourceShip.where(:resource_type => "TypeGif").order(id: :desc).paginate(:page => params[:page], per_page: 10)
   end
 
   def gif_del
@@ -65,7 +65,7 @@ class AgrisController < ApplicationController
 
   def article
     @type_article = TypeArticle.new
-    @type_article_ten = DigitalResourceShip.where(:resource_type => "TypeArticle").order(id: :desc).limit(10)
+    @type_articles = DigitalResourceShip.where(:resource_type => "TypeArticle").order(id: :desc).paginate(:page => params[:page], per_page: 10)
   end
 
   def article_create

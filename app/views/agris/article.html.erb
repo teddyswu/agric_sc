@@ -41,7 +41,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% @type_article_ten.each do |article|%>
+                      <% @type_articles.each do |article|%>
                         <tr>
                           <th scope="row"><%= article.id %></th>
                           <td><%= article.title %></td>
@@ -52,6 +52,7 @@
                       <% end %>
                     </tbody>
                   </table>
+                  <%= will_paginate @type_articles %>
                 </div>
             </div>
           </div>

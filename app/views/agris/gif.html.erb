@@ -40,7 +40,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% @type_gif_ten.each do |gif|%>
+                    <% @type_gifs.each do |gif|%>
                       <tr>
                         <th scope="row"><%= gif.id %></th>
                         <td>
@@ -53,6 +53,7 @@
                     <% end %>
                   </tbody>
                 </table>
+                <%= will_paginate @type_gifs %>
               </div>
             </div>
           </div>
@@ -78,7 +79,7 @@
       </div>
     </div>
   </div>
-  <% @type_gif_ten.each do |gif|%>
+  <% @type_gifs.each do |gif|%>
     <div class="modal fade" id="<%= "gif_#{gif.id}"%>" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

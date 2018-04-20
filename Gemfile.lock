@@ -294,6 +294,10 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
+    pdf-core (0.7.0)
+    prawn (2.2.2)
+      pdf-core (~> 0.7.0)
+      ttfunk (~> 1.5)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -365,6 +369,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.8)
     trollop (2.1.2)
+    ttfunk (1.5.1)
     turbolinks (5.1.0)
       turbolinks-source (~> 5.1)
     turbolinks-source (5.1.0)
@@ -405,6 +410,7 @@ DEPENDENCIES
   mysql2 (= 0.3.18)
   nokogiri (= 1.6.7.1)
   paperclip (= 4.3.0)
+  prawn
   pry (= 0.10.1)
   rails (= 4.2.6)
   rails-html-sanitizer (>= 1.0.4)

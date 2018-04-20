@@ -40,7 +40,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <% @type_comic_ten.each do |comic|%>
+                      <% @type_comics.each do |comic|%>
                         <tr>
                           <th scope="row"><%= comic.id %></th>
                           <td>
@@ -54,6 +54,7 @@
                       <% end %>
                     </tbody>
                   </table>
+                  <%= will_paginate @type_comics %>
                 </div>
             </div>
           </div>
@@ -145,7 +146,7 @@
       </div>
     </div>
   </div>
-  <% @type_comic_ten.each do |comic|%>
+  <% @type_comics.each do |comic|%>
     <div class="modal fade" id="<%= "comic_#{comic.id}"%>" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
