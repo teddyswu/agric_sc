@@ -15,6 +15,9 @@ class UserManagesController < ApplicationController
 
 	def edit
 		@user = User.find(params[:id])
+		@default = @user.farming_categories.map {|farm| {:id => farm.id, :name => farm.name} }
+		farms = FarmingCategory.all.map {|farm| {:id => farm.id, :name => farm.name} }
+    @los_farms = farms - @default
 	end
 	def update
 		@user = User.find(params[:id])

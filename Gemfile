@@ -12,7 +12,9 @@ gem "cancan", '1.6.10'
 gem "ckeditor", "4.2.3"
 gem "paperclip", '4.3.0'
 gem 'rails-html-sanitizer', '>= 1.0.4'
+
 gem 'will_paginate', '~> 3.1.0'
+gem 'rails-jquery-tokeninput'
 
 gem 'prawn'
 
@@ -25,7 +27,7 @@ gem "activerecord-import", "~> 0.4.1" # 一次新增多筆資料
 gem "actionpack-action_caching", '1.1.1'
 gem 'jquery-fileupload-rails', '0.4.6'
 gem 'aws-sdk', '~> 1.66' # 連線 AWS 的 gem, 目前 paperclip 會使用
-gem 'turbolinks'
+# gem 'turbolinks'
 
 group :assets do
 	gem 'sass-rails', '~> 5.0'

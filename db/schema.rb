@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180411050017) do
+ActiveRecord::Schema.define(version: 20180426041240) do
+
+  create_table "category_work_ships", force: :cascade do |t|
+    t.integer  "farming_category_id", limit: 4
+    t.integer  "work_projects_id",    limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
 
   create_table "ckeditor_assets", force: :cascade do |t|
     t.string   "data_file_name",    limit: 255, null: false
@@ -29,10 +36,17 @@ ActiveRecord::Schema.define(version: 20180411050017) do
   create_table "digital_resource_ships", force: :cascade do |t|
     t.string   "resource_type", limit: 255,   null: false
     t.integer  "resource_id",   limit: 4,     null: false
+    t.string   "keyword",       limit: 255
     t.text     "encryption",    limit: 65535, null: false
     t.text     "title",         limit: 65535, null: false
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+  end
+
+  create_table "farming_categories", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "file_lists", force: :cascade do |t|
@@ -40,6 +54,13 @@ ActiveRecord::Schema.define(version: 20180411050017) do
     t.text     "url",        limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+  end
+
+  create_table "filed_codes", force: :cascade do |t|
+    t.integer  "user_id",         limit: 4
+    t.string   "filed_code_name", limit: 255
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "stories", force: :cascade do |t|
@@ -91,6 +112,13 @@ ActiveRecord::Schema.define(version: 20180411050017) do
     t.datetime "updated_at",               null: false
   end
 
+  create_table "user_farming_category_ships", force: :cascade do |t|
+    t.integer  "user_id",             limit: 4
+    t.integer  "farming_category_id", limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
   create_table "user_profiles", force: :cascade do |t|
     t.integer  "user_id",             limit: 4
     t.string   "fb_uid",              limit: 255
@@ -133,5 +161,12 @@ ActiveRecord::Schema.define(version: 20180411050017) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "work_projects", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.integer  "record_type", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
 end

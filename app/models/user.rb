@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
 
   after_save :create_encryption
   has_many :user_datums
+  has_many :user_farming_category_ships
+  has_many :farming_categories, :through => :user_farming_category_ships
   has_one :user_profile, :foreign_key => "user_id"
 
   def create_encryption

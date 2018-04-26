@@ -324,6 +324,8 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails-jquery-tokeninput (0.2.6)
+      jquery-rails (>= 2)
     railties (4.2.6)
       actionpack (= 4.2.6)
       activesupport (= 4.2.6)
@@ -370,9 +372,6 @@ GEM
     tilt (2.0.8)
     trollop (2.1.2)
     ttfunk (1.5.1)
-    turbolinks (5.1.0)
-      turbolinks-source (~> 5.1)
-    turbolinks-source (5.1.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.1.8)
@@ -414,10 +413,10 @@ DEPENDENCIES
   pry (= 0.10.1)
   rails (= 4.2.6)
   rails-html-sanitizer (>= 1.0.4)
+  rails-jquery-tokeninput
   rufus-scheduler (= 2.0.24)
   rvm-capistrano
   sass-rails (~> 5.0)
-  turbolinks
   uglifier (>= 1.3.0)
   web-console (~> 2.0)
   will_paginate (~> 3.1.0)
