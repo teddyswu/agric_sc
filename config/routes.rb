@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :upload_tools
   resources :user_profiles
   resources :stories
+  resources :work_records
   resources :user_manages do
     get "farmer", :on => :collection
   end

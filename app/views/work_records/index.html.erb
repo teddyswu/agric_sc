@@ -15,7 +15,7 @@
             <ol class="breadcrumb text-right">
               <li><a href="#">Dashboard</a></li>
               <li><a href="#">資料</a></li>
-              <li class="active">會員</li>
+              <li class="active">工作紀錄</li>
             </ol>
           </div>
         </div>
@@ -34,25 +34,25 @@
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">管理員</th>
-                        <th scope="col">友善農友</th>
-                        <th scpoe="col">編輯</th>
+                        <th scope="col">農友</th>
+                        <th scope="col">作物種類</th>
+                        <th scope="col">田區代號</th>
+                        <th scope="col">紀錄事項</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% @users.each do |user|%>
+                      <% @records.each do |record|%>
                         <tr>
-                          <th scope="row"><%= user.id %></th>
-                          <td><%= user.email%></td>
-                          <td><%= render_is_true(user.is_admin) %></td>
-                          <td><%= render_is_farmer(user.is_farmer, user.is_check_farmer) %></td>
-                          <td><%= link_to "[edit]", edit_user_manage_path(user.id)%></td>
+                          <th scope="row"><%= record.id%></th>
+                          <th><%= record.user.user_profile.name %></th>
+                          <th><%= record.category_work_ship.farming_category.name%></th>
+                          <td><%= record.filed_code.filed_code_name%></td>
+                          <td><%= record.category_work_ship.work_project.name %></td>
                         </tr>
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @users %>
+                  <%= will_paginate @records %>
                 </div>
             </div>
           </div>

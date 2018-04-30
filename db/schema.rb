@@ -11,11 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180426041240) do
+ActiveRecord::Schema.define(version: 20180430102707) do
 
   create_table "category_work_ships", force: :cascade do |t|
     t.integer  "farming_category_id", limit: 4
-    t.integer  "work_projects_id",    limit: 4
+    t.integer  "work_project_id",     limit: 4
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end
@@ -167,6 +167,16 @@ ActiveRecord::Schema.define(version: 20180426041240) do
     t.integer  "record_type", limit: 4
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "work_records", force: :cascade do |t|
+    t.integer  "category_work_ship_id", limit: 4
+    t.integer  "filed_code_id",         limit: 4
+    t.text     "photo",                 limit: 65535
+    t.text     "photo_2",               limit: 65535
+    t.integer  "owner_id",              limit: 4
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
 end
