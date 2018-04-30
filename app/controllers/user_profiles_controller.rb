@@ -10,6 +10,14 @@ class UserProfilesController < ApplicationController
     	farm_cate.farming_category_id = cate
     	farm_cate.save!
     end
+    if params[:filed_code].present?
+      params[:filed_code].split('_').each do |code|
+      	filed_code = FiledCode.new
+      	filed_code.user_id = params[:user_profile][:user_id]
+      	filed_code.filed_code_name = code
+      	filed_code.save!
+      end
+    end
 		redirect_to edit_user_manage_path
 	end
 

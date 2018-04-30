@@ -45,7 +45,7 @@
                         <tr>
                           <th scope="row"><%= story.id %></th>
                           <td><%= story.title %></td>
-                          <td><%= link_to "#{story_path(story.id)}",story_path(story.id) %></td>
+                          <td><%= link_to "#{story_path(story.id)}",story_path(story.id), target: "_blank" %></td>
                           <td><%= link_to "[edit]", edit_story_path(story.id)%></td>
                           <td><%= link_to "[del]", story_path(story.id), :method => :delete %></td>
                         </tr>

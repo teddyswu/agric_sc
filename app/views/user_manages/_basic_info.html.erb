@@ -103,6 +103,16 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
+          <%= f.label("田區代號", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= text_field_tag 'filed_code', @filed_code, class: 'form-control', :disabled => true  if @filed_code != "" %>
+          <%= text_field_tag 'filed_code', @filed_code, class: 'form-control' if @filed_code == ""%>
+          <span class="help-block" style ="color :red">請使用底線隔開，如A_B_C</span>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
           <%= f.label("有機證書", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
