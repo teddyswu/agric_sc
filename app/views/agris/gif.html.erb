@@ -35,6 +35,7 @@
                   <thead class="thead-dark">
                     <tr>
                       <th scope="col">#</th>
+                      <th scope="col">預覽</th>
                       <th scope="col">網址</th>
                       <th scope="col">刪除</th>
                     </tr>
@@ -45,9 +46,10 @@
                         <th scope="row"><%= gif.id %></th>
                         <td>
                           <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#<%= "gif_#{gif.id}"%>">
-                            <%= image_tag(gif.resource.url, height: "100" )%>
+                            <%= image_tag(gif.resource.url, height: "100", width: "100" )%>
                           </button>
                         </td>
+                        <th scope="row"><%= "http://" + request.host + show_gif_path(gif.resource.file_identifier)  %></th>
                         <td><%= link_to "[del]", gif_del_path(gif.id), :method => :delete %></td>
                       </tr>
                     <% end %>

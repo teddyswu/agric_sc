@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get "agris/comic_del/:id", :to => "agris#comic_del", :as => "comic_del"
   delete "agris/gif_del/:id", :to => "agris#gif_del", :as => "gif_del"
   get "agris/movie_del/:id", :to => "agris#movie_del", :as => "movie_del"
+  get "agris/showgif/:id", :to => "agris#showgif", :as =>"show_gif"
   root :to => "agris#index"
   resources :upload_tools
   resources :user_profiles
