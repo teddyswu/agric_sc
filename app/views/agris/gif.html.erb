@@ -49,7 +49,7 @@
                             <%= image_tag(gif.resource.url, height: "100", width: "100" )%>
                           </button>
                         </td>
-                        <th scope="row"><%= "http://" + request.host + show_gif_path(gif.resource.file_identifier)  %></th>
+                        <th scope="row"><%= render_path(gif.resource.file_identifier)  %></th>
                         <td><%= link_to "[del]", gif_del_path(gif.id), :method => :delete %></td>
                       </tr>
                     <% end %>

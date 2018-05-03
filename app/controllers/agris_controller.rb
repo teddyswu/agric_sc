@@ -1,10 +1,14 @@
 class AgrisController < ApplicationController
-	before_action :is_admin, except: [:index,:showgif]
-  before_action :authenticate_user!, except: [:showgif]
+	before_action :is_admin, except: [:index, :showgif, :showjpg]
+  before_action :authenticate_user!, except: [:showgif, :showjpg]
 	skip_before_action :verify_authenticity_token
 
   caches_action :showgif, :cache_path => Proc.new {
     cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
+  }, :expires_in => 24.hour
+
+  caches_action :showjpg, :cache_path => Proc.new {
+    cache_path = "#{WebConf.host}-#{request.path}_showjpg_cache"
   }, :expires_in => 24.hour
 
 
@@ -66,6 +70,14 @@ class AgrisController < ApplicationController
     domain = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/gif/"
     filename = params[:id]
     path = domain + filename + ".gif"
+    data = open(path)
+    send_data data.read, type: data.content_type, disposition: 'inline'
+  end
+
+  def showjpg
+    domain = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/gif/"
+    filename = params[:id]
+    path = domain + filename + ".jpg"
     data = open(path)
     send_data data.read, type: data.content_type, disposition: 'inline'
   end
