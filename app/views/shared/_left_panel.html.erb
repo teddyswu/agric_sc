@@ -34,7 +34,10 @@
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>工作紀錄 ".html_safe, work_records_path  %>
         </li>
         <li <%= "class='active'".html_safe if request.url.include?("farmer") %>>
-          <%= link_to " <i class='menu-icon fa fa-briefcase'></i>審核茶農 ".html_safe, farmer_user_manages_path  %>
+          <%= link_to " <i class='menu-icon fa fa-check'></i>審核茶農 ".html_safe, farmer_user_manages_path  %>
+        </li>
+        <li <%= "class='active'".html_safe if request.url.include?("record") %>>
+          <%= link_to " <i class='menu-icon fa fa-list-ul'></i>工作事項 ".html_safe, work_records_path  %>
         </li>
         <h3 class="menu-title"></h3>
         <li>

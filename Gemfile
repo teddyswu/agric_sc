@@ -12,6 +12,7 @@ gem "cancan", '1.6.10'
 gem "ckeditor", "4.2.3"
 gem "paperclip", '4.3.0'
 gem 'rails-html-sanitizer', '>= 1.0.4'
+gem "dalli"
 
 gem 'will_paginate', '~> 3.1.0'
 gem 'rails-jquery-tokeninput'

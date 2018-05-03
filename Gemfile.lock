@@ -79,6 +79,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
+    dalli (2.7.6)
     debug_inspector (0.0.3)
     devise (3.4.0)
       bcrypt (~> 3.0)
@@ -398,6 +399,7 @@ DEPENDENCIES
   carrierwave (= 0.10.0)
   ckeditor (= 4.2.3)
   coffee-rails (~> 4.1.0)
+  dalli
   devise (= 3.4.0)
   flash_cookie_session
   fog

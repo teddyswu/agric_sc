@@ -1,7 +1,13 @@
 class AgrisController < ApplicationController
-	before_action :is_admin, except: [:index]
-  before_action :authenticate_user!
+	before_action :is_admin, except: [:index,:showgif]
+  before_action :authenticate_user!, except: [:showgif]
 	skip_before_action :verify_authenticity_token
+
+  caches_action :showgif, :cache_path => Proc.new {
+    cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
+  }, :expires_in => 24.hour
+
+
   def index
 	end
 	def comic
