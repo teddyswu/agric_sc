@@ -12,29 +12,32 @@
         <li class="active">
         	<%= link_to " <i class='menu-icon fa fa-dashboard'></i>Dashboard ".html_safe, root_path %>
         </li>
-        <h3 class="menu-title">Bot使用</h3><!-- /.menu-title -->
+        <h3 class="menu-title">聊天內容</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("gif") %>>
           <%= link_to " <i class='menu-icon fa fa-picture-o'></i>動圖 ".html_safe,  gif_agris_path %>
         </li>
-        <li <%= "class='active'".html_safe if request.url.include?("movie") %>>
-          <%= link_to " <i class='menu-icon fa fa-film'></i>影片 ".html_safe,  movie_agris_path %>
+        <!-- <li <%#= "class='active'".html_safe if request.url.include?("movie") %>>
+          <%#= link_to " <i class='menu-icon fa fa-film'></i>影片 ".html_safe,  movie_agris_path %>
         </li>
-        <li <%= "class='active'".html_safe if request.url.include?("comic") %>>
-          <%= link_to " <i class='menu-icon fa fa-rocket'></i>漫畫 ".html_safe, comic_agris_path  %>
+        <li <%#= "class='active'".html_safe if request.url.include?("comic") %>>
+          <%#= link_to " <i class='menu-icon fa fa-rocket'></i>漫畫 ".html_safe, comic_agris_path  %>
         </li>
-        <li <%= "class='active'".html_safe if request.url.include?("article") %>>
-          <%= link_to " <i class='menu-icon fa fa-edit'></i>文章 ".html_safe, article_agris_path  %>
-        </li>
+        <li <%#= "class='active'".html_safe if request.url.include?("article") %>>
+          <%#= link_to " <i class='menu-icon fa fa-edit'></i>文章 ".html_safe, article_agris_path  %>
+        </li> -->
         <h3 class="menu-title">網頁內容</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("stories") %>>
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>網頁內容 ".html_safe, new_story_path  %>
         </li>
-        <h3 class="menu-title">友善農有</h3><!-- /.menu-title -->
+        <h3 class="menu-title">友善農友</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("record") %>>
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>工作紀錄 ".html_safe, work_records_path  %>
         </li>
         <li <%= "class='active'".html_safe if request.url.include?("farmer") %>>
-          <%= link_to " <i class='menu-icon fa fa-check'></i>審核茶農 ".html_safe, farmer_user_manages_path  %>
+          <%= link_to " <i class='menu-icon fa fa-check'></i>茶農管理 ".html_safe, farmer_user_manages_path  %>
+        </li>
+        <li <%= "class='active'".html_safe if request.url.include?("farming") %>>
+          <%= link_to " <i class='menu-icon fa fa-wrench'></i>作物管理 ".html_safe, farming_categories_path  %>
         </li>
         <li <%= "class='active'".html_safe if request.url.include?("project") %>>
           <%= link_to " <i class='menu-icon fa fa-list-ul'></i>工作事項 ".html_safe, work_projects_path  %>

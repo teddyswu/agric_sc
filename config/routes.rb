@@ -21,6 +21,10 @@ Rails.application.routes.draw do
   resources :stories
   resources :work_records
   resources :work_projects
+  resources :farming_categories do
+    get "binding", :on => :collection
+    post "create_binding", :on => :collection
+  end
   resources :user_manages do
     get "farmer", :on => :collection
   end

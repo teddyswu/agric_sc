@@ -28,28 +28,29 @@
             <div class="card">
               <div class="card-header">
                 <strong class="card-title"></strong>
-                <%= link_to "新增事項", new_work_project_path, :class => "btn btn-secondary"%>
+                <%= link_to "新增作物", new_work_project_path, :class => "btn btn-secondary"%>
+                <%= link_to "作物綁定", binding_farming_categories_path, :class => "btn btn-primary"%>
               </div>
                 <div class="card-body">
                   <table class="table">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">名稱</th>
-                        <th scope="col">種類</th>
+                        <th scope="col">作物名稱</th>
+                        <th scope="col">綁定事項</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% @work_projects.each do |project|%>
+                      <% @category_work_ship.each do |ship|%>
                         <tr>
-                          <th scope="row"><%= project.id%></th>
-                          <th><%= project.name %></th>
-                          <th><%= render_is_farm_work(project.record_type) %></th>
+                          <th scope="row"><%= ship.id%></th>
+                          <th><%= ship.farming_category.name %></th>
+                          <th><%= ship.work_project.name %></th>
                         </tr>
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @work_projects %>
+                  <%= will_paginate @category_work_ship %>
                 </div>
             </div>
           </div>

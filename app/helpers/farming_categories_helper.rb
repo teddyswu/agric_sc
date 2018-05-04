@@ -1,0 +1,2 @@
+module FarmingCategoriesHelper
+end
