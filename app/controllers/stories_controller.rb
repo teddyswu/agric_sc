@@ -1,9 +1,13 @@
 class StoriesController < ApplicationController
 	before_filter :authenticate_user!, except: [:show]
 
+	def index
+		@story = Story.order(id: :desc).paginate(:page => params[:page], per_page: 10)
+	end
+
 	def new
 		@story = Story.new
-		@story_ten = Story.order(id: :desc).limit(10)
+
 	end
 
 	def show
@@ -26,7 +30,7 @@ class StoriesController < ApplicationController
 		@story = Story.find(params[:id])
 	  @story.update(story_params)
 
-	  redirect_to :action => :new
+	  redirect_to :action => :index
 	end
 
 	def create

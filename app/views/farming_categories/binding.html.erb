@@ -36,12 +36,22 @@
                       <%= f.label("作物名稱", :class => 'form-control-label') %>
                     </div>
                     <div class="col-12 col-md-9">
-                      <%= f.select :farming_category_id, options_from_collection_for_select(@crop, "id", "name") %>
+                      <%= f.select :farming_category_id, options_from_collection_for_select(@crop, "id", "name", params[:category_id]) %>
                     </div>
                   </div>
                   <div class="row form-group">
                     <div class="col col-md-3">
-                      <%= f.label("綁定事項", :class => 'form-control-label') %>
+                      <%= f.label("已綁定事項", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <% @default_projects.each do |dp|%>
+                        <%= dp[:name]%>、
+                      <% end %>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col col-md-3">
+                      <%= f.label("新綁定事項", :class => 'form-control-label') %>
                     </div>
                     <div class="col-12 col-md-9">
                       <%= f.text_field :work_project_id, 'data-tokeninput' => { collection: @work_projects, options: { theme: 'facebook'} }.to_json %>
@@ -64,3 +74,10 @@
     </div>
   </div>
 </body>
+<script>
+  $("#category_work_ship_farming_category_id").change(function(){
+    Val = $('#category_work_ship_farming_category_id').val();
+    url = "<%= binding_farming_categories_path %>" + "?category_id=" + Val;
+    $( location ).attr("href", url);
+  })
+</script>

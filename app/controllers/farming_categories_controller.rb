@@ -1,9 +1,15 @@
 class FarmingCategoriesController < ApplicationController
 	def binding
-		crop_selected_id = CategoryWorkShip.all.select(:farming_category_id)
-    @crop = FarmingCategory.where.not(:id => crop_selected_id)
+		@crop = FarmingCategory.all
     @category_work_ship = CategoryWorkShip.new
-    @work_projects = WorkProject.all.map {|work| {:id => work.id, :name => work.name} }
+    selected_wp = CategoryWorkShip.select(:work_project_id).where(:farming_category_id => params[:category_id]) if params[:category_id].present?
+    if params[:category_id].present?
+    	@work_projects = WorkProject.where.not(:id => selected_wp).map {|work| {:id => work.id, :name => work.name} }
+    	@default_projects = WorkProject.where(:id => selected_wp).map {|work| {:id => work.id, :name => work.name} }
+    else
+    	@work_projects = WorkProject.all.map {|work| {:id => work.id, :name => work.name} }
+    	@default_projects = {}
+    end
 	end
 
 	def create_binding

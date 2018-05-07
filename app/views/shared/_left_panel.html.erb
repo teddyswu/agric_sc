@@ -27,7 +27,7 @@
         </li> -->
         <h3 class="menu-title">網頁內容</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("stories") %>>
-          <%= link_to " <i class='menu-icon fa fa-briefcase'></i>網頁內容 ".html_safe, new_story_path  %>
+          <%= link_to " <i class='menu-icon fa fa-briefcase'></i>網頁內容 ".html_safe, stories_path  %>
         </li>
         <h3 class="menu-title">友善農友</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("record") %>>

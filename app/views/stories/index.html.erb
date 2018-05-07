@@ -14,8 +14,8 @@
           <div class="page-title">
             <ol class="breadcrumb text-right">
               <li><a href="#">Dashboard</a></li>
-              <li><a href="#">資料</a></li>
-              <li class="active">工作項目</li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">文章</li>
             </ol>
           </div>
         </div>
@@ -27,30 +27,32 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
-                <strong class="card-title"></strong>
-                <%= link_to "新增作物", new_work_project_path, :class => "btn btn-secondary"%>
-                <%= link_to "作物綁定", binding_farming_categories_path(:category_id=> 1), :class => "btn btn-primary"%>
+                <strong class="card-title">Table List</strong> <%= link_to "新增", new_story_path%>
               </div>
                 <div class="card-body">
                   <table class="table">
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">作物名稱</th>
-                        <th scope="col">綁定事項</th>
+                        <th scope="col">標題</th>
+                        <th scope="col">網址</th>
+                        <th scope="col">編輯</th>
+                        <th scope="col">刪除</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% @category_work_ship.each do |ship|%>
+                      <% @story.each do |story|%>
                         <tr>
-                          <th scope="row"><%= ship.id%></th>
-                          <th><%= ship.farming_category.name %></th>
-                          <th><%= ship.work_project.name %></th>
+                          <th scope="row"><%= story.id %></th>
+                          <td><%= story.title %></td>
+                          <td><%= link_to "#{story_path(story.id)}",story_path(story.id), target: "_blank" %></td>
+                          <td><%= link_to "[edit]", edit_story_path(story.id)%></td>
+                          <td><%= link_to "[del]", story_path(story.id), :method => :delete %></td>
                         </tr>
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @category_work_ship %>
+                  <%= will_paginate @story %>
                 </div>
             </div>
           </div>

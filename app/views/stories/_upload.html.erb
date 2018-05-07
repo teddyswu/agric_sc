@@ -1,14 +1,49 @@
-<div class="form-group">
-  <label for="inputTitle" class="col-sm-2 col-form-label">多圖上傳</label>
-  <div>
-    <div role="tabpanel" class="tab-pane" id="pic-upload">
-      <div class="row my-2">
+<div class="form-group row">
+  <label for="inputTitle" class="col-sm-2 col-form-label">使用圖片和影片</label>
+  <div class="col-sm-10">
+    <ul class="nav nav-tabs my-2" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" href="#pic-upload" role="tab" data-toggle="tab">
+          多圖上傳
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#video-upload" role="tab" data-toggle="tab">影片</a>
+      </li>
+    </ul>
+    <div class="tab-content py-2">
+      <div role="tabpanel" class="tab-pane active" id="pic-upload">
+        <div class="row my-2">
+        </div>
+        <div class="btn-group" role="group" aria-label="">
+          <button type="button" class="btn btn-secondary btn-sm" id="insert_all_original">全部插入</button>
+        </div>
+        <hr>
+        <%= jquery_fileupload_for_original %>
       </div>
-      <div class="btn-group" role="group" aria-label="">
-        <button type="button" class="btn btn-secondary btn-sm" id="insert_all_original">全部插入</button>
+      <div role="tabpanel" class="tab-pane" id="video-upload">
+        <a class="btn btn-primary" href="" data-toggle="modal" data-target=".modal-video">插入YouTube</a>
       </div>
-      <hr>
-      <%= jquery_fileupload_for_original %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-video" tabindex="-1" role="dialog" aria-labelledby="modal-video">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">插入影片</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="">請輸入 YouTube 影片網址</label>
+          <input type="url" class="form-control" id="video-url">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary video-btn disabled">確認</button>
+      </div>
     </div>
   </div>
 </div>
