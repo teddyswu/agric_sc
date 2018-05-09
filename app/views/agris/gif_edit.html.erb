@@ -36,34 +36,29 @@
                       <th scope="col">#</th>
                       <th scope="col">預覽</th>
                       <th scope="col">網址</th>
-                      <th scope="col">編輯</th>
                       <th scope="col">刪除</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% @type_gifs.each do |gif|%>
-                      <tr>
-                        <th scope="row"><%= gif.id %></th>
-                        <td>
-                          <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#<%= "gif_#{gif.id}"%>">
-                            <%= image_tag(gif.resource.url, height: "100", width: "100" )%>
-                          </button>
-                        </td>
-                        <th scope="row"><%= render_path(gif.resource.file_identifier)  %></th>
-                        <td><%= link_to "編輯", gif_edit_path(gif.id) %></td>
-                        <td><%= link_to "刪除", gif_del_path(gif.id), :method => :delete %></td>
-                      </tr>
-                    <% end %>
+                    <tr>
+                      <th scope="row"><%= @type_gif.id %></th>
+                      <td>
+                        <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#<%= "gif_#{@type_gif.id}"%>">
+                          <%= image_tag(@type_gif.resource.url, height: "100", width: "100" )%>
+                        </button>
+                      </td>
+                      <th scope="row"><%= render_path(@type_gif.resource.file_identifier)  %></th>
+                      <td><%= link_to "刪除", gif_del_path(@type_gif.id), :method => :delete %></td>
+                    </tr>
                   </tbody>
                 </table>
-                <%= will_paginate @type_gifs %>
               </div>
             </div>
           </div>
           <div class="col-lg-12">
             <table cellpadding="4" cellspacing="1" width="50%">
               <tr class="even">
-                <%= render :partial => "upload_tools/jquery_fileupload", :locals => {:option => {:resource_type => @type.class.to_s}, :table_params => { } } %>
+                <%= render :partial => "upload_tools/jquery_fileupload", :locals => {:option => {:resource_type => "gifedit"}, :table_params => { :id => params[:id] } } %>
               </tr>
               <div role="tabpanel" class="tab-pane active" id="pic-all">
                 <div class="row my-2">
@@ -82,23 +77,21 @@
       </div>
     </div>
   </div>
-  <% @type_gifs.each do |gif|%>
-    <div class="modal fade" id="<%= "gif_#{gif.id}"%>" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="largeModalLabel">預覽</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>
-              <%= image_tag(gif.resource.url)%>
-            </p>
-          </div>
+  <div class="modal fade" id="<%= "gif_#{@type_gif.id}"%>" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="largeModalLabel">預覽</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            <%= image_tag(@type_gif.resource.url)%>
+          </p>
         </div>
       </div>
     </div>
-  <% end %>
+  </div>
 </body>

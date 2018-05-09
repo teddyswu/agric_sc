@@ -38,6 +38,7 @@
                         <th scope="col">作物種類</th>
                         <th scope="col">田區代號</th>
                         <th scope="col">紀錄事項</th>
+                        <th scope="col">建立時間</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -45,9 +46,10 @@
                         <tr>
                           <th scope="row"><%= record.id%></th>
                           <th><%= record.user.user_profile.name %></th>
-                          <th><%= record.category_work_ship.farming_category.name%></th>
-                          <td><%= record.filed_code.filed_code_name%></td>
-                          <td><%= record.category_work_ship.work_project.name %></td>
+                          <th><%= record.farming_category%></th>
+                          <td><%= record.filed_code%></td>
+                          <td><%= record.work_project %></td>
+                          <th><%= record.created_at.strftime( '%Y-%m-%d' ) %></th>
                         </tr>
                       <% end %>
                     </tbody>

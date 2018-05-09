@@ -35,6 +35,13 @@ class UploadToolsController < ApplicationController
         gif_ship.title = "gif"
         gif_ship.save!
         render json: {:thumb => gif.file.url, :big => gif.file.url, :original => gif.file.url}
+      when 'gifedit'
+        gif = DigitalResourceShip.find(@table_params["id"])
+        gif.resource.file =  params[:file]
+        gif.resource.save!
+        gif.resource.url = gif.resource.file.url
+        gif.resource.save!
+        render json: {:thumb => gif.resource.file.url, :big => gif.resource.file.url, :original => gif.resource.file.url}
       when 'filelist'
         filelist = FileList.new(@table_params.except!(:watermark))
         filelist.file = params[:file]

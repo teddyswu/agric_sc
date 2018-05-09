@@ -66,6 +66,10 @@ class AgrisController < ApplicationController
   	@type_gifs = DigitalResourceShip.where(:resource_type => "TypeGif").order(id: :desc).paginate(:page => params[:page], per_page: 10)
   end
 
+  def gif_edit
+    @type_gif = DigitalResourceShip.find(params[:id])
+  end
+
   def showgif
     domain = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/gif/"
     filename = params[:id]
