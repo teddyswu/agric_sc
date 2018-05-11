@@ -13,13 +13,15 @@ class FarmingCategoriesController < ApplicationController
 	end
 
 	def create_binding
+		ship = CategoryWorkShip.where(:farming_category_id=> params[:category_work_ship][:farming_category_id])
+		ship.destroy_all
 		params[:category_work_ship][:work_project_id].each do |work|
 			ship = CategoryWorkShip.new
       ship.farming_category_id = params[:category_work_ship][:farming_category_id]
       ship.work_project_id = work
       ship.save!
 		end
-		redirect_to :action => :binding
+		redirect_to binding_farming_categories_path(:category_id => params[:category_work_ship][:farming_category_id] )
 	end
 
 	def index

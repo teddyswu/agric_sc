@@ -7,9 +7,19 @@ class WorkProjectsController < ApplicationController
 		@work_project = WorkProject.new
 	end
 
+	def edit
+		@work_project = WorkProject.find(params[:id])
+	end
+
 	def create
 		work_project = WorkProject.new(work_project_params)
 		work_project.save
+		redirect_to :action => :index
+	end
+
+	def update
+		@work_project = WorkProject.find(params[:id])
+		@work_project.update(work_project_params)
 		redirect_to :action => :index
 	end
 

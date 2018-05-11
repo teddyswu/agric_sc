@@ -1,0 +1,60 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">資料</a></li>
+              <li class="active">工作項目</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title"></strong>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">名稱</th>
+                      <th scope="col">種類</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <%= form_for @work_project, :url => work_project_path(@work_project), :html => { :method => :patch } do |f| %>
+                        <th scope="row"><%= f.text_field(:id, :class => "form-control", :value => @work_project.id, :readonly => true)%></th>
+                        <th><%= f.text_field(:name, :class => "form-control")%></th>
+                        <th><%= f.select :record_type, options_for_select([["農地耕作", "1"], ["採收後處理", "2"]],@work_project.record_type)%></th>
+                        <th><%= f.submit "送出" %></th>
+                      <% end %>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

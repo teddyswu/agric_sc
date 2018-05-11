@@ -37,6 +37,7 @@
                         <th scope="col">#</th>
                         <th scope="col">名稱</th>
                         <th scope="col">種類</th>
+                        <th scope="col">編輯</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -45,6 +46,7 @@
                           <th scope="row"><%= project.id%></th>
                           <th><%= project.name %></th>
                           <th><%= render_is_farm_work(project.record_type) %></th>
+                          <th><%= link_to "編輯", edit_work_project_path(project.id)%>
                         </tr>
                       <% end %>
                     </tbody>
