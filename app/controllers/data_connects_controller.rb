@@ -137,6 +137,24 @@ class DataConnectsController < ApplicationController
     when "user_datum"
     	user = User.find_by_encryption(params[:encryption])
     	render json: user.user_datums.select(:user_data,:id) and return
+    when "check_farmer"
+    	user_profile = UserProfile.find_by_fb_uid(params[:uid])
+    	if user_profile == nil
+    		render json: "[{'check':" + "false" + "}]"
+    	else
+        if user_profile.user.is_check_farmer == true
+        	filed_code = FiledCode.where(:user_id => user_profile.user.id)
+			    filed = ""
+			    filed_code.each do |code|
+			    	filed << code.filed_code_name
+			    	filed << "、"
+			    end
+			    @filed_code = filed.chop if filed != nil
+        	render json: "[{'check':" + "true" + "},{'field_code':'#{@filed_code}'}]"
+        else
+        	render json: "[{'check':" + "false" + "}]"
+        end
+    	end
 		end
 	end
 end
