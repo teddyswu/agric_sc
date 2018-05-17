@@ -154,18 +154,19 @@ class DataConnectsController < ApplicationController
     		render json: "[{'check':" + "false" + "}]"
     	else
         if user_profile.user.is_check_farmer == true
-        	filed_code = FiledCode.where(:user_id => user_profile.user.id)
-			    filed = ""
-			    filed_code.each do |code|
-			    	filed << code.filed_code_name
-			    	filed << "、"
-			    end
-			    @filed_code = filed.chop if filed != nil
-        	render json: "[{'check':" + "true" + "},{'field_code':'#{@filed_code}'}]"
+        	render json: "[{'check':" + "true" + "}]"
         else
         	render json: "[{'check':" + "false" + "}]"
         end
     	end
+    when "get_filed_code"
+    	user_profile = UserProfile.find_by_fb_uid(params[:uid])
+    	filed_code = FiledCode.where(:user_id => user_profile.user.id)
+	    filed = Array.new
+	    filed_code.each do |code|
+	    	filed << code.filed_code_name
+	    end
+      render json: "[{'field_code':'#{filed}'}]"
 		end
 	end
 end
