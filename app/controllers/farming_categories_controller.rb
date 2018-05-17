@@ -16,10 +16,12 @@ class FarmingCategoriesController < ApplicationController
 		ship = CategoryWorkShip.where(:farming_category_id=> params[:category_work_ship][:farming_category_id])
 		ship.destroy_all
 		params[:category_work_ship][:work_project_id].each do |work|
-			ship = CategoryWorkShip.new
-      ship.farming_category_id = params[:category_work_ship][:farming_category_id]
-      ship.work_project_id = work
-      ship.save!
+			if work != ""
+				ship = CategoryWorkShip.new
+	      ship.farming_category_id = params[:category_work_ship][:farming_category_id]
+	      ship.work_project_id = work
+	      ship.save!
+	    end
 		end
 		redirect_to binding_farming_categories_path(:category_id => params[:category_work_ship][:farming_category_id] )
 	end

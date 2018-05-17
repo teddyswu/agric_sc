@@ -44,7 +44,7 @@
                       <%= form_for @work_project, :url => work_project_path(@work_project), :html => { :method => :patch } do |f| %>
                         <th scope="row"><%= f.text_field(:id, :class => "form-control", :value => @work_project.id, :readonly => true)%></th>
                         <th><%= f.text_field(:name, :class => "form-control")%></th>
-                        <th><%= f.select :record_type, options_for_select([["農地耕作", "1"], ["採收後處理", "2"]],@work_project.record_type)%></th>
+                        <th><%= f.select :record_type, options_for_select(@select, :selected => @work_project.record_type), {}, {:class => "form-control"} %></th>
                         <th><%= f.submit "送出" %></th>
                       <% end %>
                     </tr>

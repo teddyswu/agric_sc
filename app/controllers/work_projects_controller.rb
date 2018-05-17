@@ -8,6 +8,7 @@ class WorkProjectsController < ApplicationController
 	end
 
 	def edit
+		@select = [["農地耕作", "1"], ["採收後處理", "2"]]
 		@work_project = WorkProject.find(params[:id])
 	end
 
