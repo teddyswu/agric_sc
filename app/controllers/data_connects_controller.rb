@@ -163,7 +163,7 @@ class DataConnectsController < ApplicationController
     	case params[:type]
     	when "filed_code"
 	    	user_profile = UserProfile.find_by_fb_uid(params[:uid])
-	    	filed_code = FiledCode.where(:user_id => user_profile.user.id)
+	    	filed_code = FiledCode.where(:user_id => user_profile.user.id).order(:id)
 		    filed = Array.new
 		    filed_code.each do |code|
 		    	filed << code.filed_code_name
