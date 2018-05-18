@@ -159,14 +159,31 @@ class DataConnectsController < ApplicationController
         	render json: "[{'check':" + "false" + "}]"
         end
     	end
-    when "get_filed_code"
-    	user_profile = UserProfile.find_by_fb_uid(params[:uid])
-    	filed_code = FiledCode.where(:user_id => user_profile.user.id)
-	    filed = Array.new
-	    filed_code.each do |code|
-	    	filed << code.filed_code_name
-	    end
-      render json: "[{'field_code':'#{filed}'}]"
+    when "get"
+    	case params[:type]
+    	when "filed_code"
+	    	user_profile = UserProfile.find_by_fb_uid(params[:uid])
+	    	filed_code = FiledCode.where(:user_id => user_profile.user.id)
+		    filed = Array.new
+		    filed_code.each do |code|
+		    	filed << code.filed_code_name
+		    end
+	      render json: "[{'field_code':'#{filed}'}]"
+    	when "before_farming_work"
+    		work_projects = WorkProject.select(:name).where(:record_type => 1).map {|work| work.name }
+        work = Array.new
+        work_projects.each_slice(3) do |work_project|
+        	work << work_project
+        end
+        render json: "[{'work':'#{work}'}]"
+      when "after_farming_work"
+      	work_projects = WorkProject.select(:name).where(:record_type => 2).map {|work| work.name }
+        work = Array.new
+        work_projects.each_slice(3) do |work_project|
+        	work << work_project
+        end
+        render json: "[{'work':'#{work}'}]"
+      end
 		end
 	end
 end
