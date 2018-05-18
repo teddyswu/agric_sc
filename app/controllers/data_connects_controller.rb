@@ -89,6 +89,7 @@ class DataConnectsController < ApplicationController
     		uid = UserProfile.find_by_fb_uid(params[:uid])
     		wr = WorkRecord.new
     		wr.owner_id = uid.user_id
+    		wr.record_type = params[:record_type].to_i
     		wr.farming_category = params[:farming_category]
     		wr.filed_code = params[:filed_code]
     		wr.work_project = params[:work_project]
