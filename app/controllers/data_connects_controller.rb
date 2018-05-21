@@ -150,20 +150,27 @@ class DataConnectsController < ApplicationController
     	user = User.find_by_encryption(params[:encryption])
     	render json: user.user_datums.select(:user_data,:id) and return
     when "check_farmer"
-    	user_profile = UserProfile.find_by_fb_uid(params[:uid])
+    	user_profile = UserProfile.find_by_name(params[:name])
     	if user_profile == nil
-    		render json: "[{'check':" + "false" + "}]"
+    		render json: "[{'check':false}]"
     	else
         if user_profile.user.is_check_farmer == true
-        	render json: "[{'check':" + "true" + "}]"
+        	render json: "[{'check':true}]"
         else
-        	render json: "[{'check':" + "false" + "}]"
+        	render json: "[{'check':false}]"
         end
     	end
+    when "farmer_data"
+    	user_profile = UserProfile.find_by_name(params[:name])
+    	if user_profile == nil
+    		render json: "[{'status':no data}]"
+    	else
+    		render json: "[{'uid':'#{user_profile.fb_uid}'},{'name':'#{user_profile.name}'},{'cell_phone':'#{user_profile.cell_phone}'},{'certificate':'#{user_profile.certificate_photo}'},{'certificate_2':'#{user_profile.certificate_photo_2}'}]"
+      end
     when "get"
     	case params[:type]
     	when "filed_code"
-	    	user_profile = UserProfile.find_by_fb_uid(params[:uid])
+	    	user_profile = UserProfile.find_by_name(params[:name])
 	    	filed_code = FiledCode.where(:user_id => user_profile.user.id).order(:id)
 		    filed = Array.new
 		    filed_code.each do |code|
