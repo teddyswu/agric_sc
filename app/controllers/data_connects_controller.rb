@@ -78,6 +78,7 @@ class DataConnectsController < ApplicationController
           user_profile.fb_uid = params[:uid]
           user_profile.name = params[:name]
           user_profile.cell_phone = params[:cell_phone]
+          user_profile.pic_url = params[:user_profile]
           user_profile.certificate_photo = params[:certificate]
           user_profile.certificate_photo_2 = params[:certificate_2]
           user_profile.save!
@@ -165,8 +166,20 @@ class DataConnectsController < ApplicationController
     	if user_profile == nil
     		render json: "[{'status':no data}]"
     	else
-    		render json: "[{'uid':'#{user_profile.fb_uid}'},{'name':'#{user_profile.name}'},{'cell_phone':'#{user_profile.cell_phone}'},{'certificate':'#{user_profile.certificate_photo}'},{'certificate_2':'#{user_profile.certificate_photo_2}'}]"
+    		render json: "[{'uid':'#{user_profile.fb_uid}'},{'name':'#{user_profile.name}'},{'cell_phone':'#{user_profile.cell_phone}'},{'certificate':'#{user_profile.certificate_photo}'},{'certificate_2':'#{user_profile.certificate_photo_2}'},{'user_profile':'#{user_profile.pic_url}'}]"
       end
+    when "edit_farmer_data"
+  		user_profile = UserProfile.find_by_name(params[:name])
+  		user_profile.cell_phone = params[:cell_phone] if params[:cell_phone].present?
+  		user_profile.pic_url = params[:user_profile] if params[:user_profile].present?
+  		user_profile.certificate_photo = params[:certificate] if params[:certificate].present?
+  		user_profile.certificate_photo_2 = params[:certificate_2] if params[:certificate_2].present?
+  		user_profile.save!
+  		render json: "[{'update':ok}]"
+  	when "delete_farmer_data"
+  		user_profile = UserProfile.find_by_name(params[:name])
+  		user_profile.destroy
+  		render json: "[{'delete':ok}]"
     when "get"
     	case params[:type]
     	when "filed_code"
