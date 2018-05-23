@@ -169,6 +169,7 @@
   function appendImage (src) {
     $('#user_profile_certificate_photo').val("清除中...");
     $('#user_profile_certificate_photo').val(src.original);
+    $("#pic_1").attr('src', src.original);
   }
   $(function () {
     $('#fileupload_2').fileupload({
@@ -240,5 +241,6 @@
   function appendImage_2 (src) {
     $('#user_profile_certificate_photo_2').val("清除中...");
     $('#user_profile_certificate_photo_2').val(src.original);
+    $("#pic_2").attr('src', src.original);
   }
 </script>

@@ -105,10 +105,17 @@
         <div class="col col-md-3">
           <%= f.label("田區代號", :class => 'form-control-label') %>
         </div>
+        <div id="number" style="display:none">1</div>
         <div class="col-12 col-md-9">
-          <%= text_field_tag 'filed_code', @filed_code, class: 'form-control', :disabled => true  if @filed_code != "" %>
-          <%= text_field_tag 'filed_code', @filed_code, class: 'form-control' if @filed_code == ""%>
-          <span class="help-block" style ="color :red">請使用底線隔開，如A_B_C</span>
+          <div id="filed">
+            <%= render_row(@filed_code)%>
+          </div>
+          <% if @filed_code.blank? %>
+            <%= button_tag type: 'button', onclick: "insert_a_row();" do %>
+              <i class="fa fa-magic"></i>&nbsp; 插入
+            <% end %>
+            <span class="help-block" style ="color :red">輸入方式：一行一個田區代號</span>
+          <% end %>
         </div>
       </div>
       <div class="row form-group">
@@ -124,6 +131,9 @@
           </span>
         </div>
       </div>
+      <div>
+        <%= image_tag @user.user_profile.certificate_photo, height: '400', id: 'pic_1' %>
+      </div>
       <div class="row form-group">
         <div class="col col-md-3">
           <%= f.label("有機證書2", :class => 'form-control-label') %>
@@ -136,6 +146,9 @@
             <input id="fileupload_2" type="file" name="files[]">
           </span>
         </div>
+      </div>
+      <div>
+        <%= image_tag @user.user_profile.certificate_photo_2, height: '400', id: 'pic_2' %>
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
@@ -164,3 +177,12 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  function insert_a_row() {
+    var row = parseInt($("#number").html());
+    row++;
+    $("#filed").append("<input type='text' name='filed_code[" + row + "]' id='filed_code_" + row + "' class='form-control'>");
+    $("#number").html(row);
+  }
+</script>

@@ -11,10 +11,10 @@ class UserProfilesController < ApplicationController
     	farm_cate.save!
     end
     if params[:filed_code].present?
-      params[:filed_code].split('_').each do |code|
+      params[:filed_code].each do |key,value|
       	filed_code = FiledCode.new
       	filed_code.user_id = params[:user_profile][:user_id]
-      	filed_code.filed_code_name = code
+      	filed_code.filed_code_name = value
       	filed_code.save!
       end
     end

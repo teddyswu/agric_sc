@@ -1,7 +1,7 @@
 class UserManagesController < ApplicationController
 
 	def index
-		@users = User.all.paginate(:page => params[:page], per_page: 10)
+		@users = User.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
 		# respond_to do |format|
   #     format.html
   #     format.pdf do
@@ -18,14 +18,7 @@ class UserManagesController < ApplicationController
 		@default = @user.farming_categories.map {|farm| {:id => farm.id, :name => farm.name} }
 		farms = FarmingCategory.all.map {|farm| {:id => farm.id, :name => farm.name} }
     @los_farms = farms - @default
-    filed_code = FiledCode.where(:user_id => params[:id])
-    filed = ""
-    filed_code.each do |code|
-    	filed << code.filed_code_name
-    	filed << "_"
-    end
-    @filed_code = filed.chop if filed != nil
-
+    @filed_code = FiledCode.where(:user_id => params[:id])
 	end
 	def update
 		@user = User.find(params[:id])
@@ -35,7 +28,7 @@ class UserManagesController < ApplicationController
 	end
 
 	def farmer
-		@users = User.where(:is_farmer => true ).paginate(:page => params[:page], per_page: 10)
+		@users = User.where(:is_farmer => true ).order(id: :desc).paginate(:page => params[:page], per_page: 10)
 	end
 
 
