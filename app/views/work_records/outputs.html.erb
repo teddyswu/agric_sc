@@ -1,0 +1,53 @@
+<body>
+  <div class="breadcrumbs">
+    <div class="col-sm-4">
+      <div class="page-header float-left">
+        <div class="page-title">
+          <h1><%= params[:record_type]=="1" ? "農場工作紀錄" : "採收及採收後處理紀錄"%></h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-8">
+      <div class="page-header float-right">
+      </div>
+    </div>
+  </div>
+  <div class="content mt-3">
+    <div class="animated fadeIn">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <strong class="card-title">Table List</strong>
+            </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">工作時間</th>
+                      <th scope="col">作物種類</th>
+                      <th scope="col">田區代號</th>
+                      <th scope="col">紀錄事項</th>
+                      <th scpoe="col">備註</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @records.each_with_index do |record, i |%>
+                      <tr>
+                        <td><%= record.created_at.strftime( '%Y-%m-%d' ) %></td>
+                        <td><%= record.farming_category%></td>
+                        <td><%= record.filed_code%></td>
+                        <td><%= record.work_project %></td>
+                        <%= "<td rowspan='#{@records.size}'>各工作項目如下：<br >#{@work_projects.chop}</td>".html_safe if i ==0 %>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <%= will_paginate @records %>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

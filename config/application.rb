@@ -19,6 +19,7 @@ module AgricSc
   class Application < Rails::Application
     config.autoload_paths += Dir["#{config.root}/lib/module/**/"] # 載入lib/module/底下所有.rb的檔案
     config.autoload_paths += %w(#{config.root}/app/models/ckeditor)
+    config.autoload_paths += %w(#{config.root}/app/pdfs)
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

@@ -105,17 +105,15 @@
         <div class="col col-md-3">
           <%= f.label("田區代號", :class => 'form-control-label') %>
         </div>
-        <div id="number" style="display:none">1</div>
+        <div id="number" style="display:none"></div>
         <div class="col-12 col-md-9">
           <div id="filed">
             <%= render_row(@filed_code)%>
           </div>
-          <% if @filed_code.blank? %>
-            <%= button_tag type: 'button', onclick: "insert_a_row();" do %>
-              <i class="fa fa-magic"></i>&nbsp; 插入
-            <% end %>
-            <span class="help-block" style ="color :red">輸入方式：一行一個田區代號</span>
+          <%= button_tag type: 'button', onclick: "insert_a_row();" do %>
+            <i class="fa fa-magic"></i>&nbsp; 插入
           <% end %>
+          <span class="help-block" style ="color :red">輸入方式：一行一個田區代號</span>
         </div>
       </div>
       <div class="row form-group">
@@ -179,6 +177,9 @@
 </div>
 
 <script>
+  $( window ).load(function() {
+    $("#number").html(document.querySelectorAll('input[id^="filed_code"]').length);
+  });
   function insert_a_row() {
     var row = parseInt($("#number").html());
     row++;

@@ -18,7 +18,7 @@ gem 'will_paginate', '~> 3.1.0'
 gem 'rails-jquery-tokeninput'
 
 gem 'prawn'
-
+gem 'prawn-table'
 # 圖片上傳相關
 gem "carrierwave", '0.10.0'     # 上傳圖片必要套件
 gem "mini_magick", "3.6.0"      # 圖片處理的套件(縮圖、浮水印)

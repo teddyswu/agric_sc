@@ -20,7 +20,9 @@ Rails.application.routes.draw do
   resources :upload_tools
   resources :user_profiles
   resources :stories
-  resources :work_records
+  resources :work_records do 
+    get "outputs", :on => :collection
+  end
   resources :work_projects
   resources :farming_categories do
     get "binding", :on => :collection

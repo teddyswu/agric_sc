@@ -11,6 +11,8 @@ class UserProfilesController < ApplicationController
     	farm_cate.save!
     end
     if params[:filed_code].present?
+      @filed_code = FiledCode.where(:user_id => params[:user_profile][:user_id])
+      @filed_code.destroy_all
       params[:filed_code].each do |key,value|
       	filed_code = FiledCode.new
       	filed_code.user_id = params[:user_profile][:user_id]

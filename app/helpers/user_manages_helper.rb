@@ -19,11 +19,11 @@ module UserManagesHelper
 	def render_row(filed_code)
 		if filed_code.present?
 			filed = ""
-			filed_code.each do |code|
-        filed << code.filed_code_name
-        filed << "、"
+			filed_code.each_with_index do |code, i|
+				i = i+1
+				filed <<"<input type='text' name='filed_code[#{i}]' id='filed_code_#{i}' value='#{code.filed_code_name}' class='form-control'>"
 			end
-			return filed.chop
+			return filed.html_safe
 		else
 			return text_field_tag 'filed_code[1]', nil, class: 'form-control'
 		end
