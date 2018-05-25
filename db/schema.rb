@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180522094643) do
+ActiveRecord::Schema.define(version: 20180525024632) do
 
   create_table "category_work_ships", force: :cascade do |t|
     t.integer  "farming_category_id", limit: 4
@@ -170,15 +170,20 @@ ActiveRecord::Schema.define(version: 20180522094643) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "work_record_images", force: :cascade do |t|
+    t.integer  "work_record_id", limit: 4
+    t.text     "url",            limit: 65535
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
   create_table "work_records", force: :cascade do |t|
     t.string   "farming_category", limit: 255
     t.string   "filed_code",       limit: 255
-    t.text     "photo",            limit: 65535
-    t.text     "photo_2",          limit: 65535
     t.integer  "owner_id",         limit: 4
     t.integer  "record_type",      limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.string   "work_project",     limit: 255
   end
 

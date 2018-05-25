@@ -87,16 +87,20 @@ class DataConnectsController < ApplicationController
     			render json: "[{'uid':" + "#{params[:uid]}" + "},{'status':'uid already exists'}]" and return
     		end
     	when "work_record"
-    		uid = UserProfile.find_by_fb_uid(params[:uid])
+    		uid = UserProfile.find_by_name(params[:name])
     		wr = WorkRecord.new
     		wr.owner_id = uid.user_id
     		wr.record_type = params[:record_type].to_i
     		wr.farming_category = params[:farming_category]
     		wr.filed_code = params[:filed_code]
     		wr.work_project = params[:work_project]
-    		wr.photo = params[:photo]
-    		wr.photo_2 = params[:photo_2]
     		wr.save!
+    		params[:photo].each do |k, v|
+    			wri = WorkRecordImage.new
+    			wri.work_record_id = wr.id
+    			wri.url = v
+    			wri.save!
+    		end
     		render json: "[{'status':'work_record create ok'}]" and return
     	end
 		when "delete"
