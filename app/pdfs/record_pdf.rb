@@ -1,34 +1,46 @@
 class RecordPdf < Prawn::Document
-	def initialize(records,work_projects,record_type)
+	def initialize(before_records,after_records)
 		super(top_margin: 70)
 		font"/Library/Fonts/Arial Unicode.ttf"
-		@records = records
-		@work_projects = work_projects
-		@record_type = record_type
-		record_title
-	  line_items
+		@before_records = before_records
+		@before_work_projects = ""
+		WorkProject.where(:record_type => 1).each do |bwp|
+      @before_work_projects << bwp.name
+      @before_work_projects << "、"
+    end
+		@after_records = after_records
+		text "農場工作紀錄"
+	  before_line_items
+	  start_new_page
+	  text "採收及採收後處理紀錄"
+	  after_line_items
 	end
 
-	def record_title
-		text @record_type=="1" ? "農場工作紀錄" : "採收及採收後處理紀錄"
-		
-	end
-	
-	def line_items
-		table (line_item_rows) do 
-		end
-			
+	def before_line_items
+		table (before_line_rows)
 	end
 
-  def line_item_rows
+
+  def after_line_items
+		table (after_line_rows)
+	end
+
+  def before_line_rows
   	[["工作時間",	"作物種類",	"田區代號",	"紀錄事項",	"備註"]]+
-  	@records.each_with_index.map do |item, i |
+  	@before_records.each_with_index.map do |item, i |
   		if i == 0
-  			[item.created_at.strftime( '%Y-%m-%d' ), item.farming_category, item.filed_code, item.work_project, {:content => "各工作項目如下：#{@work_projects.gsub('<br >', '、').chop}", :rowspan => @records.size, :width => 250} ]
+  			[item.created_at.strftime( '%Y-%m-%d' ), item.farming_category, item.filed_code, item.work_project, {:content => "各工作項目如下：#{@before_work_projects.chop}", :rowspan => @before_records.size, :width => 250} ]
   	  else
-  	  	[item.created_at.strftime( '%Y-%m-%d' ), item.farming_category, item.filed_code, item.work_project ]
+  	   	[item.created_at.strftime( '%Y-%m-%d' ), item.farming_category, item.filed_code, item.work_project ]
   		end
   	end
+  end
+
+  def after_line_rows
+  	[["日期", "田區代號", "作物別", "採收批號", "採收量()", "採收後作業內容", "倉儲代號"]]+
+    @after_records.each_with_index.map do |item, i |
+     	[item.created_at.strftime( '%Y-%m-%d' ), item.filed_code, item.farming_category, "", "", item.work_project, ""]
+    end
   end
 
 end

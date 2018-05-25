@@ -3,8 +3,8 @@
     <div class="col-sm-4">
       <div class="page-header float-left">
         <div class="page-title">
-          <h1><%= params[:record_type]=="1" ? "農場工作紀錄" : "採收及採收後處理紀錄"%></h1>
-          <%= link_to "|匯出|", outputs_work_records_path(:record_type => params[:record_type], :name => params[:name], :s_month => params[:s_month], :format => :pdf)%>
+          <h1></h1>
+          <%= link_to "|匯出|", outputs_work_records_path(:name => params[:name], :s_month => params[:s_month], :format => :pdf)%>
         </div>
       </div>
     </div>
