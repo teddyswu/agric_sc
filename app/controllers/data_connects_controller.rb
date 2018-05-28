@@ -187,8 +187,8 @@ class DataConnectsController < ApplicationController
     when "get"
     	case params[:type]
     	when "filed_code"
-	    	user_profile = UserProfile.find_by_name(params[:name])
-	    	filed_code = FiledCode.where(:user_id => user_profile.user.id).order(:id)
+	    	user = User.joins(:user_profile).where("user_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
+	    	filed_code = FiledCode.where(:user_id => user[0].id).order(:id)
 		    filed = Array.new
 		    filed_code.each do |code|
 		    	filed << code.filed_code_name
