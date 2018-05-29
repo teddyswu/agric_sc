@@ -14,10 +14,12 @@ class UserProfilesController < ApplicationController
       @filed_code = FiledCode.where(:user_id => params[:user_profile][:user_id])
       @filed_code.destroy_all
       params[:filed_code].each do |key,value|
-      	filed_code = FiledCode.new
-      	filed_code.user_id = params[:user_profile][:user_id]
-      	filed_code.filed_code_name = value
-      	filed_code.save!
+        if value != ""
+        	filed_code = FiledCode.new
+        	filed_code.user_id = params[:user_profile][:user_id]
+        	filed_code.filed_code_name = value
+        	filed_code.save!
+        end
       end
     end
 		redirect_to edit_user_manage_path

@@ -50,6 +50,7 @@
         </div>
         <div class="col-12 col-md-9">
           <%= f.text_field(:name, :class => "form-control")%>
+          <small class="form-text" id="name" style="color: red;"></small>
         </div>
       </div>
       <div class="row form-group">
@@ -90,7 +91,6 @@
         </div>
         <div class="col-12 col-md-9">
           <%= f.text_field :category, 'data-tokeninput' => { collection: @los_farms, options: { theme: 'facebook',prePopulate: @default} }.to_json %>
-          <%#= f.text_field(:category, :class => "form-control")%>
         </div>
       </div>
       <div class="row form-group">
@@ -114,6 +114,7 @@
             <i class="fa fa-magic"></i>&nbsp; 插入
           <% end %>
           <span class="help-block" style ="color :red">輸入方式：一行一個田區代號</span>
+          <small class="form-text" id="filed_code" style="color: red;"></small>
         </div>
       </div>
       <div class="row form-group">
@@ -165,7 +166,7 @@
         </div>
       </div>
       <div class="card-footer">
-        <button type="submit" class="btn btn-primary btn-sm">
+        <button type="button" class="btn btn-primary btn-sm" id="from_submit">
           <i class="fa fa-dot-circle-o"></i> Submit
         </button>
         <button type="reset" class="btn btn-danger btn-sm">
