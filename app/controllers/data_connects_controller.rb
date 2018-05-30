@@ -208,6 +208,20 @@ class DataConnectsController < ApplicationController
         	work << work_project
         end
         render json: "[{'work':'#{work}'}]"
+      when "farmer_group"
+      	farmer_groups = UserProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group)
+        farmer_group = Array.new
+        farmer_groups.each do |fg|
+        	farmer_group << fg.ps_group
+        end
+        render json: "[{'farmer_group':'#{farmer_group}'}]"
+      when "farmer_list"
+      	farmer_lists = UserProfile.joins(:user).where("user_profiles.ps_group = ?",params[:group])
+        farmer_list = Hash.new
+        farmer_lists.each do |fl|
+        	farmer_list[fl.name] = fl.introduce
+        end
+        render json: "[{'farmer_list':'#{farmer_list}'}]"
       end
 		end
 	end

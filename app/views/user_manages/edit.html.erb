@@ -246,13 +246,13 @@
  $(document).ready(function(){
     $("#from_submit").click(function(){
       if($("#user_profile_name").val()==""){
-          $("#name").html("你尚未填寫姓名");
-          $("#user_profile_name").focus();          
+        $("#name").html("你尚未填寫姓名");
+        $("#user_profile_name").focus();          
       }else if($("#filed_code_1").val()==""){
-          $("#filed_code").html("至少填寫一個田區代號");
-          $("#filed_code_1").focus();       
+        $("#filed_code").html("至少填寫一個田區代號");
+        $("#filed_code_1").focus();       
       }else{
-          $("#edit_user_profile_3").submit();
+        document.forms[1].submit();
       }
     })
  })

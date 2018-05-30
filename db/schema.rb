@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180525024632) do
+ActiveRecord::Schema.define(version: 20180530042506) do
 
   create_table "category_work_ships", force: :cascade do |t|
     t.integer  "farming_category_id", limit: 4
@@ -133,6 +133,7 @@ ActiveRecord::Schema.define(version: 20180525024632) do
     t.text     "certification_body",  limit: 65535
     t.string   "category",            limit: 255
     t.string   "crop_name",           limit: 255
+    t.text     "introduce",           limit: 65535
     t.text     "certificate_photo",   limit: 65535
     t.text     "certificate_photo_2", limit: 65535
     t.string   "oc_num",              limit: 255

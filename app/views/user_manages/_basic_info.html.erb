@@ -119,6 +119,14 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
+          <%= f.label("自我介紹", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_area(:introduce, :class => "form-control", rows: 5)%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
           <%= f.label("有機證書", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
