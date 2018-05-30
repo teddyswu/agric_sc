@@ -1,6 +1,8 @@
 class UserProfilesController < ApplicationController
 	def update
 		@user_profile = UserProfile.find_by_user_id(params[:user_profile][:user_id])
+    @user_profile.user.email = params[:user_profile][:user_email]
+    @user_profile.user.save!
 	  @user_profile.update(user_profile_params)
 	  @farming_categories = UserFarmingCategoryShip.where(:user_id => params[:user_profile][:user_id])
     @farming_categories.destroy_all

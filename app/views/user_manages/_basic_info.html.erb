@@ -14,6 +14,14 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
+          <%= f.label("電子信箱", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:user_email, :class => "form-control", :value => @user.email)%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
           <%= f.label("FB Uid", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
