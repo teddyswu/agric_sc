@@ -170,7 +170,7 @@ class DataConnectsController < ApplicationController
     	if user_profile == nil
     		render json: "[{'status':no data}]"
     	else
-    		render json: '{"uid":'+'"' + user_profile.fb_uid.to_s + '"' + '},{"name":' + '"' + user_profile.name.to_s + '"'+ '},{"cell_phone":'+ '"' + user_profile.cell_phone.to_s + '"'+ '},{"certificate":'+ '"' + user_profile.certificate_photo.to_s + '"' + '},{"certificate_2":' + '"' + user_profile.certificate_photo_2.to_s + '"' + '},{"profile_pic":' + '"' + user_profile.pic_url.to_s + '"' + "}]"
+    		render json: '{"uid":'+'"' + user_profile.fb_uid.to_s + '","name":' + '"' + user_profile.name.to_s + '","cell_phone":'+ '"' + user_profile.cell_phone.to_s + '","certificate":'+ '"' + user_profile.certificate_photo.to_s + '","certificate_2":' + '"' + user_profile.certificate_photo_2.to_s + '","profile_pic":' + '"' + user_profile.pic_url.to_s + '"' + "}"
       end
     when "edit_farmer_data"
   		user_profile = UserProfile.find_by_name(params[:name])
