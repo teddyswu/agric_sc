@@ -150,19 +150,19 @@ class DataConnectsController < ApplicationController
     	user.password = "user_temp"
     	user.encrypted_password = "user_temp"
     	user.save!
-      render json: "[{'encryption':" + "#{user.encryption}" + "},{'status':'user create ok'}]" and return
+      render json: '[{"encryption":' + '"' + user.encryption + '"' + '},{"status":"user create ok"}]' and return
     when "user_datum"
     	user = User.find_by_encryption(params[:encryption])
     	render json: user.user_datums.select(:user_data,:id) and return
     when "check_farmer"
     	user_profile = UserProfile.find_by_name(params[:name])
     	if user_profile == nil
-    		render json: "[{'check':false}]"
+    		render json: '[{"check":false}]'
     	else
         if user_profile.user.is_check_farmer == true
-        	render json: "[{'check':true}]"
+        	render json: '[{"check":true}]'
         else
-        	render json: "[{'check':false}]"
+        	render json: '[{"check":false}]'
         end
     	end
     when "farmer_data"
@@ -170,7 +170,7 @@ class DataConnectsController < ApplicationController
     	if user_profile == nil
     		render json: "[{'status':no data}]"
     	else
-    		render json: "[{'uid':'#{user_profile.fb_uid}'},{'name':'#{user_profile.name}'},{'cell_phone':'#{user_profile.cell_phone}'},{'certificate':'#{user_profile.certificate_photo}'},{'certificate_2':'#{user_profile.certificate_photo_2}'},{'profile_pic':'#{user_profile.pic_url}'}]"
+    		render json: '{"uid":'+'"' + user_profile.fb_uid.to_s + '"' + '},{"name":' + '"' + user_profile.name.to_s + '"'+ '},{"cell_phone":'+ '"' + user_profile.cell_phone.to_s + '"'+ '},{"certificate":'+ '"' + user_profile.certificate_photo.to_s + '"' + '},{"certificate_2":' + '"' + user_profile.certificate_photo_2.to_s + '"' + '},{"profile_pic":' + '"' + user_profile.pic_url.to_s + '"' + "}]"
       end
     when "edit_farmer_data"
   		user_profile = UserProfile.find_by_name(params[:name])
@@ -193,35 +193,39 @@ class DataConnectsController < ApplicationController
 		    filed_code.each do |code|
 		    	filed << code.filed_code_name
 		    end
-	      render json: "[{'field_code':'#{filed}'}]"
+	      render json: filed
     	when "before_farming_work"
     		work_projects = WorkProject.select(:name).where(:record_type => 1).map {|work| work.name }
         work = Array.new
         work_projects.each_slice(3) do |work_project|
         	work << work_project
         end
-        render json: "[{'work':'#{work}'}]"
+        render json: work
       when "after_farming_work"
       	work_projects = WorkProject.select(:name).where(:record_type => 2).map {|work| work.name }
         work = Array.new
         work_projects.each_slice(3) do |work_project|
         	work << work_project
         end
-        render json: "[{'work':'#{work}'}]"
+        render json: work
       when "farmer_group"
       	farmer_groups = UserProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group)
         farmer_group = Array.new
         farmer_groups.each do |fg|
         	farmer_group << fg.ps_group
         end
-        render json: "[{'farmer_group':'#{farmer_group}'}]"
+        render json: farmer_group
       when "farmer_list"
       	farmer_lists = UserProfile.joins(:user).where("user_profiles.ps_group = ?",params[:group])
-        farmer_list = Hash.new
+        farmer = Array.new
         farmer_lists.each do |fl|
-        	farmer_list[fl.name] = fl.introduce
+          farmer_list = Hash.new
+        	farmer_list["name"] = fl.name
+        	farmer_list["user_pic_url"] = fl.user_pic_url
+        	farmer_list["introduce"] = fl.introduce
+          farmer << farmer_list
         end
-        render json: "[{'farmer_list':'#{farmer_list}'}]"
+        render json: farmer
       end
 		end
 	end

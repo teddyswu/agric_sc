@@ -243,6 +243,79 @@
     $('#user_profile_certificate_photo_2').val(src.original);
     $("#pic_2").attr('src', src.original);
   }
+
+  $(function () {
+    $('#user_pic').fileupload({
+
+      // AJAX Options
+      url: '<%= upload_tools_path %>',
+      dataType: 'json',
+
+      // General Options
+      paramName: 'file',
+      formAcceptCharset: 'utf-8',
+      sequentialUploads: true,
+
+      // Validation
+      acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|avi|mov)$/i,
+      maxFileSize: 6000000 // 6MB
+
+    }).on('fileuploadsubmit', function (_, data) {
+
+      var watermark = $('input[name=radio_watermark]:checked');
+
+      <%# 指定 `formData` 可以避免預設整個 Form 被 Serialize，只 Serialize 圖片本身與指定的參數 %>
+      data.formData = {
+        option: "{&quot;resource_type&quot;:&quot;Article&quot;,&quot;resource_id&quot;:null}",
+        table_params: "{}",
+        watermark: watermark.val() == 'true'
+      };
+
+    }).on('fileuploadprocessalways', function (_, data) {
+
+      var currentFile = data.files[data.index];
+
+      if (data.files.error && currentFile.error) {
+
+        var error_message = '`' + currentFile.name + '`' + ' ' + currentFile.error
+
+        user_pic_errorHandler_2(error_message);
+
+      }
+
+    }).on('fileuploadprogressall', function (_, data) {
+
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('#progress .bar').css('width', progress + '%');
+
+    }).on('fileuploaddone', function (_, data) {
+
+      //location.reload();
+      user_pic_appendImage_2(data.result);
+
+    }).on('fileuploadfail', function (_, data) {
+
+      $.each(data.files, function (index, file) {
+
+        var error_message = '`' + file.name + '`' + ' 上傳失敗.'
+
+        user_pic_errorHandler_2(error_message);
+
+      });
+
+    });
+
+  });
+  function user_pic_errorHandler_2 (error_message) {
+    var error = $('<span class="text-danger"/>').text(error_message);
+
+    $('#progress').after('<br>').after(error);
+  }
+  function user_pic_appendImage_2 (src) {
+    $('#user_profile_user_pic_url').val("清除中...");
+    $('#user_profile_user_pic_url').val(src.original);
+    $("#user_pic_url").attr('src', src.original);
+  }
  $(document).ready(function(){
     $("#from_submit").click(function(){
       if($("#user_profile_name").val()==""){

@@ -14,6 +14,22 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
+          <%= f.label("個人照片", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:user_pic_url, :class => "form-control", :value => @user.user_profile.user_pic_url)%>
+          <span class="btn btn-success fileinput-button">
+            <span>上傳檔案</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="user_pic" type="file" name="files[]">
+          </span>
+        </div>
+      </div>
+      <div>
+        <%= image_tag @user.user_profile.user_pic_url, height: '400', id: 'user_pic_url' %>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
           <%= f.label("電子信箱", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
