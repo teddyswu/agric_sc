@@ -32,6 +32,6 @@ Rails.application.routes.draw do
     get "farmer", :on => :collection
   end
   resources :data_connects do
-    get "story", :on => :collection
+    match "story", :on => :collection, via: [:get, :post]
   end
 end
