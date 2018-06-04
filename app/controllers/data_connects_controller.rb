@@ -94,6 +94,7 @@ class DataConnectsController < ApplicationController
     		wr.farming_category = params[:farming_category]
     		wr.filed_code = params[:filed_code]
     		wr.work_project = params[:work_project]
+    		wr.weight = params[:weight]
     		wr.save!
     		params[:photo].each do |k, v|
     			wri = WorkRecordImage.new
