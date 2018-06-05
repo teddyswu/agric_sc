@@ -10,12 +10,12 @@ class RecordPdf < Prawn::Document
     end
 		@after_records = after_records
     font("/Library/Fonts/Kaiu.ttf", :size => 14) do
-		  text "農場工作紀錄", :align => :center
+		  text "農場工作紀錄"
     end
 	  before_line_items
 	  start_new_page
     font("/Library/Fonts/Kaiu.ttf", :size => 14) do
-	    text "採收及採收後處理紀錄", :align => :center
+	    text "採收及採收後處理紀錄"
 	  end
     after_line_items
 	end
@@ -42,9 +42,9 @@ class RecordPdf < Prawn::Document
   end
 
   def after_line_rows
-  	[[{:content => "日期", :align => :center}, {:content => "田區代號", :align => :center}, {:content => "作物別", :align => :center}, {:content => "採收批號", :align => :center}, {:content => "採收量(        )", :align => :center}, {:content => "採收後作業內容", :align => :center}, {:content => "倉儲代號", :align => :center}]]+
+  	[[{:content => "日期", :align => :center}, {:content => "田區代號", :align => :center}, {:content => "作物別", :align => :center}, {:content => "採收批號", :align => :center}, {:content => "採收量(  臺斤  )", :align => :center}, {:content => "採收後作業內容", :align => :center}, {:content => "倉儲代號", :align => :center}]]+
     @after_records.each_with_index.map do |item, i |
-     	[{:content => item.created_at.strftime( '%Y-%m-%d' ), :align => :center}, {:content => item.filed_code, :align => :center}, {:content => item.farming_category, :align => :center}, {:content => "",:width => 80}, {:content => "", :align => :center}, {:content => item.work_project, :align => :center}, {:content => "",:width => 80}]
+     	[{:content => item.created_at.strftime( '%Y-%m-%d' ), :align => :center}, {:content => item.filed_code, :align => :center}, {:content => item.farming_category, :align => :center}, {:content => "",:width => 80}, {:content => item.weight.to_s, :align => :center}, {:content => item.work_project, :align => :center}, {:content => "",:width => 80}]
     end
   end
 
