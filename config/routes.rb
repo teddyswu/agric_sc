@@ -1,6 +1,21 @@
 Rails.application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
   devise_for :users
+  
+  get "agris/comic_del/:id", :to => "agris#comic_del", :as => "comic_del"
+  delete "agris/gif_del/:id", :to => "agris#gif_del", :as => "gif_del"
+  get "agris/gif_edit/:id", :to => "agris#gif_edit", :as => "gif_edit"
+  get "agris/movie_del/:id", :to => "agris#movie_del", :as => "movie_del"
+  get "showgif/:id", :to => "agris#showgif", :as =>"show_gif"
+  get "showjpg/:id", :to => "agris#showjpg", :as =>"show_jpg"
+  
+  get "agris/wording_list", :to => "agris#wording_list", :as => "wording_list"
+  get "agris/wording_new", :to => "agris#wording_new", :as => "wording_new"
+  post "agris/wording_create", :to => "agris#wording_create", :as => "wording_create"
+  patch "agris/wording_update/:id", :to => "agris#wording_update", :as => "wording_update"
+  get "agris/wording_edit/:id", :to => "agris#wording_edit", :as => "wording_edit"
+  delete "agris/wording_delete/:id", :to => "agris#wording_delete", :as => "wording_delete"
+  
   resources :agris do
     get "comic",:on => :collection
     post "comic_create", :on => :collection
@@ -10,12 +25,7 @@ Rails.application.routes.draw do
     get "article", :on => :collection
     post "article_create", :on => :collection
   end
-  get "agris/comic_del/:id", :to => "agris#comic_del", :as => "comic_del"
-  delete "agris/gif_del/:id", :to => "agris#gif_del", :as => "gif_del"
-  get "agris/gif_edit/:id", :to => "agris#gif_edit", :as => "gif_edit"
-  get "agris/movie_del/:id", :to => "agris#movie_del", :as => "movie_del"
-  get "showgif/:id", :to => "agris#showgif", :as =>"show_gif"
-  get "showjpg/:id", :to => "agris#showjpg", :as =>"show_jpg"
+
   root :to => "agris#index"
   resources :upload_tools
   resources :user_profiles

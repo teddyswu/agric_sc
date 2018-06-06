@@ -187,7 +187,7 @@ class DataConnectsController < ApplicationController
   		user_profile.destroy
   		render json: "[{'delete':ok}]"
     when "get"
-    	case params[:type]
+    	case params[:type].downcase
     	when "filed_code"
 	    	user = User.joins(:user_profile).where("user_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
 	    	filed_code = FiledCode.where(:user_id => user[0].id).order(:id)
@@ -228,6 +228,64 @@ class DataConnectsController < ApplicationController
           farmer << farmer_list
         end
         render json: farmer
+      when "message"
+      	case params[:key]
+      	when "list"
+      		mo = Wording.where("name like '%MESSAGE%'").order(:name)
+      		wording = Array.new
+      		mo.each do |m|
+      			wording << m.name
+      		end
+      		render json: wording
+      	when /./
+      		wording = Array.new
+      		key = params[:key].split('.')
+      		key.each do |k|
+            wd = Wording.where("name like '%MESSAGE.#{k}%'").order(:name)
+            word = Array.new
+            wd.each do |w|
+            	word << JSON.parse(w.content)
+            end
+            wording << word
+      		end
+      		render json: wording
+      	else
+      		mo = Wording.where("name like '%MESSAGE.#{params[:key]}%'").order(:name)
+      		wording = Array.new
+      		mo.each do |m|
+      			wording << JSON.parse(m.content)
+      		end
+      		render json: wording
+      	end
+      when "level"
+      	case params[:key]
+      	when "list"
+      		mo = Wording.where("name like '%LEVEL%'").order(:name)
+      		wording = Array.new
+      		mo.each do |m|
+      			wording << m.name
+      		end
+      		render json: wording
+      	when /./
+      		wording = Array.new
+      		key = params[:key].split('.')
+      		key.each do |k|
+            wd = Wording.where("name like '%LEVEL.#{k}%'").order(:name)
+            word = Array.new
+            wd.each do |w|
+            	word << JSON.parse(w.content)
+            end
+            wording << word
+      		end
+      		render json: wording
+      	else
+      		mo = Wording.where("name like '%LEVEL.#{params[:key]}%'").order(:name)
+      		wording = Array.new
+      		mo.each do |m|
+      			wording << JSON.parse(m.content)
+      		end
+      		render json: wording
+      	end
       end
 		end
 	end

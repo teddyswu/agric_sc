@@ -61,6 +61,45 @@ class AgrisController < ApplicationController
     redirect_to :action => :movie
   end
 
+  def wording_list
+    @wording_lists = Wording.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
+  end
+
+  def wording_new
+    @wording = Wording.new
+  end
+
+  
+  def wording_create
+    
+    @wording = Wording.new(word_params)
+    @wording.save!
+
+    redirect_to :action => :wording_list
+  end
+
+  def wording_edit
+    @wording = Wording.find(params[:id])
+  end
+
+  def wording_delete
+    @wording = Wording.find(params[:id])
+    @wording.destroy
+
+    redirect_to :action => :wording_list
+  end
+
+  def wording_update
+    @wording = Wording.find(params[:id])
+    @wording.update(word_params)
+
+    redirect_to :action => :wording_list
+  end
+
+  def word_params
+    params.require(:wording).permit(:name, :content)
+  end
+
   def gif
   	@type = TypeGif.new
   	@type_gifs = DigitalResourceShip.where(:resource_type => "TypeGif").order(id: :desc).paginate(:page => params[:page], per_page: 10)

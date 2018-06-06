@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180604074104) do
+ActiveRecord::Schema.define(version: 20180605104730) do
 
   create_table "category_work_ships", force: :cascade do |t|
     t.integer  "farming_category_id", limit: 4
@@ -172,6 +172,13 @@ ActiveRecord::Schema.define(version: 20180604074104) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "wordings", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.text     "content",    limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
 
   create_table "work_projects", force: :cascade do |t|
     t.string   "name",        limit: 255
