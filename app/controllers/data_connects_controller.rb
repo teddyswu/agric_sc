@@ -222,9 +222,12 @@ class DataConnectsController < ApplicationController
         farmer = Array.new
         farmer_lists.each do |fl|
           farmer_list = Hash.new
+          farmer_list["id"] = fl.id
         	farmer_list["name"] = fl.name
         	farmer_list["user_pic_url"] = fl.user_pic_url
         	farmer_list["introduce"] = fl.introduce
+          farmer_list["farmer_info"] = "http://story.sogi.com.tw/farmers/#{fl.user_id}"
+          farmer_list["farmer_record"] = "http://story.sogi.com.tw/farmers/#{fl.user_id}/work_record"
           farmer << farmer_list
         end
         render json: farmer
