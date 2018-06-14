@@ -231,7 +231,7 @@ class DataConnectsController < ApplicationController
           farmer << farmer_list
         end
         render json: farmer
-      when "message"
+      when /message/
       	case params[:key]
       	when "list"
       		mo = Wording.where("name like '%MESSAGE%'").order(:name)
@@ -260,7 +260,7 @@ class DataConnectsController < ApplicationController
       		end
       		render json: wording
       	end
-      when "level"
+      when /level/
       	case params[:key]
       	when "list"
       		mo = Wording.where("name like '%LEVEL%'").order(:name)
