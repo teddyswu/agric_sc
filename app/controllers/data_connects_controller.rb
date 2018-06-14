@@ -234,7 +234,8 @@ class DataConnectsController < ApplicationController
       when /message/
       	case params[:key]
       	when "list"
-      		mo = Wording.where("name like '%MESSAGE%'").order(:name)
+          type = params[:type].upcase
+      		mo = Wording.where("name like '%#{type}%'").order(:name)
       		wording = Array.new
       		mo.each do |m|
       			wording << m.name
@@ -243,8 +244,9 @@ class DataConnectsController < ApplicationController
       	when /./
       		wording = Array.new
       		key = params[:key].split('.')
+          type = params[:type].upcase
       		key.each do |k|
-            wd = Wording.where("name like '%MESSAGE.#{k}%'").order(:name)
+            wd = Wording.where("name like '%#{type}.#{k}%'").order(:name)
             word = Array.new
             wd.each do |w|
             	word << JSON.parse(w.content)
@@ -253,7 +255,8 @@ class DataConnectsController < ApplicationController
       		end
       		render json: wording
       	else
-      		mo = Wording.where("name like '%MESSAGE.#{params[:key]}%'").order(:name)
+          type = params[:type].upcase
+      		mo = Wording.where("name like '%#{type}.#{params[:key]}%'").order(:name)
       		wording = Array.new
       		mo.each do |m|
       			wording << JSON.parse(m.content)
@@ -263,17 +266,19 @@ class DataConnectsController < ApplicationController
       when /level/
       	case params[:key]
       	when "list"
-      		mo = Wording.where("name like '%LEVEL%'").order(:name)
+          type = params[:type].upcase
+      		mo = Wording.where("name like '%#{type}%'").order(:name)
       		wording = Array.new
       		mo.each do |m|
       			wording << m.name
       		end
       		render json: wording
       	when /./
+          type = params[:type].upcase
       		wording = Array.new
       		key = params[:key].split('.')
       		key.each do |k|
-            wd = Wording.where("name like '%LEVEL.#{k}%'").order(:name)
+            wd = Wording.where("name like '%#{type}.#{k}%'").order(:name)
             word = Array.new
             wd.each do |w|
             	word << JSON.parse(w.content)
@@ -282,7 +287,8 @@ class DataConnectsController < ApplicationController
       		end
       		render json: wording
       	else
-      		mo = Wording.where("name like '%LEVEL.#{params[:key]}%'").order(:name)
+          type = params[:type].upcase
+      		mo = Wording.where("name like '%#{type}.#{params[:key]}%'").order(:name)
       		wording = Array.new
       		mo.each do |m|
       			wording << JSON.parse(m.content)
