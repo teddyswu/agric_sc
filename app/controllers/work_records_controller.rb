@@ -3,6 +3,10 @@ class WorkRecordsController < ApplicationController
 		@records = WorkRecord.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
 	end
 
+	def show
+		@record_images = WorkRecordImage.where(:work_record_id => params[:id])
+	end
+
 	def outputs
 		up = UserProfile.find_by_name(params[:name])
 		beginning = "#{params[:s_month]}".to_i

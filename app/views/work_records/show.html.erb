@@ -1,0 +1,119 @@
+<style type="text/css">
+	a img {
+		border: none;
+		vertical-align: middle;
+	}
+
+	#abgne-110223 {
+		height: 480px;	/* 圖片的高 + 30 */
+		width: 642px;	/* 圖片的寬 + 邊框寬度 * 2 */
+		overflow: hidden;
+	}
+
+	#abgne-110223 .wrap-110223 {
+		height: 450px;	/* 圖片的高 */
+		width: 640px;	/* 圖片的寬 */
+		overflow: hidden;
+		position: relative;
+		margin-bottom: 5px;
+		border: 1px solid #ccc;
+	}
+
+	.wrap-110223 ul, .wrap-110223 li {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.wrap-110223 ul {
+		position: absolute;
+	}
+
+	.wrap-110223 ul li {
+		float: left;
+	}
+
+	#abgne-110223 .arrows {
+		float: right;
+	}
+
+	#abgne-110223 .arrows a {
+		float: left;
+		width: 22px;
+		height: 22px;
+		background: url(/arrows.png) no-repeat left top;
+	}
+
+	#abgne-110223 a.next {
+		margin-left: -1px;
+		background-position: right top;
+	}
+
+	#abgne-110223 .caption {
+		float: left;
+		width: 596px;		/* 區塊的寬 - .arrows 的寬(44) */
+		overflow: hidden;	/* 避免文字太長 */
+		color: #666;
+		font-size: 13px;
+		line-height: 22px;	/* .arrows a 的高 */
+	}
+</style>
+
+<body>
+	<div id="abgne-110223">
+		<div class="wrap-110223">
+			<ul>
+				<% @record_images.each do |image|%>
+					<li><a href="#"><%= image_tag(image.url, width: "640")%></a></li>
+				<% end %>
+			</ul>
+		</div>
+		<div class="caption"></div>
+		<div class="arrows">
+			<a href="#" class="prev"></a>
+			<a href="#" class="next"></a>
+		</div>
+	</div>
+</body>
+<script>
+	$(function(){
+		// 先取得 #abgne-110223 及 ul, li 及 .caption 元素
+		// 並預設先顯示第幾個, 還有動畫速度
+		var $block = $('#abgne-110223'), 
+		$wrap = $block.find('.wrap-110223'), 
+		$ul = $wrap.find('ul'), 
+		$li = $ul.find('li'), 
+		$caption = $block.find('.caption'), 
+		_default = 0, 
+		_width = $wrap.width(), 
+		animateSpeed = 400;
+
+		// 先把 ul 的寬度設成 li 數量 x $wrap 的寬
+		$ul.width(640 * $li.length);
+		// 如果 .arrows 中的 a 被點擊時
+		$block.find('.arrows').delegate('a', 'click', function(event){
+			// 先找出 .selected 的元素後移掉該樣式
+			var $selected = $li.filter('.selected').removeClass('selected'), 
+				// 找出目前顯示的元素是第幾個
+				_index = $li.index($selected);
+			
+			// 依點擊的是上一張或下一張來切換
+			_index = (event.target.className == 'prev' ? _index - 1 + $li.length : _index + 1) % $li.length;
+			$ul.animate({
+				left: _index * _width * -1
+			}, animateSpeed);
+			// 改變標題
+			$caption.hide().html($li.eq(_index).addClass('selected').find('img').attr('alt')).fadeIn(animateSpeed);
+
+			return false;
+		});
+		
+		// 先顯示預設的
+		$ul.css('left', _default * _width * -1);
+		$caption.html($li.eq(_default).addClass('selected').find('img').attr('alt'));
+		
+		$block.find('a').focus(function(){
+			this.blur();
+		});
+	});
+</script>
