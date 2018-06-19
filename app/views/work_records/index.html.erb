@@ -39,7 +39,7 @@
                         <th scope="col">田區代號</th>
                         <th scope="col">紀錄事項</th>
                         <th scope="col">採收量(臺斤)</th>
-                        <th scope="col">建立時間</th>
+                        <th scope="col">工作時間</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@
                           <td><%= record.filed_code%></td>
                           <td><%= record.work_project %></td>
                           <td><%= record.weight%></td>
-                          <th><%= record.created_at.strftime( '%Y-%m-%d' ) %></th>
+                          <th><%= record.work_time.try(:strftime, '%Y-%m-%d' ) %></th>
                         </tr>
                       <% end %>
                     </tbody>

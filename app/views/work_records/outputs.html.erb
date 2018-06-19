@@ -29,16 +29,18 @@
                       <th scope="col">作物種類</th>
                       <th scope="col">田區代號</th>
                       <th scope="col">紀錄事項</th>
+                      <th scope="col">採收量(臺斤)</th>
                       <th scpoe="col">備註</th>
                     </tr>
                   </thead>
                   <tbody>
                     <% @records.each_with_index do |record, i |%>
                       <tr>
-                        <td><%= record.created_at.strftime( '%Y-%m-%d' ) %></td>
+                        <td><%= record.work_time.try(:strftime,  '%Y-%m-%d' ) %></td>
                         <td><%= record.farming_category%></td>
                         <td><%= record.filed_code%></td>
                         <td><%= record.work_project %></td>
+                        <td><%= record.weight %>
                         <%= "<td rowspan='#{@records.size}'>各工作項目如下：<br >#{@work_projects.chop}</td>".html_safe if i ==0 %>
                       </tr>
                     <% end %>

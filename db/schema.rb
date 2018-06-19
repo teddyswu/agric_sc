@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180605104730) do
+ActiveRecord::Schema.define(version: 20180619081501) do
 
   create_table "category_work_ships", force: :cascade do |t|
     t.integer  "farming_category_id", limit: 4
@@ -102,6 +102,13 @@ ActiveRecord::Schema.define(version: 20180605104730) do
     t.text     "description", limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+  end
+
+  create_table "user_behaviors", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.string   "payload",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "user_data", force: :cascade do |t|
@@ -200,6 +207,7 @@ ActiveRecord::Schema.define(version: 20180605104730) do
     t.integer  "owner_id",         limit: 4
     t.integer  "record_type",      limit: 4
     t.float    "weight",           limit: 24
+    t.datetime "work_time"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.string   "work_project",     limit: 255

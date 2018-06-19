@@ -95,6 +95,7 @@ class DataConnectsController < ApplicationController
     		wr.farming_category = params[:farming_category]
     		wr.filed_code = params[:filed_code]
     		wr.work_project = params[:work_project]
+        wr.work_time = params[:work_time]
     		wr.weight = params[:weight]
     		wr.save!
     		params[:photo].each do |k, v|
@@ -103,7 +104,13 @@ class DataConnectsController < ApplicationController
     			wri.url = v
     			wri.save!
     		end
-    		render json: "[{'status':'work_record create ok'}]" and return
+    		render json: "[{" + '"status":"work_record create ok"' + "}]" and return
+      when "behavior"
+        ub = UserBehavior.new
+        ub.name = params[:name]
+        ub.payload = params[:payload]
+        ub.save!
+        render json: "[{" + '"status":"activity create ok"' + "}]" and return
     	end
 		when "delete"
 			type = DigitalResourceShip.find_by_encryption(params[:encryption])

@@ -33,10 +33,10 @@ class RecordPdf < Prawn::Document
   	[[{:content => "工作日期", :align => :center}, {:content => "田區代號", :align => :center}, {:content => "作物別", :align => :center},	{:content => "工作項目", :align => :center},	"備註"]]+
   	@before_records.each_with_index.map do |item, i |
   		if i == 0
-  			[{:content => item.created_at.strftime( '%Y-%m-%d' ), :width => 80, :align => :center}, {:content => item.filed_code, :width => 60, :align => :center}, {:content => item.farming_category, :width =>60, :align => :center}, {:content => item.work_project, :width => 210, :align => :center}, {:content => "各工作項目如下：
+  			[{:content => item.work_time.try(:strftime, '%Y-%m-%d' ), :width => 80, :align => :center}, {:content => item.filed_code, :width => 60, :align => :center}, {:content => item.farming_category, :width =>60, :align => :center}, {:content => item.work_project, :width => 210, :align => :center}, {:content => "各工作項目如下：
                                                                                                                                                       #{@before_work_projects}", :rowspan => @before_records.size} ]
   	  else
-  	   	[{:content => item.created_at.strftime( '%Y-%m-%d' ), :align => :center}, {:content => item.filed_code, :align => :center}, {:content => item.farming_category, :align => :center}, {:content => item.work_project, :align => :center} ]
+  	   	[{:content => item.work_time.try(:strftime, '%Y-%m-%d' ), :align => :center}, {:content => item.filed_code, :align => :center}, {:content => item.farming_category, :align => :center}, {:content => item.work_project, :align => :center} ]
   		end
   	end
   end
@@ -44,7 +44,7 @@ class RecordPdf < Prawn::Document
   def after_line_rows
   	[[{:content => "日期", :align => :center}, {:content => "田區代號", :align => :center}, {:content => "作物別", :align => :center}, {:content => "採收批號", :align => :center}, {:content => "採收量(  臺斤  )", :align => :center}, {:content => "採收後作業內容", :align => :center}, {:content => "倉儲代號", :align => :center}]]+
     @after_records.each_with_index.map do |item, i |
-     	[{:content => item.created_at.strftime( '%Y-%m-%d' ), :align => :center}, {:content => item.filed_code, :align => :center}, {:content => item.farming_category, :align => :center}, {:content => "",:width => 80}, {:content => item.weight.to_s, :align => :center}, {:content => item.work_project, :align => :center}, {:content => "",:width => 80}]
+     	[{:content => item.work_time.try(:strftime, '%Y-%m-%d' ), :align => :center}, {:content => item.filed_code, :align => :center}, {:content => item.farming_category, :align => :center}, {:content => "",:width => 80}, {:content => item.weight.to_s, :align => :center}, {:content => item.work_project, :align => :center}, {:content => "",:width => 80}]
     end
   end
 
