@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   get "agris/wording_edit/:id", :to => "agris#wording_edit", :as => "wording_edit"
   delete "agris/wording_delete/:id", :to => "agris#wording_delete", :as => "wording_delete"
   
+  resources :farmers do 
+    get "work_record", on: :member
+  end
+
   resources :agris do
     get "comic",:on => :collection
     post "comic_create", :on => :collection
