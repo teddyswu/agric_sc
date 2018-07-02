@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180619091834) do
+ActiveRecord::Schema.define(version: 20180629103834) do
+
+  create_table "article_images", force: :cascade do |t|
+    t.integer  "article_id",   limit: 4
+    t.string   "file",         limit: 255
+    t.text     "url_headline", limit: 65535
+    t.text     "url_cover",    limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "category_work_ships", force: :cascade do |t|
     t.integer  "farming_category_id", limit: 4
@@ -69,6 +78,28 @@ ActiveRecord::Schema.define(version: 20180619091834) do
     t.string   "owner",      limit: 255
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+  end
+
+  create_table "story_images", force: :cascade do |t|
+    t.integer  "story_id",     limit: 4
+    t.string   "file",         limit: 255
+    t.text     "url_headline", limit: 65535
+    t.text     "url_cover",    limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  create_table "story_tag_ships", force: :cascade do |t|
+    t.integer  "story_id",     limit: 4
+    t.integer  "story_tag_id", limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "story_tags", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "type_articles", force: :cascade do |t|
@@ -142,6 +173,7 @@ ActiveRecord::Schema.define(version: 20180619091834) do
     t.text     "fb_url",              limit: 65535
     t.string   "farm_name",           limit: 255
     t.string   "ps_group",            limit: 255
+    t.string   "front_name",          limit: 255
     t.string   "name",                limit: 255
     t.string   "tel",                 limit: 255
     t.string   "cell_phone",          limit: 255

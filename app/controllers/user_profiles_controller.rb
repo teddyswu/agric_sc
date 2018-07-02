@@ -28,6 +28,6 @@ class UserProfilesController < ApplicationController
 	end
 
 	def user_profile_params
-		params.require(:user_profile).permit(:user_id, :fb_url, :farm_name, :ps_group, :name, :tel, :cell_phone, :address, :certification_body,:certificate_photo, :certificate_photo_2, :oc_num, :crop_name, :validity_period, :introduce, :user_pic_url)
+		params.require(:user_profile).permit(:user_id, :fb_url, :farm_name, :ps_group, :name, :tel, :cell_phone, :address, :certification_body,:certificate_photo, :certificate_photo_2, :oc_num, :crop_name, :validity_period, :introduce, :user_pic_url, :front_name)
 	end
 end

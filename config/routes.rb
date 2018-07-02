@@ -33,7 +33,9 @@ Rails.application.routes.draw do
   root :to => "agris#index"
   resources :upload_tools
   resources :user_profiles
-  resources :stories
+  resources :stories do
+    get "list", :on => :collection
+  end
   resources :work_records do 
     get "outputs", :on => :collection
   end

@@ -1,25 +1,61 @@
 <body>
-  <%#= render "shared/left_panel" %>
-  <div id="right-panel" class="right-panel">
-    
-    <div class="content mt-3">
-      <div class="animated fadeIn">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-header"><strong><%= @story.title%></strong></div>
-              <div class="card-body card-block">
-                <div class="form-group">
-                  <%= @story.content.html_safe%>
-                </div>
-                <div class="form-group">
-                  <%=  @story.owner%>
-                </div>
+  <nav class="pushy pushy-left bg-white">
+     <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">農村故事</h1>
+            <div class="h3">茶知識</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-lg-8 content">
+          <h1 class="h4 text-black font-weight-bold"><%= @story.title%></h1>
+          <div class="my-2">
+              <div class="btn-group">
+                  <a class="btn px-2 btn-fb" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<%= "http://#{request.host}#{story_path(@story.id)}"%>">
+                      <i class="fab fa-lg fa-fw fa-facebook-f"></i>
+                  </a>
+                  <a class="btn px-2 btn-line" target="_blank" href="http://line.naver.jp/R/msg/text/?<%= "http://#{request.host}#{story_path(@story.id)}"%>">
+                      <i class="fab fa-lg fa-fw fa-line"></i>
+                  </a>
               </div>
+          </div>
+          <div class="content text-dark mt-3 lead">
+            <%= @story.content.html_safe%>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 mt-6 mt-lg-0">
+          <div class="sidebar">
+            <div class="row align-items-center mb-6 mb-lg-10">
+                <div class="col-6">
+                  <div class="h4 text-black font-weight-bold">推薦故事</div>
+                </div>
+                <div class="col-6 text-right">
+                  <%= link_to "看更多>", list_stories_path, class: "text-info" %>
+                </div>
+                <div class="col-12">
+                  <% @recommend_story.each do |rs| %>
+                    <%= link_to story_path(rs.id), class: "media my-2" do %>
+                      <%= image_tag rs.story_image.try(:url_cover), class: "img-fluid mr-3", size: "100x67"%>
+                      <div class="media-body align-self-center">
+                        <span class="badge badge-primary"><%= render_story_tag(rs.story_tags) %></span>
+                        <div class="h6 text-dark text-row-2"><%= rs.title%></div>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <%= render "shared/footer" %>
 </body>

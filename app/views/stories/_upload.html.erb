@@ -10,6 +10,9 @@
       <li class="nav-item">
         <a class="nav-link" href="#video-upload" role="tab" data-toggle="tab">影片</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#cover-upload" role="tab" data-toggle="tab">封面圖</a>
+      </li>
     </ul>
     <div class="tab-content py-2">
       <div role="tabpanel" class="tab-pane active" id="pic-upload">
@@ -23,6 +26,15 @@
       </div>
       <div role="tabpanel" class="tab-pane" id="video-upload">
         <a class="btn btn-primary" href="" data-toggle="modal" data-target=".modal-video">插入YouTube</a>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="cover-upload">
+        <table>
+          <tr>
+            <%= label_tag "選擇圖片檔案"%>
+            <%= f.file_field :file %>
+          </tr>
+          <br />如不修改，請保持不動!
+        </table>
       </div>
     </div>
   </div>

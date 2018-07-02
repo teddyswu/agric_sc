@@ -32,13 +32,21 @@
                   <%= f.label("文章標題", :class => 'form-control-label') %><%= f.text_field(:title, :class => "form-control", placeholder: "輸入文章標題")%>
                 </div>
                 <div class="form-group">
+                  <%= f.label("文章標籤", :class => 'form-control-label') %>
+                  <% @story_tags.each do |st| %>
+                    <li>
+                      <%= check_box_tag 'tag_ids[]', st.id %><%= st.name%>
+                    </li>
+                  <%end%>
+                </div>
+                <div class="form-group">
                   <%= f.label("文章內容", :class => 'form-control-label') %><%= f.text_area(:content, :class => "form-control", placeholder: "輸入文章內容")%>
                 </div>
                 <script>
 						      CKEDITOR.replace( 'story_content' );
 						      CKEDITOR.config.height = 400;
 						    </script>
-                <%= render "upload" %>
+                <%= render "upload", :f => f %>
                 <div class="form-group">
                   <%= f.label("擁有者", :class => 'form-control-label') %><%= f.text_field(:owner, :class => "form-control", placeholder: "輸入文章描述", :value => current_user.email, :readonly => true)%>
                 </div>

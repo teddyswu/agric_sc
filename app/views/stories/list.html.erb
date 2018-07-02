@@ -1,0 +1,74 @@
+<body>
+	<nav class="pushy pushy-left bg-white">
+	   <%= render "shared/mobile" %>
+	</nav>
+	<div class="site-overlay"></div>
+	<%= render "shared/header" %>
+	<div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">農村故事</h1>
+            <div class="h3"><%= @tag%></div>
+          </div>
+        </div>
+      </div>
+      <div class="row article">
+        <% if params[:page].blank?%>
+          <div class="col-12 my-5 post">
+            <%= link_to story_path(@first_story.id) do %>
+              <div class="text-center">
+                <%= image_tag @first_story.story_image.try(:url_headline), class: "img-fluid d-none d-md-block" %>
+                <%= image_tag @first_story.story_image.try(:url_cover), class: "img-fluid d-md-none" %>
+              </div>
+              <div class="my-1">
+                <span class="badge badge-primary"><%= render_story_tag(@first_story.story_tags)%></span>
+              </div>
+              <div class="h4 my-1 text-row-1 text-dark font-weight-bold"><%= @first_story.title%></div>
+              <div class="text-gray-6 text-row-2"><%= truncate(strip_tags(@first_story.content), :length => 150)%></div>
+            <% end %>
+          </div>
+        <% end %>
+        <% @storys.each do |story|%>
+          <div class="col-12 col-md-4 my-5 post">
+            <%= link_to story_path(story.id) do %>
+              <div class="text-center">
+                <%= image_tag story.story_image.try(:url_cover), class: "img-fluid"%>
+              </div>
+              <div class="my-1">
+                <span class="badge badge-primary"><%= render_story_tag(story.story_tags)%></span>
+              </div>
+              <div class="lead my-1 text-row-1 text-dark font-weight-bold"><%= story.title%></div>
+              <div class="font-small text-gray-6 text-row-2"><%= truncate(strip_tags(story.content), :length => 50)%></div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <% if params[:page].blank?%>
+        <div class="scroller-status text-center">
+          <div class="infinite-scroll-request loader-ellips"></div>
+          <div class="infinite-scroll-last alert alert-secondary">
+            <div class="lead font-weight-bold">
+                <i class="fas fa-spinner fa-pulse"></i> 載入中
+            </div>
+          </div>
+          <div class="infinite-scroll-error alert alert-secondary">
+            <div class="lead font-weight-bold">沒有頁面可以讀取了</div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <%= render "shared/footer" %>
+</boby>
+<% content_for :javascript do %>
+  <script>
+    $('.article').infiniteScroll({
+      <% url = params[:tag].present? ? "list?tag=#{params[:tag]}&page={{#}}" : "list?page={{#}}"%>
+      path: '<%= url.html_safe %>',
+      append: '.post',
+      status: ".scroller-status"
+    });
+  </script>
+<% end %>

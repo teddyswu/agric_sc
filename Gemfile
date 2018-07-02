@@ -28,6 +28,9 @@ gem "activerecord-import", "~> 0.4.1" # 一次新增多筆資料
 gem "actionpack-action_caching", '1.1.1'
 gem 'jquery-fileupload-rails', '0.4.6'
 gem 'aws-sdk', '~> 1.66' # 連線 AWS 的 gem, 目前 paperclip 會使用
+
+gem "omniauth-oauth"
+gem "omniauth-facebook", '4.0.0'
 # gem 'turbolinks'
 
 group :assets do
