@@ -37,18 +37,18 @@
                 </div>
                 <ul class="nav nav-info">
                   <li class="nav-item my-1">
-                  	<%= link_to farmer_path(@farmer.id), clsaa: "nav-link" do%>
+                  	<%= link_to farmer_path(@farmer.id), class: "nav-link" do%>
                   		<u><%= @farmer.user_profile.farm_name%></u>
                   	<% end %>
                   </li>
                   <li class="nav-item my-1">
-                  	<%= link_to work_record_farmer_path(@farmer.id), clsaa: "nav-link" do %>
+                  	<%= link_to work_record_farmer_path(@farmer.id), class: "nav-link" do %>
                   		<u>農場工作記錄</u>
                   	<% end %>
                   </li>
                   <li class="nav-item my-1">
                     <div class="nav-link">
-                      參與 <a href=""><u>10</u></a> 個活動
+                      參與 <a href="" onclick="alert( '尚未開放' );"><u>10</u></a> 個活動
                     </div>
                   </li>
                   <li class="nav-item my-1">
@@ -66,153 +66,33 @@
         </div>
       </div>
       <div class="row article">
-        <div class="col-6 col-lg-4 my-3 post">
-          <a class="position-relative d-block btn-info" href="javascript:void();" data-toggle="modal" data-target="#modal-detail">
-            <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-              <div class="mb-auto"></div>
-              <div class="text-center">
-                <div class="my-auto">
-	                <div class="align-self-center">工作時間：01:00</div>
-	                <div class="">工作項目：施肥</div>
+        <% @work_records.each_with_index do |wr| %>
+          <div class="col-6 col-lg-4 my-3 post">
+            <%= link_to "javascript:void();",class: "position-relative d-block btn-info", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
+              <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_record_images.size > 1%>
+              <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
+                <div class="mb-auto"></div>
+                <div class="text-center">
+                  <div class="my-auto">
+  	                <div class="align-self-center">工作時間：<%= wr.work_time.strftime('%Y-%m-%d' )%></div>
+  	                <div class="">工作項目：<%= wr.work_project %></div>
+                  </div>
+                </div>
+                <div class="row no-gutters mt-auto">
+                  <div class="col">
+                    <i class="far fa-comment-alt"></i> <%= wr.work_record_reply.size %>
+                  </div>
+                  <div class="col-8 text-right">
+                    <span class="text-white ml-1" href=""><i class="far fa-smile"></i> <%= wr.smile.to_i %></span>
+                    <span class="text-white ml-1" href=""><i class="far fa-meh"></i> <%= wr.general.to_i %></span>
+                    <span class="text-white ml-1" href=""><i class="far fa-frown"></i> <%= wr.dislike.to_i %></span>
+                  </div>
                 </div>
               </div>
-              <div class="row no-gutters mt-auto">
-                <div class="col">
-                  <i class="far fa-comment-alt"></i> 10
-                </div>
-                <div class="col-8 text-right">
-                  <span class="text-white ml-1" href=""><i class="far fa-smile"></i> 10</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-meh"></i> 99</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-frown"></i> 88</span>
-                </div>
-              </div>
-            </div>
-            <img class="img-fluid text-center" src="assets/img/uploads/info-md2.jpg" alt="">
-          </a>
-        </div>
-        <div class="col-6 col-lg-4 my-3 post">
-          <a class="position-relative d-block btn-info" href="javascript:void();" data-toggle="modal" data-target="#modal-detail">
-            <div class="multi p-2">
-              <i class="far fa-clone"></i>
-            </div>
-            <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-              <div class="mb-auto"></div>
-              <div class="text-center">
-                <div class="my-auto">
-                  <div class="align-self-center">工作時間：01:00</div>
-                  <div class="">工作項目：施肥</div>
-                </div>
-              </div>
-              <div class="row no-gutters mt-auto">
-                <div class="col">
-                  <i class="far fa-comment-alt"></i> 10
-                </div>
-                <div class="col-8 text-right">
-                  <span class="text-white ml-1" href=""><i class="far fa-smile"></i> 10</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-meh"></i> 99</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-frown"></i> 88</span>
-                </div>
-              </div>
-            </div>
-            <img class="img-fluid text-center" src="assets/img/uploads/info-md1.jpg" alt="">
-          </a>
-        </div>
-        <div class="col-6 col-lg-4 my-3 post">
-          <a class="position-relative d-block btn-info" href="javascript:void();" data-toggle="modal" data-target="#modal-detail">
-            <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-              <div class="mb-auto"></div>
-              <div class="text-center">
-                <div class="my-auto">
-                <div class="align-self-center">工作時間：01:00</div>
-                <div class="">工作項目：施肥</div>
-                </div>
-              </div>
-              <div class="row no-gutters mt-auto">
-                <div class="col">
-                  <i class="far fa-comment-alt"></i> 10
-                </div>
-                <div class="col-8 text-right">
-                  <span class="text-white ml-1" href=""><i class="far fa-smile"></i> 10</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-meh"></i> 99</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-frown"></i> 88</span>
-                </div>
-              </div>
-            </div>
-            <img class="img-fluid text-center" src="assets/img/uploads/info-md1.jpg" alt="">
-          </a>
-        </div>
-        <div class="col-6 col-lg-4 my-3 post">
-          <a class="position-relative d-block btn-info" href="javascript:void();" data-toggle="modal" data-target="#modal-detail">
-            <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-              <div class="mb-auto"></div>
-              <div class="text-center">
-                <div class="my-auto">
-                  <div class="align-self-center">工作時間：01:00</div>
-                  <div class="">工作項目：施肥</div>
-                </div>
-              </div>
-              <div class="row no-gutters mt-auto">
-                <div class="col">
-                  <i class="far fa-comment-alt"></i> 10
-                </div>
-                <div class="col-8 text-right">
-                  <span class="text-white ml-1" href=""><i class="far fa-smile"></i> 10</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-meh"></i> 99</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-frown"></i> 88</span>
-                </div>
-              </div>
-            </div>
-            <img class="img-fluid text-center" src="assets/img/uploads/info-md1.jpg" alt="">
-          </a>
-        </div>
-        <div class="col-6 col-lg-4 my-3 post">
-          <a class="position-relative d-block btn-info" href="javascript:void();" data-toggle="modal" data-target="#modal-detail">
-            <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-              <div class="mb-auto"></div>
-              <div class="text-center">
-                <div class="my-auto">
-                  <div class="align-self-center">工作時間：01:00</div>
-                  <div class="">工作項目：施肥</div>
-                </div>
-              </div>
-              <div class="row no-gutters mt-auto">
-                <div class="col">
-                  <i class="far fa-comment-alt"></i> 10
-                </div>
-                <div class="col-8 text-right">
-                  <span class="text-white ml-1" href=""><i class="far fa-smile"></i> 10</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-meh"></i> 99</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-frown"></i> 88</span>
-                </div>
-              </div>
-            </div>
-            <img class="img-fluid text-center" src="assets/img/uploads/info-md1.jpg" alt="">
-          </a>
-        </div>
-        <div class="col-6 col-lg-4 my-3 post">
-          <a class="position-relative d-block btn-info" href="javascript:void();" data-toggle="modal" data-target="#modal-detail">
-            <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-              <div class="mb-auto"></div>
-              <div class="text-center">
-                <div class="my-auto">
-                  <div class="align-self-center">工作時間：01:00</div>
-                  <div class="">工作項目：施肥</div>
-                </div>
-              </div>
-              <div class="row no-gutters mt-auto">
-                <div class="col">
-                  <i class="far fa-comment-alt"></i> 10
-                </div>
-                <div class="col-8 text-right">
-                  <span class="text-white ml-1" href=""><i class="far fa-smile"></i> 10</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-meh"></i> 99</span>
-                  <span class="text-white ml-1" href=""><i class="far fa-frown"></i> 88</span>
-                </div>
-              </div>
-            </div>
-            <img class="img-fluid text-center" src="assets/img/uploads/info-md1.jpg" alt="">
-          </a>
-        </div>
+              <%= image_tag wr.work_record_images.first.try(:url), class: "img-fluid text-center"%>
+            <% end %>
+          </div>
+        <% end %>
       </div>
       <div class="scroller-status text-center">
         <div class="infinite-scroll-request loader-ellips"></div>
@@ -227,4 +107,152 @@
       </div>
     </div>
   </div>
+  <% @work_record_all.each_with_index do |wd| %>
+    <div class="modal fade" id="modal-detail_<%= wd.id %>" tabindex="-1" role="dialog">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <div class="nav-modal">
+        <a class="btn-left" href="javascript:void();">
+          <i class="fas fa-2x fa-chevron-left"></i>
+        </a>
+        <a class="btn-right" href="javascript:void();">
+          <i class="fas fa-2x fa-chevron-right"></i>
+        </a>
+      </div>
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="overflow: auto !important;">
+          <div class="row no-gutters">
+            <div class="col-12 col-lg-7">
+              <div class="slider-modal">
+                <% wd.work_record_images.each do |image|%>
+                  <div><%= image_tag image.url , class: "img-fluid d-block" %></div>
+                <% end %>
+              </div>
+            </div>
+            <div class="col-12 col-lg-5">
+              <div class="pt-4 px-4 pb-0">
+                <div class="row align-items-center">
+                  <div class="media col">
+                    <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= @farmer.user_profile.fb_uid%>/picture" alt="" style="width: 50px">
+                    <div class="media-body align-self-center ml-3"><%= wd.user.user_profile.front_name%></div>
+                  </div>
+                  <div class="col text-right">
+                    <div class="btn-group">
+                      <a class="text-danger btn btn-sm btn-like" href="javascript:void();">
+                        <i class="far fa-fw fa-lg fa-heart"></i>
+                      </a>
+                      <div class="dropdown">
+                        <a class="text-dark btn btn-sm" href="javascript:void();" data-toggle="dropdown">
+                          <i class="fas fa-fw fa-lg fa-share"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
+                          <a class="text-fb" href="#">
+                            <i class="fab fa-fw fa-2x fa-facebook"></i>
+                          </a>
+                          <a class="text-line" href="#">
+                            <i class="fab fa-fw fa-2x fa-line"></i>
+                          </a>
+                          <a class="text-dark" href="#">
+                            <i class="far fa-fw fa-2x fa-envelope"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-md-none border-top mt-3">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                      <a class="text-primary btn-smile" href="javascript:void();">
+                        <i id="like" class="far fa-lg fa-smile"></i>
+                      </a>
+                      <span class="badge badge-light badge-pill"><%= wd.smile.to_i %> 個喜歡</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                      <a class="text-primary btn-meh" href="javascript:void();">
+                          <i id="like" class="far fa-lg fa-meh"></i>
+                      </a>
+                      <span class="badge badge-light badge-pill"><%= wd.general.to_i %> 個普通</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                      <a class="text-primary btn-frown" href="javascript:void();">
+                          <i id="like" class="far fa-lg fa-frown"></i>
+                      </a>
+                      <span class="badge badge-light badge-pill"><%= wd.dislike.to_i %> 個不喜歡</span>
+                    </li>
+                  </ul>
+                  <form class="mt-3">
+                    <a class="" href="">請先登入</a>
+                    <div class="form-row">
+                      <div class="col-9">
+                        <textarea class="form-control bg-light" rows="1" placeholder="留言..."></textarea>
+                      </div>
+                      <div class="col">
+                        <button class="btn btn-block btn-outline-info">送出</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="mt-3 py-3 font-small comment">
+                  <div class="">
+                    <%= "#{wd.work_time.strftime('%Y-%m-%d' )}進行#{wd.work_project}" %>
+                  </div>
+                  <div class="mt-2">
+                    <% wd.work_record_reply.each do |reply|%>
+                      <div class="mt-1"><strong class="mr-2"><%= reply.user.user_profile.front_name%></strong><%= reply.content%></div>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="d-none d-md-block">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                      <a class="text-primary btn-smile" href="javascript:void();">
+                        <i id="like" class="far fa-lg fa-smile"></i>
+                      </a>
+                      <span class="badge badge-light badge-pill"><%= wd.smile.to_i %> 個喜歡</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                      <a class="text-primary btn-meh" href="javascript:void();">
+                        <i id="like" class="far fa-lg fa-meh"></i>
+                      </a>
+                      <span class="badge badge-light badge-pill"><%= wd.general.to_i %> 個普通</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                      <a class="text-primary btn-frown" href="javascript:void();">
+                        <i id="like" class="far fa-lg fa-frown"></i>
+                      </a>
+                      <span class="badge badge-light badge-pill"><%= wd.dislike.to_i %> 個不喜歡</span>
+                    </li>
+                  </ul>
+                  <form class="mt-1">
+                    <a class="" href="">請先登入</a>
+                    <div class="form-row">
+                      <div class="col-9">
+                        <textarea class="form-control bg-light" rows="1" placeholder="留言..."></textarea>
+                      </div>
+                      <div class="col">
+                        <button class="btn btn-block btn-outline-info">送出</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render "shared/footer" %>
 </body>
+<% content_for :javascript do %>
+  <script>
+    $('.article').infiniteScroll({
+      path: '<%= params[:id]%>?page={{#}}',
+      append: '.post',
+      status: ".scroller-status"
+    });
+  </script>
+<% end %>

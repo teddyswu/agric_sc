@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180629103834) do
+ActiveRecord::Schema.define(version: 20180703044435) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -233,6 +233,23 @@ ActiveRecord::Schema.define(version: 20180629103834) do
     t.datetime "updated_at",                   null: false
   end
 
+  create_table "work_record_moods", force: :cascade do |t|
+    t.integer  "work_record_id", limit: 4
+    t.integer  "user_id",        limit: 4
+    t.integer  "mood",           limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "work_record_replies", force: :cascade do |t|
+    t.integer  "work_record_id", limit: 4
+    t.integer  "user_id",        limit: 4
+    t.text     "content",        limit: 65535
+    t.boolean  "enabled"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
   create_table "work_records", force: :cascade do |t|
     t.string   "farming_category", limit: 255
     t.string   "filed_code",       limit: 255
@@ -240,6 +257,9 @@ ActiveRecord::Schema.define(version: 20180629103834) do
     t.integer  "record_type",      limit: 4
     t.float    "weight",           limit: 24
     t.datetime "work_time"
+    t.integer  "smile",            limit: 4
+    t.integer  "general",          limit: 4
+    t.integer  "dislike",          limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.string   "work_project",     limit: 255
