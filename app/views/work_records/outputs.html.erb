@@ -1,55 +1,91 @@
 <body>
-  <div class="breadcrumbs">
-    <div class="col-sm-4">
-      <div class="page-header float-left">
-        <div class="page-title">
-          <h1></h1>
-          <%= link_to "|匯出|", outputs_work_records_path(:name => params[:name], :s_month => params[:s_month], :format => :pdf)%>
+  <nav class="pushy pushy-left bg-white">
+     <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">友善農夫</h1>
+            <div class="h3">列印工作紀錄</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-sm-8">
-      <div class="page-header float-right">
-      </div>
-    </div>
-  </div>
-  <div class="content mt-3">
-    <div class="animated fadeIn">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-header">
-              <strong class="card-title">Table List</strong>
+      <div class="row justify-content-center">
+        <div class="col-12 mb-6">
+          <div class="border-top border-bottom border-gray py-5">
+            <ul class="nav justify-content-center">
+              <li class="nav-item">
+                <a class="nav-link" href="#">帳號設定</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">追蹤紀錄</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="farm-info.html">活動紀錄</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="farm-print.html">列印工作紀錄</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12 col-lg-8 mb-10">
+          <!-- <form class="form-inline justify-content-center">
+            <div class="form-group mb-2">
+              <input type="date" class="form-control" id="dateStart" placeholder="開始日期">
             </div>
-              <div class="card-body">
-                <table class="table">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th scope="col">工作日期</th>
-                      <th scope="col">田區代號</th>
-                      <th scope="col">作物別</th>
-                      <th scope="col">工作項目</th>
-                      <th scope="col">採收量(臺斤)</th>
-                      <th scpoe="col">備註</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @records.each_with_index do |record, i |%>
-                      <tr>
-                        <td><%= record.work_time.try(:strftime,  '%Y-%m-%d' ) %></td>
-                        <td><%= record.filed_code%></td>
-                        <td><%= record.farming_category%></td>
-                        <td><%= record.work_project %></td>
-                        <td><%= record.weight %>
-                        <%= "<td rowspan='#{@records.size}'>各工作項目如下：<br >#{@work_projects.chop}</td>".html_safe if i ==0 %>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-              </div>
+            <div class="form-group mx-sm-3 mb-2">
+              ~
+            </div>
+            <div class="form-group mr-sm-3 mb-2">
+              <input type="date" class="form-control" id="dateEnd" placeholder="結束日期">
+            </div>
+            <button type="submit" class="btn btn-outline-info mb-2">查詢</button>
+          </form> -->
+        </div>
+        <div class="col-12">
+          <div class="row align-items-center">
+            <div class="col col-sm-8">
+              <div class="h4 text-black font-weight-bold"><%= "#{params[:s_month]}".to_i.month.ago.strftime('%Y-%m-%d') %>~<%= Time.now.strftime('%Y-%m-%d') %></div>
+            </div>
+            <div class="col-12 col-sm-4 text-sm-right">
+              <%= link_to "列印", outputs_work_records_path(:name => params[:name], :s_month => params[:s_month], :format => :pdf), class: "btn btn-info"%>
+            </div>
+          </div>
+          <div class="table-responsive-md mt-4">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr class="table-primary">
+                  <th class="text-center">工作日期</th>
+                  <th class="text-center">田區代號</th>
+                  <th class="text-center">作物別</th>
+                  <th class="text-center">工作項目</th>
+                  <th class="text-center">採收量(臺斤)</th>
+                  <th class="text-center">備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @records.each_with_index do |record, i |%>
+                  <tr>
+                    <td class="text-center"><%= record.work_time.try(:strftime,  '%Y-%m-%d' ) %></td>
+                    <td class="text-center"><%= record.filed_code%></td>
+                    <td class="text-center"><%= record.farming_category%></td>
+                    <td class="text-center"><%= record.work_project %></td>
+                    <td class="text-center"><%= record.weight %>
+                    <%= "<td rowspan='#{@records.size}'>各工作項目如下：<br >#{@work_projects.chop}</td>".html_safe if i ==0 %>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <%= render "shared/footer" %>
+
 </body>

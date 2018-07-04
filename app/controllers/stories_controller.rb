@@ -41,7 +41,6 @@ class StoriesController < ApplicationController
 		@story = Story.find(params[:id])
 		@story_tags = StoryTag.all
 		@story_tag_ship = StoryTagShip.where(:story_id => params[:id]).map {|sts| sts.story_tag_id }
-	  p @story_tag_ship
 	end
 
 	def update

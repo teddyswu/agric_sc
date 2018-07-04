@@ -21,24 +21,25 @@
         </ul>
       </div>
       <!-- 未登入 -->
-
-      <div class="dropdown">
-        <a class="btn btn-sm btn-fb px-2" href="" data-toggle="dropdown">
-          <i class="fab fa-facebook-f"></i>
-          <span class="d-none d-lg-inline-block">登入</span>
-        </a>
-      </div>
-
-      <!-- 已登入 -->
-      <!-- <div class="dropdown">
-        <a class="btn text-dark px-0 dropdown-toggle" href="" data-toggle="dropdown">
-          <img class="img-fluid rounded-circle" src="" alt="" style="width: 30px">
-        </a>
-        <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="#">帳號管理</a>
-          <a class="dropdown-item" href="#">登出</a>
+      <% if current_user.present? %>
+        <!-- 已登入 -->
+        <div class="dropdown">
+          <a class="btn text-dark px-0 dropdown-toggle" href="" data-toggle="dropdown">
+            <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= current_user.user_profile.fb_uid%>/picture" alt="" style="width: 30px">
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="#">帳號管理</a>
+            <%= link_to "登出", destroy_user_session_path, :method => :delete, class: "dropdown-item" %>
+          </div>
+        </div>   
+      <% else %>
+        <div class="dropdown">
+          <a class="btn btn-sm btn-fb px-2" href="" data-toggle="dropdown">
+            <i class="fab fa-facebook-f"></i>
+            <span class="d-none d-lg-inline-block">登入</span>
+          </a>
         </div>
-      </div> -->
+      <% end %>
     </nav>
   </div>
 </div>

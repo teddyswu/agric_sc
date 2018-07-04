@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   end
   resources :work_records do 
     get "outputs", :on => :collection
+    get "mood", :on => :collection
   end
   resources :work_projects
   resources :farming_categories do
@@ -47,6 +48,7 @@ Rails.application.routes.draw do
   resources :user_manages do
     get "farmer", :on => :collection
   end
+  resources :work_record_replies
   resources :data_connects do
     match "story", :on => :collection, via: [:get, :post]
   end
