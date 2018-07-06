@@ -28,7 +28,7 @@
             <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= current_user.user_profile.fb_uid%>/picture" alt="" style="width: 30px">
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="#">帳號管理</a>
+            <%= link_to "帳號管理", profile_users_path, class: "dropdown-item"%>
             <%= link_to "登出", destroy_user_session_path, :method => :delete, class: "dropdown-item" %>
           </div>
         </div>   

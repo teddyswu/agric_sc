@@ -10,6 +10,7 @@ class FarmersController < ApplicationController
 
 	def work_record
 		@farmer = User.find_by_id_and_is_farmer_and_is_check_farmer(params[:id], true ,true)
+		@work_records = WorkRecord.where(:owner_id => params[:id])
 		render layout: "story"
 	end
 end

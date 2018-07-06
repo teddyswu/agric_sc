@@ -28,7 +28,7 @@
                 <a class="nav-link" href="farm-info.html">活動紀錄</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="farm-print.html">列印工作紀錄</a>
+                <%= link_to "列印工作紀錄", outputs_work_records_path(:name => params[:name]), class: "nav-link"%>
               </li>
             </ul>
           </div>

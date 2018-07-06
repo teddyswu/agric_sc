@@ -89,21 +89,43 @@ class DataConnectsController < ApplicationController
     		end
     	when "work_record"
     		uid = UserProfile.find_by_name(params[:name])
-    		wr = WorkRecord.new
+    		wr = WorkRecordLog.new
     		wr.owner_id = uid.user_id
     		wr.record_type = params[:record_type].to_i
     		wr.farming_category = params[:farming_category]
     		wr.filed_code = params[:filed_code]
     		wr.work_project = params[:work_project]
-        wr.work_time = params[:work_time]
+        wr.work_time = Time.now
     		wr.weight = params[:weight]
     		wr.save!
     		params[:photo].each do |k, v|
-    			wri = WorkRecordImage.new
-    			wri.work_record_id = wr.id
+    			wri = WorkRecordImageLog.new
+    			wri.work_record_log_id = wr.id
     			wri.url = v
     			wri.save!
     		end
+        if wr.filed_code == "X"
+          record = WorkRecordLog.offset(1).last
+          wr_t = WorkRecord.new
+          wr_t.owner_id = record.owner_id
+          wr_t.record_type = record.record_type
+          wr_t.farming_category = record.farming_category
+          wr_t.filed_code = record.filed_code
+          wr_t.work_project = record.work_project
+          wr_t.work_time = record.created_at
+          wr_t.weight = record.weight
+          wr_t.save!
+          i = 1
+          p WorkRecordImageLog.offset(i).last.url
+          while WorkRecordImageLog.offset(i).last.url != "X" do
+            p "111"
+            wri_t = WorkRecordImage.new
+            wri_t.work_record_id = wr_t.id
+            wri_t.url = WorkRecordImageLog.offset(i).last.url
+            wri_t.save!
+            i += 1
+          end
+        end
     		render json: "[{" + '"status":"work_record create ok"' + "}]" and return
       when "behavior"
         ub = UserBehavior.new

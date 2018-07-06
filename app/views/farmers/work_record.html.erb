@@ -1,1 +1,110 @@
-<%= @farmer.user_profile.front_name%>農場工作記錄
+<link rel="stylesheet" href="/assets/sk2/css/fullcalendar.css">
+<link rel="stylesheet" href="/assets/sk2/css/fullcalendar.print.min.css" media="print">
+<body>
+  <nav class="pushy pushy-left bg-white">
+     <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">友善農夫</h1>
+            <div class="h3">工作紀錄</div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-12 mb-6">
+          <div class="border-top border-bottom border-gray py-3">
+            <div class="row">
+              <div class="col-12 col-lg-2 my-2 text-center">
+                <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= @farmer.user_profile.fb_uid%>/picture" alt="" style="width: 150px;">
+              </div>
+              <div class="col-12 col-lg-10 my-2">
+                <div class="mb-2">
+                  <div class="text-center text-md-left">
+                    <span class="h5"><%= @farmer.user_profile.front_name%></span>
+                    <span class="ml-3">
+                    	<%= link_to @farmer.user_profile.fb_url, class: "text-fb", target: "_blank" do %>
+                        <i class="fab fa-fw fa-lg fa-facebook"></i>
+                      <% end %>
+                      <a class="text-danger btn-like" href="javascript:void();">
+                        <i class="far fa-fw fa-lg fa-heart"></i>
+                      </a>
+                    </span>
+                  </div>
+                </div>
+                <ul class="nav nav-info">
+                  <li class="nav-item my-1">
+                  	<%= link_to farmer_path(@farmer.id), class: "nav-link" do%>
+                  		<u><%= @farmer.user_profile.farm_name%></u>
+                  	<% end %>
+                  </li>
+                  <li class="nav-item my-1">
+                  	<%= link_to work_record_farmer_path(@farmer.id), class: "nav-link" do %>
+                  		<u>農場工作記錄</u>
+                  	<% end %>
+                  </li>
+                  <li class="nav-item my-1">
+                    <div class="nav-link">
+                      參與 <a href="" onclick="alert( '尚未開放' );"><u>10</u></a> 個活動
+                    </div>
+                  </li>
+                  <li class="nav-item my-1">
+                    <div class="nav-link">
+                      獲得 <a href=""><u>10</u></a> 位友善會員關注
+                    </div>
+                  </li>
+                </ul>
+                <div class="mt-4 text-row-2 text-muted">
+                  <%= @farmer.user_profile.introduce%>
+                </div>
+              </div>
+          	</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div id="calendar"></div>
+      </div>
+    </div>
+  </div>
+</bady>
+<script src="/assets/sk2/js/function/fullcalendar.moment.min.js"></script>
+<script src="/assets/sk2/js/vendor/jquery.fullcalendar.min.js"></script>
+<script src="/assets/sk2/js/locale/fullcalendar.zh-tw.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#calendar').fullCalendar({
+      header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,basicWeek,basicDay'
+      },
+      themeSystem: 'bootstrap4',
+      navLinks: true, // can click day/week names to navigate views
+      editable: true,
+      eventLimit: true, // allow "more" link when too many events
+      eventClick: function(event) {
+          if (event.url) {
+              window.open(event.url, "_blank");
+              return false;
+          }
+      },
+      eventColor: '#4a99d6',
+      events: [
+        <% @work_records.each do |record| %>
+          {
+	          title: '<%= record.work_project %>',
+	          start: '<%= record.work_time%>',
+	          color: '#fd7e14',
+	          url: 	 '<%= "http://#{request.host}#{farmer_path(params[:id])}"%>', 
+	        },
+        <% end %>
+      ]
+    });
+  });
+</script>

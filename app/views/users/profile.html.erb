@@ -1,0 +1,91 @@
+<body>
+  <nav class="pushy pushy-left bg-white">
+     <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">友善會員</h1>
+            <div class="h3">帳號管理</div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-12 mb-6">
+          <ul class="nav justify-content-center border-top border-bottom border-gray py-3">
+            <li class="nav-item">
+              <%= link_to "帳號設定", profile_users_path, class: "nav-link"%>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">追蹤友善農夫</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="user-activity.html">活動紀錄</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12 col-lg-8">
+          <%= form_for @user.user_profile, :url => user_path(@user) do |f|%>
+            <div class="form-group row align-items-center">
+              <label for="id" class="col-sm-2 col-form-label">
+                <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= @user.user_profile.fb_uid%>/picture" alt="" style="width: 50px">
+              </label>
+              <div class="col-sm-10">
+                <%= f.text_field :name , class: "form-control-plaintext", :readonly => true, :disabled => true%>
+              </div>
+              <div class="col-12">
+                <small class="form-text text-muted">
+                  * 臉書會員的照片與您的臉書相同，若欲替換照片請由臉書帳號作更新，O.Story也會一起更新哦！
+                </small>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="name" class="col-sm-2 col-form-label">全名</label>
+              <div class="col-sm-10">
+                <%= f.text_field :front_name, class: "form-control"%>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="email" class="col-sm-2 col-form-label">電子信箱</label>
+              <div class="col-sm-10">
+                <%= f.text_field :email, class: "form-control", :value => @user.email, :readonly => true, :disabled => true%>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="birthday" class="col-sm-2 col-form-label">性別</label>
+              <div class="col-sm-10">
+                <div class="form-control-plaintext">
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <%= f.radio_button :gender, 1, class: "custom-control-input" %>
+                    <label class="custom-control-label" for="user_profile_gender_1">男</label>
+                  </div>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <%= f.radio_button :gender, 0, class: "custom-control-input" %>
+                    <label class="custom-control-label" for="user_profile_gender_0">女</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="birthday" class="col-sm-2 col-form-label">生日</label>
+              <div class="col-sm-10">
+                <%= f.date_field :birthday, class: "form-control", :placeholder => "請輸入生日", :required => true %>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="info" class="col-sm-2 col-form-label">個人介紹</label>
+              <div class="col-sm-10">
+                <%= f.text_area :introduce, class: "form-control", rows: 5%>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-10 offset-sm-2">
+                <%= f.submit "更新", class: "btn btn-outline-info px-8" %>
+              </div>
+            </div>
+          <% end %>
+        </div>

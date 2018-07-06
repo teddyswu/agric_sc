@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
   devise_for :users
+  resources :users do
+    get "profile", on: :collection
+  end
   
   get "agris/comic_del/:id", :to => "agris#comic_del", :as => "comic_del"
   delete "agris/gif_del/:id", :to => "agris#gif_del", :as => "gif_del"

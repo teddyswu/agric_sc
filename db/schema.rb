@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180703044435) do
+ActiveRecord::Schema.define(version: 20180706093521) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -168,6 +168,8 @@ ActiveRecord::Schema.define(version: 20180703044435) do
   create_table "user_profiles", force: :cascade do |t|
     t.integer  "user_id",             limit: 4
     t.text     "user_pic_url",        limit: 65535
+    t.integer  "gender",              limit: 4
+    t.datetime "birthday"
     t.text     "pic_url",             limit: 65535
     t.string   "fb_uid",              limit: 255
     t.text     "fb_url",              limit: 65535
@@ -226,9 +228,28 @@ ActiveRecord::Schema.define(version: 20180703044435) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "work_record_image_logs", force: :cascade do |t|
+    t.integer  "work_record_log_id", limit: 4
+    t.text     "url",                limit: 65535
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
   create_table "work_record_images", force: :cascade do |t|
     t.integer  "work_record_id", limit: 4
     t.text     "url",            limit: 65535
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  create_table "work_record_logs", force: :cascade do |t|
+    t.string   "farming_category", limit: 255
+    t.string   "filed_code",       limit: 255
+    t.integer  "owner_id",         limit: 4
+    t.integer  "record_type",      limit: 4
+    t.float    "weight",           limit: 24
+    t.datetime "work_time"
+    t.string   "work_project",     limit: 255
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
