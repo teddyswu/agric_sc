@@ -35,6 +35,9 @@ class User
             user.authorizations << Authorization.new( :provider => provider, :uid => uid )
             up = UserProfile.new
             up.user_id = user.id
+            up.name = data["nickname"].present? ? data ["nickname"] : data["name"]
+            up.name = "u#{Time.now.to_i}" if up.name.blank?
+            up.fb_uid = uid
             #up.gender = (data["user_gender"] == "male"? 1 : 0 )
             #up.birthday = data["user_birthday"]
             up.save
@@ -51,26 +54,20 @@ class User
     # 會員新增 function
     def new_from_provider_data(provider, uid, data)
       user = User.find_or_initialize_by( :email => data["email"])
-      case provider
-      when "facebook"
-        user.account = "fb_user_#{Time.now.to_i}_#{rand(999)}"
-      when "tqq"
-        user.account = "tqq_user_#{Time.now.to_i}_#{rand(999)}"
-      when "weibo"
-        user.account = "sina_user_#{Time.now.to_i}_#{rand(999)}"
-      when "twitter"
-        user.account = "twitter_user_#{Time.now.to_i}_#{rand(999)}"
-      when "yahoo"
-        user.account = "yahoo_user_#{Time.now.to_i}_#{rand(999)}"
-      when "google"
-        user.account = "google_user_#{Time.now.to_i}_#{rand(999)}"
-      end
-      
-      profile = UserProfile.new
-      profile.user_id = user.id
-      profile.name = data["nickname"].present? ? data ["nickname"] : data["name"]
-      profile.name = "u#{Time.now.to_i}" if user.nickname.blank?
-      profile.save!
+      # case provider
+      # when "facebook"
+      #   user.account = "fb_user_#{Time.now.to_i}_#{rand(999)}"
+      # when "tqq"
+      #   user.account = "tqq_user_#{Time.now.to_i}_#{rand(999)}"
+      # when "weibo"
+      #   user.account = "sina_user_#{Time.now.to_i}_#{rand(999)}"
+      # when "twitter"
+      #   user.account = "twitter_user_#{Time.now.to_i}_#{rand(999)}"
+      # when "yahoo"
+      #   user.account = "yahoo_user_#{Time.now.to_i}_#{rand(999)}"
+      # when "google"
+      #   user.account = "google_user_#{Time.now.to_i}_#{rand(999)}"
+      # end
       user.password = Devise.friendly_token[0,20]
       return user
     end

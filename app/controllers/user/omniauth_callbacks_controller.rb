@@ -13,11 +13,6 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
               if @user == nil
                 render :text => "<script>alert('登入失敗，請檢查您的Facebook是否有電子郵件資料，並同意授權我們作為會員帳號使用，謝謝!');location.href='/footers/fb_faq';</script>" and return
               end
-              domain_id = Domain.find_by_name_en(params[:domain_type]).id
-              domain_user_ship = DomainUserShip.new
-              domain_user_ship.domain_id = domain_id
-              domain_user_ship.user_id = @user.id
-              domain_user_ship.save if DomainUserShip.find_by_domain_id_and_user_id(domain_id,@user.id).blank?
               if @user.persisted? 
                 sign_in_and_redirect @user, :event => :authentication
               else
