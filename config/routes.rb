@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
-  devise_for :users
+  devise_for :users, :controllers => { :omniauth_callbacks => "user/omniauth_callbacks"}
   resources :users do
     get "profile", on: :collection
   end
