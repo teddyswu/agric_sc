@@ -65,13 +65,12 @@ class User
       when "google"
         user.account = "google_user_#{Time.now.to_i}_#{rand(999)}"
       end
-
-      user.nickname = data["nickname"].present? ? data ["nickname"] : data["name"]
-      user.status = 1 # 要預設給正常狀態的值
-      user.role_id = 0 # 先暫時寫死,目前初階會員角色的 id 為1
-
-      user.nickname = "u#{Time.now.to_i}" if user.nickname.blank?
-
+      
+      profile = UserProfile.new
+      profile.user_id = user.id
+      profile.name = data["nickname"].present? ? data ["nickname"] : data["name"]
+      profile.name = "u#{Time.now.to_i}" if user.nickname.blank?
+      profile.save!
       user.password = Devise.friendly_token[0,20]
       return user
     end
