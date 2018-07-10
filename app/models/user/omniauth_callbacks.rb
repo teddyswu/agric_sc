@@ -26,7 +26,7 @@ class User
           return user
         elsif user = User.find_by_email(data["email"])
           user.skip_confirmation!
-          user.bind_service(response)
+          # user.bind_service(response)
           return user
         else
           user = User.new_from_provider_data(provider, uid, data)
@@ -54,20 +54,6 @@ class User
     # 會員新增 function
     def new_from_provider_data(provider, uid, data)
       user = User.find_or_initialize_by( :email => data["email"])
-      # case provider
-      # when "facebook"
-      #   user.account = "fb_user_#{Time.now.to_i}_#{rand(999)}"
-      # when "tqq"
-      #   user.account = "tqq_user_#{Time.now.to_i}_#{rand(999)}"
-      # when "weibo"
-      #   user.account = "sina_user_#{Time.now.to_i}_#{rand(999)}"
-      # when "twitter"
-      #   user.account = "twitter_user_#{Time.now.to_i}_#{rand(999)}"
-      # when "yahoo"
-      #   user.account = "yahoo_user_#{Time.now.to_i}_#{rand(999)}"
-      # when "google"
-      #   user.account = "google_user_#{Time.now.to_i}_#{rand(999)}"
-      # end
       user.password = Devise.friendly_token[0,20]
       return user
     end

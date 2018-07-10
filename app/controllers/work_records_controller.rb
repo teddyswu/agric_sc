@@ -1,4 +1,7 @@
 class WorkRecordsController < ApplicationController
+  before_filter :authenticate_user!, only: [:index]
+  before_action :is_admin, only: [:index]
+
 	def index
 		@records = WorkRecord.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
 	end

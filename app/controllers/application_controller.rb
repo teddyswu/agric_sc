@@ -5,6 +5,12 @@ class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def after_sign_in_path_for(resource_or_scope)
-  	profile_users_path
+  	current_user.is_admin == true ? agris_path : profile_users_path
+  end
+  def is_admin
+    if current_user.is_admin != true
+      flash[:alert] = "您無此權限, 請洽詢相關工作人員"
+      redirect_to root_path
+    end
   end
 end

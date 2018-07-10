@@ -1,5 +1,5 @@
 class AgrisController < ApplicationController
-	before_action :is_admin, except: [:index, :showgif, :showjpg]
+	before_action :is_admin, except: [:showgif, :showjpg]
   before_action :authenticate_user!, except: [:showgif, :showjpg]
 	skip_before_action :verify_authenticity_token
 
@@ -148,13 +148,6 @@ class AgrisController < ApplicationController
     article_ship.save!
     redirect_to :action => :article
 
-  end
-
-  def is_admin
-    if current_user.is_admin == false
-      flash[:alert] = "您無此權限, 請洽詢相關工作人員"
-      sign_out(current_user)
-    end
   end
 
 

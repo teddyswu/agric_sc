@@ -1,5 +1,6 @@
 class StoriesController < ApplicationController
 	before_filter :authenticate_user!, except: [:show, :list]
+	before_action :is_admin, except: [:show, :list]
 
 	def index
 		@story = Story.order(id: :desc).paginate(:page => params[:page], per_page: 10)

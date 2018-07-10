@@ -119,7 +119,7 @@ Devise.setup do |config|
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
   # db field (see migrations). Until confirmed, new email is stored in
   # unconfirmed_email column, and copied to email column on successful confirmation.
-  config.reconfirmable = true
+  config.reconfirmable = false
 
   # Defines which key will be used when confirming an account
   # config.confirmation_keys = [ :email ]
@@ -245,7 +245,8 @@ Devise.setup do |config|
 
   authorization = YAML.load_file("config/authorization_key.yml")
   config.omniauth :facebook, authorization[:facebook][:app_key], authorization[:facebook][:app_secret], {
-  :scope => 'email,user_birthday',
+  # :scope => 'email,user_birthday',
+  :scope => 'email',
   :info_fields => 'id,email,gender,link,locale,name,timezone,updated_time,verified',
   strategy_class: OmniAuth::Strategies::Facebook,
   :provider_ignores_state => true}

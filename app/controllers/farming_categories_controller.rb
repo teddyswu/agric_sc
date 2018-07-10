@@ -1,4 +1,6 @@
 class FarmingCategoriesController < ApplicationController
+	before_filter :authenticate_user!, only: [:index]
+  before_action :is_admin, only: [:index]
 	def binding
 		@crop = FarmingCategory.all
     @category_work_ship = CategoryWorkShip.new

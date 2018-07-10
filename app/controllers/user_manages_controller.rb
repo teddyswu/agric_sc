@@ -1,4 +1,6 @@
 class UserManagesController < ApplicationController
+	before_filter :authenticate_user!, only: [:farmer, :index]
+  before_action :is_admin, only: [:farmer, :index]
 
 	def index
 		@users = User.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)

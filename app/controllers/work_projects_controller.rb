@@ -1,4 +1,6 @@
 class WorkProjectsController < ApplicationController
+	before_filter :authenticate_user!, only: [:index]
+  before_action :is_admin, only: [:index]
 	def index
 		@work_projects = WorkProject.all.paginate(:page => params[:page], per_page: 10)
 	end

@@ -4,9 +4,9 @@
       <button class="navbar-toggler menu-btn" type="button">
         <i class="fas fa-bars"></i>
       </button>
-      <a class="navbar-brand" href="index.html">
+      <%= link_to root_path, class: "navbar-brand" do %>
         <img src="/assets/sk2/img/ui/logo.png" srcset="/assets/sk2/img/ui/logo@2x.png 2x" class="logo" alt="">
-      </a>
+      <% end %>
       <div class="nav-main d-none d-lg-block">
         <ul class="navbar-nav">
           <li class="nav-item">

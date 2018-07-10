@@ -32,13 +32,12 @@ Rails.application.routes.draw do
     get "article", :on => :collection
     post "article_create", :on => :collection
   end
-
-  root :to => "agris#index"
   resources :upload_tools
   resources :user_profiles
   resources :stories do
     get "list", :on => :collection
   end
+  root :to => "stories#list"
   resources :work_records do 
     get "outputs", :on => :collection
     get "mood", :on => :collection
