@@ -116,9 +116,7 @@ class DataConnectsController < ApplicationController
           wr_t.weight = record.weight
           wr_t.save!
           i = 1
-          p WorkRecordImageLog.offset(i).last.url
           while WorkRecordImageLog.offset(i).last.url != "X" do
-            p "111"
             wri_t = WorkRecordImage.new
             wri_t.work_record_id = wr_t.id
             wri_t.url = WorkRecordImageLog.offset(i).last.url
