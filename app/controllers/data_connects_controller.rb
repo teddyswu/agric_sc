@@ -251,6 +251,7 @@ class DataConnectsController < ApplicationController
           farmer_list = Hash.new
           farmer_list["id"] = fl.user_id
         	farmer_list["name"] = fl.name
+          farmer_list["front_name"] = fl.front_name
         	farmer_list["user_pic_url"] = fl.user_pic_url
         	farmer_list["introduce"] = fl.introduce
           farmer_list["farmer_info"] = "http://story.sogi.com.tw/farmers/#{fl.user_id}"
