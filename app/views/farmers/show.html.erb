@@ -19,7 +19,7 @@
           <div class="border-top border-bottom border-gray py-3">
             <div class="row">
               <div class="col-12 col-lg-2 my-2 text-center">
-                <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= @farmer.user_profile.fb_uid%>/picture" alt="" style="width: 150px;">
+                <img class="img-fluid rounded-circle" src="<%= @farmer.user_profile.user_pic_url.present? ? @farmer.user_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.user_profile.fb_uid}/picture"%>" alt="" style="width: 150px;">
               </div>
               <div class="col-12 col-lg-10 my-2">
                 <div class="mb-2">
@@ -67,31 +67,35 @@
       </div>
       <div class="row article">
         <% @work_records.each_with_index do |wr| %>
-          <div class="col-6 col-lg-4 my-3 post">
-            <%= link_to "javascript:void();",class: "position-relative d-block btn-info", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
-              <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_record_images.size > 1%>
-              <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-                <div class="mb-auto"></div>
-                <div class="text-center">
-                  <div class="my-auto">
-  	                <div class="align-self-center">工作時間：<%= wr.work_time.strftime('%Y-%m-%d' )%></div>
-  	                <div class="">工作項目：<%= wr.work_project %></div>
+          <% if wr.work_record_images.size > 0 %>
+            <div class="col-6 col-lg-4 my-3 post" >
+              <%= link_to "javascript:void();",class: "position-relative d-block btn-info", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
+                <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_record_images.size > 1%>
+                <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
+                  <div class="mb-auto"></div>
+                  <div class="text-center">
+                    <div class="my-auto">
+    	                <div class="align-self-center">工作時間：<%= wr.work_time.strftime('%Y-%m-%d' )%></div>
+    	                <div class="">工作項目：<%= wr.work_project %></div>
+                    </div>
+                  </div>
+                  <div class="row no-gutters mt-auto">
+                    <div class="col">
+                      <i class="far fa-comment-alt"></i> <%= wr.work_record_reply.size %>
+                    </div>
+                    <div class="col-8 text-right">
+                      <span class="text-white ml-1" href=""><i class="far fa-smile"></i> <%= wr.smile.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-meh"></i> <%= wr.general.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-frown"></i> <%= wr.dislike.to_i %></span>
+                    </div>
                   </div>
                 </div>
-                <div class="row no-gutters mt-auto">
-                  <div class="col">
-                    <i class="far fa-comment-alt"></i> <%= wr.work_record_reply.size %>
-                  </div>
-                  <div class="col-8 text-right">
-                    <span class="text-white ml-1" href=""><i class="far fa-smile"></i> <%= wr.smile.to_i %></span>
-                    <span class="text-white ml-1" href=""><i class="far fa-meh"></i> <%= wr.general.to_i %></span>
-                    <span class="text-white ml-1" href=""><i class="far fa-frown"></i> <%= wr.dislike.to_i %></span>
-                  </div>
+                <div class="ig_style" style="overflow: hidden;">
+                  <%= image_tag wr.work_record_images.first.try(:url), class: "img-fluid text-center"%>
                 </div>
-              </div>
-              <%= image_tag wr.work_record_images.first.try(:url), class: "img-fluid text-center"%>
-            <% end %>
-          </div>
+              <% end %>
+            </div>
+          <% end%>
         <% end %>
       </div>
       <div class="scroller-status text-center">
@@ -126,7 +130,9 @@
             <div class="col-12 col-lg-7">
               <div class="slider-modal">
                 <% wd.work_record_images.each do |image|%>
-                  <div><%= image_tag image.url , class: "img-fluid d-block" %></div>
+                  <% if image.enabled == true %>
+                    <div><%= image_tag image.url , class: "img-fluid d-block" %></div>
+                  <% end %>
                 <% end %>
               </div>
             </div>
@@ -259,6 +265,13 @@
       append: '.post',
       status: ".scroller-status"
     });
+    $(window).on('load', function(){
+      $(".ig_style").height($(".ig_style").width());
+    });
+    function ig_style(){
+      $(".ig_style").height($(".ig_style").width());
+    }
+    $('.article').on( 'append.infiniteScroll', ig_style );
     function send_mood(record_id, mood) {
       <% if current_user.present? %>
       $.get( "/work_records/mood", { work_record_id: record_id, user_id: <%= current_user.id %>, mood: mood } )

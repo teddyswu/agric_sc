@@ -99,7 +99,7 @@
         <% @work_records.each do |record| %>
           {
 	          title: '<%= record.work_project %>',
-	          start: '<%= record.work_time%>',
+	          start: '<%= record.work_time.strftime("%Y-%m-%dT%H:%M:%S")%>',
 	          color: '#fd7e14',
 	          url: 	 '<%= "http://#{request.host}#{farmer_path(params[:id])}"%>', 
 	        },

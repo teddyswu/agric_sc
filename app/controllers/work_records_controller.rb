@@ -57,6 +57,14 @@ class WorkRecordsController < ApplicationController
     record_mood.update_column(:mood, mood)
 	end
 
+  def record_img
+    img = WorkRecordImage.find(params[:id])
+    img.enabled = (img.enabled == true ? false :true)
+    img.save!
+
+    redirect_to work_records_path  
+  end
+
 	def outputs
 		up = UserProfile.find_by_name(params[:name])
 		beginning = "#{params[:s_month]}".to_i

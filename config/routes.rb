@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   resources :work_records do 
     get "outputs", :on => :collection
     get "mood", :on => :collection
+    get "record_img", :on => :member
   end
   resources :work_projects
   resources :farming_categories do
