@@ -48,7 +48,7 @@ class StoriesController < ApplicationController
 		@story = Story.find(params[:id])
 	  @story.update(story_params)
 	  if story_img_params.present?
-	  	@story_image = StoryImage.find_by_story_id(params[:id])
+	  	@story_image = StoryImage.find_or_initialize_by(:story_id => params[:id])
 	  	@story_image.update(story_img_params)
 	  	@story_image.save!
 	  	@story_image.update_urls_success?
