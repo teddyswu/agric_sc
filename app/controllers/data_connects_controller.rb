@@ -120,6 +120,7 @@ class DataConnectsController < ApplicationController
             wri_t = WorkRecordImage.new
             wri_t.work_record_id = wr_t.id
             wri_t.url = WorkRecordImageLog.offset(i).last.url
+            wri_t.enabled = true
             wri_t.save!
             i += 1
           end
