@@ -67,10 +67,10 @@
       </div>
       <div class="row article">
         <% @work_records.each_with_index do |wr| %>
-          <% if wr.work_record_images.size > 0 %>
+          <% if wr.work_record_images.normal_state.size > 0 %>
             <div class="col-6 col-lg-4 my-3 post" >
               <%= link_to "javascript:void();",class: "position-relative d-block btn-info",style: "background-color:#fff", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
-                <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_record_images.size > 1%>
+                <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_record_images.normal_state.size > 1%>
                 <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
                   <div class="mb-auto"></div>
                   <div class="text-center">
@@ -91,7 +91,7 @@
                   </div>
                 </div>
                 <div class="ig_style" style="overflow: hidden;">
-                  <%= image_tag wr.work_record_images.first.try(:url), class: "img-fluid text-center"%>
+                  <%= image_tag wr.work_record_images.normal_state.first.try(:url), class: "img-fluid text-center"%>
                 </div>
               <% end %>
             </div>
