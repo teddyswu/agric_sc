@@ -34,26 +34,28 @@
           </div>
         </div>
         <div class="col-12 col-lg-8 mb-10">
-          <!-- <form class="form-inline justify-content-center">
+          <%= form_for current_user , url: outputs_work_records_path, method: :get, :html => {:class => 'form-inline justify-content-center'} do |f| %>
+            <%= hidden_field_tag :name, params[:name]%>
             <div class="form-group mb-2">
-              <input type="date" class="form-control" id="dateStart" placeholder="開始日期">
+              <%= date_field_tag :d_start,nil, class: "form-control", placeholder: "開始日期" %>
             </div>
             <div class="form-group mx-sm-3 mb-2">
               ~
             </div>
             <div class="form-group mr-sm-3 mb-2">
-              <input type="date" class="form-control" id="dateEnd" placeholder="結束日期">
+              <%= date_field_tag :d_end,nil, class: "form-control", placeholder: "結束日期" %>
             </div>
             <button type="submit" class="btn btn-outline-info mb-2">查詢</button>
-          </form> -->
+          <% end %>
         </div>
         <div class="col-12">
           <div class="row align-items-center">
             <div class="col col-sm-8">
-              <div class="h4 text-black font-weight-bold"><%= "#{params[:s_month]}".to_i.month.ago.strftime('%Y-%m-%d') %>~<%= Time.now.strftime('%Y-%m-%d') %></div>
+              <div class="h4 text-black font-weight-bold"><%= params[:s_month].present? ? "#{params[:s_month].to_i.month.ago.strftime('%Y-%m-%d')}~#{Time.now.strftime('%Y-%m-%d')}" : "#{params[:d_start]}~#{params[:d_end]}" %></div>
             </div>
             <div class="col-12 col-sm-4 text-sm-right">
-              <%= link_to "列印", outputs_work_records_path(:name => params[:name], :s_month => params[:s_month], :format => :pdf), class: "btn btn-info"%>
+              <%= link_to "列印", outputs_work_records_path(:name => params[:name], :s_month => params[:s_month], :format => :pdf), class: "btn btn-info" if params[:s_month].present?%>
+              <%= link_to "列印", outputs_work_records_path(:name => params[:name], :d_start => params[:d_start], :d_end => params[:d_end], :format => :pdf), class: "btn btn-info" if params[:d_start].present?%>
             </div>
           </div>
           <div class="table-responsive-md mt-4">

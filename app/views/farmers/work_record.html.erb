@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/assets/sk2/css/fullcalendar.print.min.css" media="print">
 <body>
   <nav class="pushy pushy-left bg-white">
-     <%= render "shared/mobile" %>
+    <%= render "shared/mobile" %>
   </nav>
   <div class="site-overlay"></div>
   <%= render "shared/header" %>
@@ -21,7 +21,7 @@
           <div class="border-top border-bottom border-gray py-3">
             <div class="row">
               <div class="col-12 col-lg-2 my-2 text-center">
-                <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= @farmer.user_profile.fb_uid%>/picture" alt="" style="width: 150px;">
+                <img class="img-fluid rounded-circle" src="<%= @farmer.user_profile.user_pic_url.present? ? @farmer.user_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.user_profile.fb_uid}/picture"%>" alt="" style="width: 150px;">
               </div>
               <div class="col-12 col-lg-10 my-2">
                 <div class="mb-2">
@@ -95,16 +95,18 @@
           }
       },
       eventColor: '#4a99d6',
-      events: [
-        <% @work_records.each do |record| %>
-          {
-	          title: '<%= record.work_project %>',
-	          start: '<%= record.work_time.strftime("%Y-%m-%dT%H:%M:%S")%>',
-	          color: '#fd7e14',
-	          url: 	 '<%= "http://#{request.host}#{farmer_path(params[:id])}"%>', 
-	        },
-        <% end %>
-      ]
+      <% cache ["#{WebConf.host}" + @work_records.last.updated_at.to_s] do %>
+        events: [
+          <% @work_records.each do |record| %>
+            {
+  	          title: '<%= record.work_project %>',
+  	          start: '<%= record.work_time.strftime("%Y-%m-%dT%H:%M:%S")%>',
+  	          color: '#fd7e14',
+  	          url: 	 '<%= "http://#{request.host}#{farmer_path(params[:id])}"%>', 
+  	        },
+          <% end %>
+        ]
+      <% end %>
     });
   });
 </script>

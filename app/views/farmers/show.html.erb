@@ -69,7 +69,7 @@
         <% @work_records.each_with_index do |wr| %>
           <% if wr.work_record_images.size > 0 %>
             <div class="col-6 col-lg-4 my-3 post" >
-              <%= link_to "javascript:void();",class: "position-relative d-block btn-info", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
+              <%= link_to "javascript:void();",class: "position-relative d-block btn-info",style: "background-color:#fff", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
                 <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_record_images.size > 1%>
                 <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
                   <div class="mb-auto"></div>

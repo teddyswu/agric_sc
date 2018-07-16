@@ -67,22 +67,31 @@ class WorkRecordsController < ApplicationController
 
 	def outputs
 		up = UserProfile.find_by_name(params[:name])
-		beginning = "#{params[:s_month]}".to_i
 		@work_projects = "" 
-		WorkProject.all.each do |wp|
+    WorkProject.all.each do |wp|
       @work_projects << wp.name
       @work_projects << "<br >"
     end
-		@records = WorkRecord.where(:owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
-		@before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
-		@after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
-		respond_to do |format|
+    if params[:s_month].present?
+      beginning = "#{params[:s_month]}".to_i
+  		@records = WorkRecord.where(:owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
+  		@before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
+  		@after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
+		else
+      beginning = "#{params[:d_start]}".to_s
+      finish = "#{params[:d_end]}".to_s
+      @records = WorkRecord.where(:owner_id => up.user_id, :created_at => beginning .. finish)
+      @before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning .. finish)
+      @after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning .. finish)
+    end
+
+    respond_to do |format|
     	format.html{ render layout: 'story' }
 	    format.pdf do
 	    	pdf = RecordPdf.new(@before_records, @after_records)
 	    	send_data pdf.render, type: "application/pdf",
 	    												disposition: "inline",
-	    												filename: "Record_#{params[:name]}_#{params[:s_month]}"
+	    												filename: "Record_#{params[:name]}_#{beginning}"
 	    end
 	  end
 	end
