@@ -91,7 +91,7 @@ class DataConnectsController < ApplicationController
     		uid = UserProfile.find_by_name(params[:name])
     		wr = WorkRecordLog.new
     		wr.owner_id = uid.user_id
-    		wr.record_type = params[:record_type].to_i
+    		wr.record_type = ( params[:record_type].to_i != 0 ?  params[:record_type].to_i : WorkProject.find_by_name(params[:work_project]).record_type)
     		wr.farming_category = params[:farming_category]
     		wr.filed_code = params[:filed_code]
     		wr.work_project = params[:work_project]
@@ -104,7 +104,7 @@ class DataConnectsController < ApplicationController
     			wri.url = v
     			wri.save!
     		end
-        if wr.filed_code == "X"
+        if wr.filed_code == "X" && WorkRecordLog.offset(1).last.filed_code != "X"
           record = WorkRecordLog.offset(1).last
           wr_t = WorkRecord.new
           wr_t.owner_id = record.owner_id
