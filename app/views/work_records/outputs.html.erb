@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="col-12 col-lg-8 mb-10">
-          <%= form_for current_user , url: outputs_work_records_path, method: :get, :html => {:class => 'form-inline justify-content-center'} do |f| %>
+          <%= form_for :anything, url: outputs_work_records_path, method: :get, :html => {:class => 'form-inline justify-content-center'} do |f| %>
             <%= hidden_field_tag :name, params[:name]%>
             <div class="form-group mb-2">
               <%= date_field_tag :d_start,nil, class: "form-control", placeholder: "開始日期" %>
