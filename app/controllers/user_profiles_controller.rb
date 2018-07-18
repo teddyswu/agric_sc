@@ -12,6 +12,8 @@ class UserProfilesController < ApplicationController
     	farm_cate.farming_category_id = cate
     	farm_cate.save!
     end
+    auth = Authorization.find_or_initialize_by(:provider => "facebook", :uid => params[:user_profile][:fb_uid], :user_id => params[:user_profile][:user_id])
+    auth.save!
     if params[:filed_code].present?
       @filed_code = FiledCode.where(:user_id => params[:user_profile][:user_id])
       @filed_code.destroy_all

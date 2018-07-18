@@ -41,7 +41,8 @@
           <%= f.label("FB Uid", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_field(:fb_uid, :class => "form-control", :value => @user.user_profile.fb_uid, :readonly => true, :disabled => true)%>
+          <%= f.text_field(:fb_uid, :class => "form-control", :value => @user.try(:authorizations).try(:first).try(:uid))%><%= link_to "查詢","#", :onclick => "window.open('https://tw.piliapp.com/facebook/id/');", :class => "btn btn-danger btn-sm" %>
+
         </div>
       </div>
       <div class="row form-group">

@@ -19,7 +19,7 @@
           <div class="border-top border-bottom border-gray py-3">
             <div class="row">
               <div class="col-12 col-lg-2 my-2 text-center">
-                <img class="img-fluid rounded-circle" src="<%= @farmer.user_profile.user_pic_url.present? ? @farmer.user_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.user_profile.fb_uid}/picture"%>" alt="" style="width: 150px;">
+                <img class="img-fluid rounded-circle" src="<%= @farmer.user_profile.user_pic_url.present? ? @farmer.user_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 150px;">
               </div>
               <div class="col-12 col-lg-10 my-2">
                 <div class="mb-2">
@@ -140,7 +140,7 @@
               <div class="pt-4 px-4 pb-0">
                 <div class="row align-items-center">
                   <div class="media col">
-                    <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= @farmer.user_profile.fb_uid%>/picture" alt="" style="width: 50px">
+                    <img class="img-fluid rounded-circle" src="<%= @farmer.user_profile.user_pic_url.present? ? @farmer.user_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
                     <div class="media-body align-self-center ml-3"><%= wd.user.user_profile.front_name%></div>
                   </div>
                   <div class="col text-right">

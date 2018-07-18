@@ -104,27 +104,55 @@ class DataConnectsController < ApplicationController
     			wri.url = v
     			wri.save!
     		end
-        if wr.filed_code == "X" && WorkRecordLog.offset(1).last.filed_code != "X"
-          record = WorkRecordLog.offset(1).last
-          wr_t = WorkRecord.new
-          wr_t.owner_id = record.owner_id
-          wr_t.record_type = record.record_type
-          wr_t.farming_category = record.farming_category
-          wr_t.filed_code = record.filed_code
-          wr_t.work_project = record.work_project
-          wr_t.work_time = record.created_at
-          wr_t.weight = record.weight
-          wr_t.save!
-          i = 1
-          while WorkRecordImageLog.offset(i).last.url != "X" do
+        last_five_ids = WorkRecord.last(5).reverse.map {|work| work.id }
+        cwr = WorkRecord.where(:id => last_five_ids, :farming_category => wr.farming_category, :filed_code => wr.filed_code, :owner_id => wr.owner_id, :work_project => wr.work_project ).where("created_at > '#{Time.now.strftime("%Y-%m-%d")}'").limit(1)
+        if wr.filed_code != "X"
+          if cwr.present?
             wri_t = WorkRecordImage.new
-            wri_t.work_record_id = wr_t.id
-            wri_t.url = WorkRecordImageLog.offset(i).last.url
+            wri_t.work_record_id = cwr.first.id
+            wri_t.url = WorkRecordImageLog.last.url
             wri_t.enabled = true
             wri_t.save!
-            i += 1
+          else
+            wr_t = WorkRecord.new
+            wr_t.owner_id = wr.owner_id
+            wr_t.record_type = wr.record_type
+            wr_t.farming_category = wr.farming_category
+            wr_t.filed_code = wr.filed_code
+            wr_t.work_project = wr.work_project
+            wr_t.work_time = wr.created_at
+            wr_t.weight = wr.weight
+            wr_t.save!
+            wri_t = WorkRecordImage.new
+            wri_t.work_record_id = wr_t.id
+            wri_t.url = WorkRecordImageLog.last.url
+            wri_t.enabled = true
+            wri_t.save!
           end
         end
+
+
+        # if wr.filed_code == "X" && WorkRecordLog.offset(1).last.filed_code != "X"
+        #   record = WorkRecordLog.offset(1).last
+        #   wr_t = WorkRecord.new
+        #   wr_t.owner_id = record.owner_id
+        #   wr_t.record_type = record.record_type
+        #   wr_t.farming_category = record.farming_category
+        #   wr_t.filed_code = record.filed_code
+        #   wr_t.work_project = record.work_project
+        #   wr_t.work_time = record.created_at
+        #   wr_t.weight = record.weight
+        #   wr_t.save!
+        #   i = 1
+        #   while WorkRecordImageLog.offset(i).last.url != "X" do
+        #     wri_t = WorkRecordImage.new
+        #     wri_t.work_record_id = wr_t.id
+        #     wri_t.url = WorkRecordImageLog.offset(i).last.url
+        #     wri_t.enabled = true
+        #     wri_t.save!
+        #     i += 1
+        #   end
+        # end
     		render json: "[{" + '"status":"work_record create ok"' + "}]" and return
       when "behavior"
         ub = UserBehavior.new
