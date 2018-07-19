@@ -88,6 +88,9 @@ class DataConnectsController < ApplicationController
     			render json: "[{'uid':" + "#{params[:uid]}" + "},{'status':'uid already exists'}]" and return
     		end
     	when "work_record"
+        File.open("#{Rails.root}/log/record.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{params} \n---------------------------------------------\n\n))
+        end
     		uid = UserProfile.find_by_name(params[:name])
     		wr = WorkRecordLog.new
     		wr.owner_id = uid.user_id
