@@ -4,15 +4,6 @@ class UserManagesController < ApplicationController
 
 	def index
 		@users = User.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
-		# respond_to do |format|
-  #     format.html
-  #     format.pdf do
-  #     	pdf = Prawn::Document.new
-  #     	pdf.font"/Library/Fonts/Arial Unicode.ttf"
-  #     	pdf.text "你好"
-  #     	send_data pdf.render
-  #     end
-  #   end
 	end
 
 	def edit
@@ -35,6 +26,6 @@ class UserManagesController < ApplicationController
 
 
 	def user_params
-		params.require(:user).permit(:is_admin, :is_check_farmer)
+		params.require(:user).permit(:is_admin, :is_check_farmer, :is_farmer)
 	end
 end

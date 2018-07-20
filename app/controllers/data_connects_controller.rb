@@ -109,7 +109,7 @@ class DataConnectsController < ApplicationController
     		end
         last_five_ids = WorkRecord.last(5).reverse.map {|work| work.id }
         cwr = WorkRecord.where(:id => last_five_ids, :farming_category => wr.farming_category, :filed_code => wr.filed_code, :owner_id => wr.owner_id, :work_project => wr.work_project ).where("created_at > '#{Time.now.strftime("%Y-%m-%d")}'").limit(1)
-        if wr.filed_code != "X"
+        if wr.filed_code != "X" 
           if cwr.present?
             wri_t = WorkRecordImage.new
             wri_t.work_record_id = cwr.first.id
@@ -126,11 +126,13 @@ class DataConnectsController < ApplicationController
             wr_t.work_time = wr.created_at
             wr_t.weight = wr.weight
             wr_t.save!
-            wri_t = WorkRecordImage.new
-            wri_t.work_record_id = wr_t.id
-            wri_t.url = WorkRecordImageLog.last.url
-            wri_t.enabled = true
-            wri_t.save!
+            if WorkRecordImageLog.last.url != "X"
+              wri_t = WorkRecordImage.new
+              wri_t.work_record_id = wr_t.id
+              wri_t.url = WorkRecordImageLog.last.url
+              wri_t.enabled = true
+              wri_t.save!
+            end
           end
         end
 
