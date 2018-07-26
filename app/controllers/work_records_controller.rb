@@ -3,7 +3,7 @@ class WorkRecordsController < ApplicationController
   before_action :is_admin, only: [:index]
 
 	def index
-		@records = WorkRecord.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
+		@records = WorkRecord.all.order(work_time: :desc).paginate(:page => params[:page], per_page: 10)
 	end
 
 	def show
@@ -75,14 +75,14 @@ class WorkRecordsController < ApplicationController
     if params[:s_month].present?
       beginning = "#{params[:s_month]}".to_i
   		@records = WorkRecord.where(:owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
-  		@before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
-  		@after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now)
+  		@before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now).order(work_time: :asc)
+  		@after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning.month.ago .. Time.now).order(work_time: :asc)
 		else
       beginning = "#{params[:d_start]}".to_s
       finish = "#{params[:d_end]}".to_s
       @records = WorkRecord.where(:owner_id => up.user_id, :created_at => beginning .. finish)
-      @before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning .. finish)
-      @after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning .. finish)
+      @before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning .. finish).order(work_time: :asc)
+      @after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning .. finish).order(work_time: :asc)
     end
 
     respond_to do |format|
