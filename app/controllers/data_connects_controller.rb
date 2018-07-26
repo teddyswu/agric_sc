@@ -92,7 +92,8 @@ class DataConnectsController < ApplicationController
           file.syswrite(%(#{Time.now.iso8601}: #{params} \n---------------------------------------------\n\n))
         end
     		wr = WorkRecordLog.new
-    		wr.owner_id = params[:name]
+        up = UserProfile.find_by_name(params[:name])
+    		wr.owner_id = up.user_id
     		wr.record_type = params[:record_type]
     		wr.farming_category = params[:farming_category]
     		wr.filed_code = params[:filed_code]
@@ -106,7 +107,6 @@ class DataConnectsController < ApplicationController
     			wri.url = v
     			wri.save!
     		end
-        up = UserProfile.find_by_name(params[:name])
         last_five_ids = WorkRecord.last(5).reverse.map {|work| work.id }
         cwr = WorkRecord.where(:id => last_five_ids, :farming_category => wr.farming_category, :filed_code => wr.filed_code, :owner_id => wr.owner_id, :work_project => wr.work_project ).where("created_at > '#{Time.now.strftime("%Y-%m-%d")}'").limit(1)
         if wr.filed_code != "X" 
