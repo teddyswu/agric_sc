@@ -91,7 +91,7 @@
                   </div>
                 </div>
                 <div class="ig_style" style="overflow: hidden;">
-                  <%= image_tag wr.work_record_images.normal_state.first.try(:url), class: "img-fluid text-center"%>
+                  <%= render_first_image(wr.work_record_images.normal_state.first.url)%>
                 </div>
               <% end %>
             </div>
@@ -111,6 +111,7 @@
       </div>
     </div>
   </div>
+
   <% @work_record_all.each_with_index do |wd| %>
     <div class="modal fade" id="modal-detail_<%= wd.id %>" tabindex="-1" role="dialog">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -131,7 +132,7 @@
               <div class="slider-modal">
                 <% wd.work_record_images.each do |image|%>
                   <% if image.enabled == true %>
-                    <div><%= image_tag image.url , class: "img-fluid d-block" %></div>
+                    <div><%= render_tag(image.url) %></div>
                   <% end %>
                 <% end %>
               </div>
