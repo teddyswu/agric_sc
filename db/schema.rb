@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180713084443) do
+ActiveRecord::Schema.define(version: 20180725044611) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -258,9 +258,9 @@ ActiveRecord::Schema.define(version: 20180713084443) do
   create_table "work_record_logs", force: :cascade do |t|
     t.string   "farming_category", limit: 255
     t.string   "filed_code",       limit: 255
-    t.integer  "owner_id",         limit: 4
-    t.integer  "record_type",      limit: 4
-    t.float    "weight",           limit: 24
+    t.string   "owner_id",         limit: 255
+    t.string   "record_type",      limit: 255
+    t.string   "weight",           limit: 255
     t.datetime "work_time"
     t.string   "work_project",     limit: 255
     t.datetime "created_at",                   null: false
