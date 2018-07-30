@@ -23,6 +23,8 @@ gem 'prawn-table'
 gem "carrierwave", '0.10.0'     # 上傳圖片必要套件
 gem "mini_magick", "3.6.0"      # 圖片處理的套件(縮圖、浮水印)
 gem "flash_cookie_session"      # 多圖上傳必要套件
+gem 'carrierwave-video-thumbnailer'
+gem 'carrierwave-video'
 
 gem "activerecord-import", "~> 0.4.1" # 一次新增多筆資料
 gem "actionpack-action_caching", '1.1.1'

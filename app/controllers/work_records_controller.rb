@@ -96,4 +96,19 @@ class WorkRecordsController < ApplicationController
 	  end
 	end
 
+  def new
+
+  end
+
+  def create
+    aa = FbToAw.new(fb_params)
+    aa.save!
+    aa.update_urls_success?
+    redirect_to :action => :new
+  end
+
+  def fb_params
+    params.require(:fb_to_aw).permit(:remote_file_url)
+  end
+
 end

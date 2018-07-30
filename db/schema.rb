@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180725044611) do
+ActiveRecord::Schema.define(version: 20180730040103) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -64,6 +64,14 @@ ActiveRecord::Schema.define(version: 20180725044611) do
     t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "fb_to_aws", force: :cascade do |t|
+    t.string   "file",       limit: 255
+    t.text     "cover_url",  limit: 65535
+    t.text     "origin_url", limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "file_lists", force: :cascade do |t|
