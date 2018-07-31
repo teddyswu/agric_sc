@@ -114,6 +114,13 @@ class DataConnectsController < ApplicationController
             wri_t = WorkRecordImage.new
             wri_t.work_record_id = cwr.first.id
             wri_t.url = WorkRecordImageLog.last.url
+            fb_to_aw = Hash.new
+            fb_to_aw["remote_file_url"] = WorkRecordImageLog.last.url
+            aa = FbToAw.new(fb_to_aw)
+            aa.save!
+            aa.update_urls_success?
+            wri_t.cover_url = aa.cover_url
+            wri_t.origin_url = aa.origin_url
             wri_t.enabled = true
             wri_t.save!
           else
@@ -130,34 +137,18 @@ class DataConnectsController < ApplicationController
               wri_t = WorkRecordImage.new
               wri_t.work_record_id = wr_t.id
               wri_t.url = WorkRecordImageLog.last.url
+              fb_to_aw = Hash.new
+              fb_to_aw["remote_file_url"] = WorkRecordImageLog.last.url
+              aa = FbToAw.new(fb_to_aw)
+              aa.save!
+              aa.update_urls_success?
+              wri_t.cover_url = aa.cover_url
+              wri_t.origin_url = aa.origin_url
               wri_t.enabled = true
               wri_t.save!
             end
           end
         end
-
-
-        # if wr.filed_code == "X" && WorkRecordLog.offset(1).last.filed_code != "X"
-        #   record = WorkRecordLog.offset(1).last
-        #   wr_t = WorkRecord.new
-        #   wr_t.owner_id = record.owner_id
-        #   wr_t.record_type = record.record_type
-        #   wr_t.farming_category = record.farming_category
-        #   wr_t.filed_code = record.filed_code
-        #   wr_t.work_project = record.work_project
-        #   wr_t.work_time = record.created_at
-        #   wr_t.weight = record.weight
-        #   wr_t.save!
-        #   i = 1
-        #   while WorkRecordImageLog.offset(i).last.url != "X" do
-        #     wri_t = WorkRecordImage.new
-        #     wri_t.work_record_id = wr_t.id
-        #     wri_t.url = WorkRecordImageLog.offset(i).last.url
-        #     wri_t.enabled = true
-        #     wri_t.save!
-        #     i += 1
-        #   end
-        # end
     		render json: "[{" + '"status":"work_record create ok"' + "}]" and return
       when "behavior"
         ub = UserBehavior.new
