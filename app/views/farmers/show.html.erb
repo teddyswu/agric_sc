@@ -90,9 +90,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="ig_style" style="overflow: hidden;">
-                  <%= render_first_image(wr.work_record_images.normal_state.first.url)%>
-                </div>
+                <%= image_tag wr.work_record_images.normal_state.first.cover_url, class: "img-fluid text-center"%>
               <% end %>
             </div>
           <% end%>
@@ -132,7 +130,7 @@
               <div class="slider-modal">
                 <% wd.work_record_images.each do |image|%>
                   <% if image.enabled == true %>
-                    <div><%= render_tag(image.url) %></div>
+                    <div><%= render_tag(image.show_url) %></div>
                   <% end %>
                 <% end %>
               </div>
@@ -266,13 +264,6 @@
       append: '.post',
       status: ".scroller-status"
     });
-    $(window).on('load', function(){
-      $(".ig_style").height($(".ig_style").width());
-    });
-    function ig_style(){
-      $(".ig_style").height($(".ig_style").width());
-    }
-    $('.article').on( 'append.infiniteScroll', ig_style );
     function send_mood(record_id, mood) {
       <% if current_user.present? %>
       $.get( "/work_records/mood", { work_record_id: record_id, user_id: <%= current_user.id %>, mood: mood } )

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180730105004) do
+ActiveRecord::Schema.define(version: 20180801034051) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -260,6 +260,7 @@ ActiveRecord::Schema.define(version: 20180730105004) do
     t.text     "url",            limit: 65535
     t.text     "cover_url",      limit: 65535
     t.text     "origin_url",     limit: 65535
+    t.text     "show_url",       limit: 65535
     t.boolean  "enabled"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
