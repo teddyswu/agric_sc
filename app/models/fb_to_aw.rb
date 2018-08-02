@@ -10,7 +10,7 @@ class FbToAw < ActiveRecord::Base
         s3_host = "https://sogi-channel.s3.amazonaws.com"
         update_datas = {
           :origin_url => self.file.url ,        # 轉原圖
-          :cover_url => self.file.cover.url
+          :cover_url => self.file.thumb.url
         }
         if self.update_attributes( update_datas )
           return true

@@ -121,6 +121,7 @@ class DataConnectsController < ApplicationController
             aa.update_urls_success?
             wri_t.cover_url = aa.cover_url
             wri_t.origin_url = aa.origin_url
+            wri_t.show_url = aa.file.show.url
             wri_t.enabled = true
             wri_t.save!
           else

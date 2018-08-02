@@ -20,20 +20,20 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   end
 
   version :thumb do
-    process thumbnail: [{format: 'png', quality: 10, size: 300}], :if => :is_mp4_file?
+    process thumbnail: [{format: 'png', quality: 10, size: 600}], :if => :is_mp4_file?
     def full_filename for_file
       png_name for_file, version_name #if is_mp4_file(file)?
     end
-    process :resize_to_fill => [300, 300]
+    process :resize_to_fill => [600, 600]
     process convert: 'jpg'
   end
 
-  version :cover do
-    process :resize_to_fill => [600, 600], :if => :is_jpg_file?
-  end
+  # version :cover do
+  #   process :resize_to_fill => [600, 600], :if => :is_jpg_file?
+  # end
 
   version :show do
-    process :resize_and_pad => [536, 600, "block"], :if => :is_jpg_file?
+    process :resize_and_pad => [536, 600, "black"], :if => :is_jpg_file?
   end
 
   def png_name for_file, version_name
