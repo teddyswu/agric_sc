@@ -51,9 +51,7 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   end
 
   def set_content_type_png(*args)
-    p self.file.content_type
     self.file.instance_variable_set(:@content_type, "image/png")
-    p self.file.content_type
   end
 
 
