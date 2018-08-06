@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     get "work_record", on: :member
   end
 
+  resources :multi_image_uploads
+
   resources :agris do
     get "comic",:on => :collection
     post "comic_create", :on => :collection
