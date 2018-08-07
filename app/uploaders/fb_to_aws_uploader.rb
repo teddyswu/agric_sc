@@ -19,8 +19,9 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
     "#{WebConf.upload_dir}/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
+  process :auto_orient, :if => :is_jpg_file?
+
   version :thumb do
-    process :auto_orient, :if => :is_jpg_file?
     process thumbnail: [{format: 'png', quality: 10, size: 350}], :if => :is_mp4_file?
     def full_filename for_file
       png_name for_file, version_name #if is_mp4_file(file)?
@@ -35,7 +36,6 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   # end
 
   version :show do
-    process :auto_orient, :if => :is_jpg_file?
     process :resize_and_pad => [536, 600, "black"], :if => :is_jpg_file?
   end
 
@@ -57,12 +57,9 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   end
 
   def auto_orient
-    # manipulate! do |image|
-      # image.tap(&:auto_orient)
-      image = MiniMagick::Image.open(current_path)
-      image.combine_options(&:auto_orient)
-      image.write current_path
-    # end
+    manipulate! do |image|
+      image.tap(&:auto_orient)
+    end
   end
 
 
