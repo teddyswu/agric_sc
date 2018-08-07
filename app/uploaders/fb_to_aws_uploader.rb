@@ -9,6 +9,7 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   include CarrierWave::MimeTypes
   include CarrierWave::Video  # for your video processing
   include CarrierWave::Video::Thumbnailer
+  MiniMagick.processor = :gm
 
   # Choose what kind of storage to use for this uploader:
   storage :fog
@@ -19,9 +20,8 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
     "#{WebConf.upload_dir}/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
-  process :auto_orient, :if => :is_jpg_file?
-
   version :thumb do
+    process :auto_orient, :if => :is_jpg_file?
     process thumbnail: [{format: 'png', quality: 10, size: 350}], :if => :is_mp4_file?
     def full_filename for_file
       png_name for_file, version_name #if is_mp4_file(file)?
