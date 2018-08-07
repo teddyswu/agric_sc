@@ -58,6 +58,8 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
 
   def auto_orient
     manipulate! do |image|
+      p image['EXIF:Orientation'].to_i
+      p "---------"
       image.tap(&:auto_orient)
     end
   end
