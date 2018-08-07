@@ -57,9 +57,12 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   end
 
   def auto_orient
-    manipulate! do |image|
-      image.tap(&:auto_orient)
-    end
+    # manipulate! do |image|
+      # image.tap(&:auto_orient)
+      image = MiniMagick::Image.open(current_path)
+      image.combine_options(&:auto_orient)
+      image.write current_path
+    # end
   end
 
 
