@@ -1,6 +1,6 @@
 module FarmersHelper
 	def render_tag(url)
-		if url.include?("jpg") 
+		if url.include?("jp") 
 			return image_tag url , class: "img-fluid d-block"
 		else
 			return "<video id=\"movie\" preload controls loop width=\"536\">
