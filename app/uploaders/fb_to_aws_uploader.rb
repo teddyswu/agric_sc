@@ -20,6 +20,7 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   end
 
   version :thumb do
+    process :auto_orient
     process thumbnail: [{format: 'png', quality: 10, size: 350}], :if => :is_mp4_file?
     def full_filename for_file
       png_name for_file, version_name #if is_mp4_file(file)?
@@ -34,6 +35,7 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   # end
 
   version :show do
+    process :auto_orient
     process :resize_and_pad => [536, 600, "black"], :if => :is_jpg_file?
   end
 
@@ -52,6 +54,12 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
 
   def set_content_type_png(*args)
     self.file.instance_variable_set(:@content_type, "image/png")
+  end
+
+  def auto_orient
+    manipulate! do |image|
+      image.tap(&:auto_orient)
+    end
   end
 
 
