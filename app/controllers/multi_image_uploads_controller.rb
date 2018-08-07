@@ -18,7 +18,7 @@ class MultiImageUploadsController < ApplicationController
         work_record_image.work_record_id = work_record.id
         work_record_image.cover_url = image.cover_url
         work_record_image.origin_url = image.origin_url
-        work_record_image.show_url = image.file.show.url
+        work_record_image.show_url = image.show_url
         work_record_image.enabled = true
         work_record_image.save!
         render json: {:thumb => image.file.show.url, :big => image.file.show.url, :original => image.file.show.url}
