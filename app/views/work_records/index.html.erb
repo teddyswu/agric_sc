@@ -53,14 +53,14 @@
                           <td><%= record.weight%></td>
                           <td><%= record.work_time.try(:strftime, '%Y-%m-%d' ) %></td>
                         </tr>
-                        <%(record.work_record_images || []).each do |image|%>
-                          <tbody style="font-size: 10px">
-                            <td></td>
-                            <td colspan="4"><%= link_to image.url , image.url, target: "_blank"%></td>
-                            <td><%=link_to (image.enabled == true ? "[開啟]": "[隱藏]") ,record_img_work_record_path(image.id) %></td>
+                        <%#(record.work_record_images || []).each do |image|%>
+                          <!-- <tbody style="font-size: 10px"> -->
+                            <!-- <td></td> -->
+                            <!-- <td colspan="4"><%#= link_to image.url , image.url, target: "_blank"%></td> -->
+                            <!-- <td><%#=link_to (image.enabled == true ? "[開啟]": "[隱藏]") ,record_img_work_record_path(image.id) %></td> -->
 
-                          </tbody>
-                        <%end%>
+                          <!-- </tbody> -->
+                        <%#end%>
                       <% end %>
                     </tbody>
                   </table>
