@@ -14,13 +14,13 @@ class MultiImageUploadsController < ApplicationController
         image.update_urls_success?
         user = UserProfile.find_by_name(@option["name"])
         last_five_ids = WorkDiary.last(5).reverse.map {|work| work.id }
-        wdc = WorkDiary.where(:id => last_five_ids, :comment => "", :owner_id => user.user_id ).where("created_at > '#{Time.now - 9.hour}'").limit(1)
+        wdc = WorkDiary.where(:id => last_five_ids, :comment => "multi_upload", :owner_id => user.user_id ).where("created_at > '#{Time.now - 9.hour}'").limit(1)
         if wdc.present?
           wdc[0].work_diary_images.create( :url => "", :cover_url => image.cover_url, :origin_url => image.origin_url, :show_url => image.show_url, :enabled => true )
         else
           wd = WorkDiary.new
           wd.owner_id = user.user_id
-          wd.comment = ""
+          wd.comment = "multi_upload"
           wd.diary_time = Time.now
           wd.save!
           wd.work_diary_images.create( :url => "", :cover_url => image.cover_url, :origin_url => image.origin_url, :show_url => image.show_url, :enabled => true )

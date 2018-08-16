@@ -93,7 +93,7 @@ class DataConnectsController < ApplicationController
         end
         up = UserProfile.find_by_name(params[:name])
         if params[:photo] == "X"
-          wd = WorkDiary.where(:owner_id => up.user_id).last
+          wd = WorkDiary.where(:owner_id => up.user_id, :comment => "multi_upload").last
           wd.comment = params[:comment]
           wd.save!
         else
