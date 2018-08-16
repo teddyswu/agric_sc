@@ -67,30 +67,30 @@
       </div>
       <div class="row article">
         <% @work_records.each_with_index do |wr| %>
-          <% if wr.work_record_images.normal_state.size > 0 %>
+          <% if wr.work_diary_images.normal_state.size > 0 %>
             <div class="col-6 col-lg-4 my-3 post" >
               <%= link_to "javascript:void();",class: "position-relative d-block btn-info",style: "background-color:#fff", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
-                <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_record_images.normal_state.size > 1%>
+                <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_diary_images.normal_state.size > 1%>
                 <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
                   <div class="mb-auto"></div>
                   <div class="text-center">
                     <div class="my-auto">
-    	                <div class="align-self-center">工作時間：<%= wr.work_time.strftime('%Y-%m-%d' )%></div>
-    	                <div class="">工作項目：<%= wr.work_project %></div>
+    	                <div class="align-self-center"></div>
+    	                <div class=""></div>
                     </div>
                   </div>
                   <div class="row no-gutters mt-auto">
                     <div class="col">
-                      <i class="far fa-comment-alt"></i> <%= wr.work_record_reply.size %>
+                      <i class="far fa-comment-alt"></i> <%#= wr.work_record_reply.size %>
                     </div>
                     <div class="col-8 text-right">
-                      <span class="text-white ml-1" href=""><i class="far fa-smile"></i> <%= wr.smile.to_i %></span>
-                      <span class="text-white ml-1" href=""><i class="far fa-meh"></i> <%= wr.general.to_i %></span>
-                      <span class="text-white ml-1" href=""><i class="far fa-frown"></i> <%= wr.dislike.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-smile"></i> <%#= wr.smile.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-meh"></i> <%#= wr.general.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-frown"></i> <%#= wr.dislike.to_i %></span>
                     </div>
                   </div>
                 </div>
-                <%= image_tag wr.work_record_images.normal_state.first.cover_url, class: "img-fluid text-center"%>
+                <%= image_tag wr.work_diary_images.normal_state.first.cover_url, class: "img-fluid text-center"%>
               <% end %>
             </div>
           <% end%>
@@ -128,7 +128,7 @@
           <div class="row no-gutters">
             <div class="col-12 col-lg-7">
               <div class="slider-modal">
-                <% wd.work_record_images.each do |image|%>
+                <% wd.work_diary_images.each do |image|%>
                   <% if image.enabled == true %>
                     <div><%= render_tag(image.show_url) %></div>
                   <% end %>
@@ -172,19 +172,19 @@
                       <a class="text-primary btn-smile" href="javascript:send_mood(<%= wd.id %>, 1);">
                         <i id="like" class="far fa-lg fa-smile"></i>
                       </a>
-                      <span class="badge badge-light badge-pill"><%= wd.smile.to_i %> 個喜歡</span>
+                      <span class="badge badge-light badge-pill"><%#= wd.smile.to_i %> 個喜歡</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
                       <a class="text-primary btn-meh" href="javascript:send_mood(<%= wd.id %>, 2);">
                           <i id="like" class="far fa-lg fa-meh"></i>
                       </a>
-                      <span class="badge badge-light badge-pill"><%= wd.general.to_i %> 個普通</span>
+                      <span class="badge badge-light badge-pill"><%#= wd.general.to_i %> 個普通</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
                       <a class="text-primary btn-frown" href="javascript:send_mood(<%= wd.id %>, 3);">
                           <i id="like" class="far fa-lg fa-frown"></i>
                       </a>
-                      <span class="badge badge-light badge-pill"><%= wd.dislike.to_i %> 個不喜歡</span>
+                      <span class="badge badge-light badge-pill"><%#= wd.dislike.to_i %> 個不喜歡</span>
                     </li>
                   </ul>
                   <form class="mt-3">
@@ -201,12 +201,12 @@
                 </div>
                 <div class="mt-3 py-3 font-small comment">
                   <div class="">
-                    <%= "#{wd.work_time.strftime('%Y-%m-%d' )}進行#{wd.work_project}" %>
+                    <%= wd.comment %>
                   </div>
                   <div class="mt-2" id="relpy_list_<%= wd.id%>">
-                    <% wd.work_record_reply.each do |reply|%>
-                      <div class="mt-1"><strong class="mr-2"><%= reply.user.user_profile.front_name%></strong><%= reply.content%></div>
-                    <% end %>
+                    <%# wd.work_record_reply.each do |reply|%>
+                      <div class="mt-1"><strong class="mr-2"><%#= reply.user.user_profile.front_name%></strong><%#= reply.content%></div>
+                    <%# end %>
                   </div>
                 </div>
                 <div class="d-none d-md-block">
@@ -215,37 +215,37 @@
                       <a class="text-primary btn-smile" href="javascript:send_mood(<%= wd.id %>, 1);" remote=true>
                         <i id="like" class="far fa-lg fa-smile"></i>
                       </a>
-                      <span class="badge badge-light badge-pill"><%= wd.smile.to_i %> 個喜歡</span>
+                      <span class="badge badge-light badge-pill"><%#= wd.smile.to_i %> 個喜歡</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
                       <a class="text-primary btn-meh" href="javascript:send_mood(<%= wd.id %>, 2);">
                         <i id="like" class="far fa-lg fa-meh"></i>
                       </a>
-                      <span class="badge badge-light badge-pill"><%= wd.general.to_i %> 個普通</span>
+                      <span class="badge badge-light badge-pill"><%#= wd.general.to_i %> 個普通</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
                       <a class="text-primary btn-frown" href="javascript:send_mood(<%= wd.id %>, 3);">
                         <i id="like" class="far fa-lg fa-frown"></i>
                       </a>
-                      <span class="badge badge-light badge-pill"><%= wd.dislike.to_i %> 個不喜歡</span>
+                      <span class="badge badge-light badge-pill"><%#= wd.dislike.to_i %> 個不喜歡</span>
                     </li>
                   </ul>
-                  <% if current_user.present? %>
-                    <%= form_for @wrr, :url => work_record_replies_path(), :method => :post, :html => {:class => 'mt-1'}, :remote => true do |f| %>
+                  <%# if current_user.present? %>
+                    <%#= form_for @wrr, :url => work_record_replies_path(), :method => :post, :html => {:class => 'mt-1'}, :remote => true do |f| %>
                       <div class="form-row">
                         <div class="col-9">
-                          <%= f.text_area :content, class: "form-control bg-light", rows: 1, placeholder: "留言..." %>
-                          <%= f.hidden_field :user_id, :value => current_user.id%>
-                          <%= f.hidden_field :work_record_id, :value => wd.id%>
+                          <%#= f.text_area :content, class: "form-control bg-light", rows: 1, placeholder: "留言..." %>
+                          <%#= f.hidden_field :user_id, :value => current_user.id%>
+                          <%#= f.hidden_field :work_record_id, :value => wd.id%>
                         </div>
                         <div class="col">
-                          <%= f.submit "送出", class: "btn btn-block btn-outline-info" %>
+                          <%#= f.submit "送出", class: "btn btn-block btn-outline-info" %>
                         </div>
                       </div>
-                    <% end %>
-                  <% else %>
+                    <%# end %>
+                  <%# else %>
                     <a class="" href="">請先登入</a>
-                  <% end %>
+                  <%# end %>
                 </div>
               </div>
             </div>
@@ -264,15 +264,15 @@
       append: '.post',
       status: ".scroller-status"
     });
-    function send_mood(record_id, mood) {
-      <% if current_user.present? %>
-      $.get( "/work_records/mood", { work_record_id: record_id, user_id: <%= current_user.id %>, mood: mood } )
-      .done(function( data ) {
-        data;
-      });
-      <%else%>
-      alert("請先登入");
-      <% end %>
-    }
+    // function send_mood(record_id, mood) {
+    //   <%# if current_user.present? %>
+    //   $.get( "/work_records/mood", { work_record_id: record_id, user_id: <%#= current_user.id %>, mood: mood } )
+    //   .done(function( data ) {
+    //     data;
+    //   });
+    //   <%#else%>
+    //   alert("請先登入");
+    //   <%# end %>
+    // }
   </script>
 <% end %>

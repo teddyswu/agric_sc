@@ -87,6 +87,35 @@ class DataConnectsController < ApplicationController
     		else
     			render json: "[{'uid':" + "#{params[:uid]}" + "},{'status':'uid already exists'}]" and return
     		end
+      when "work_diary"
+        File.open("#{Rails.root}/log/diary.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{params} \n---------------------------------------------\n\n))
+        end
+        up = UserProfile.find_by_name(params[:name])
+        if params[:photo] == "X"
+          wd = WorkDiary.where(:owner_id => up.user_id).last
+          wd.comment = params[:comment]
+          wd.save!
+        else
+          fb_to_aw = Hash.new
+          fb_to_aw["remote_file_url"] = params[:photo]
+          aa = FbToAw.new(fb_to_aw)
+          aa.save!
+          aa.update_urls_success?
+          last_five_ids = WorkDiary.last(5).reverse.map {|work| work.id }
+          wdc = WorkDiary.where(:id => last_five_ids, :comment => params[:comment], :owner_id => up.user_id ).where("created_at > '#{Time.now - 9.hour}'").limit(1)
+          if wdc.present?
+            wdc[0].work_diary_images.create( :url => params[:photo], :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
+          else
+            wd = WorkDiary.new
+            wd.owner_id = up.user_id
+            wd.comment = params[:comment]
+            wd.diary_time = Time.now
+            wd.save!
+            wd.work_diary_images.create( :url => params[:photo], :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
+          end
+        end
+        render json: "[{" + '"status":"work_diary create ok"' + "}]" and return
     	when "work_record"
         File.open("#{Rails.root}/log/record.log", "a+") do |file|
           file.syswrite(%(#{Time.now.iso8601}: #{params} \n---------------------------------------------\n\n))
@@ -101,56 +130,65 @@ class DataConnectsController < ApplicationController
         wr.work_time = Time.now
     		wr.weight = params[:weight]
     		wr.save!
-    		params[:photo].each do |k, v|
-    			wri = WorkRecordImageLog.new
-    			wri.work_record_log_id = wr.id
-    			wri.url = v
-    			wri.save!
-    		end
-        last_five_ids = WorkRecord.last(5).reverse.map {|work| work.id }
-        cwr = WorkRecord.where(:id => last_five_ids, :farming_category => wr.farming_category, :filed_code => wr.filed_code, :owner_id => wr.owner_id, :work_project => wr.work_project ).where("created_at > '#{Time.now.strftime("%Y-%m-%d")}'").limit(1)
-        if wr.filed_code != "X" 
-          if cwr.present?
-            wri_t = WorkRecordImage.new
-            wri_t.work_record_id = cwr.first.id
-            wri_t.url = WorkRecordImageLog.last.url
-            fb_to_aw = Hash.new
-            fb_to_aw["remote_file_url"] = WorkRecordImageLog.last.url
-            aa = FbToAw.new(fb_to_aw)
-            aa.save!
-            aa.update_urls_success?
-            wri_t.cover_url = aa.cover_url
-            wri_t.origin_url = aa.origin_url
-            wri_t.show_url = aa.show_url
-            wri_t.enabled = true
-            wri_t.save!
-          else
-            wr_t = WorkRecord.new
-            wr_t.owner_id = up.user_id
-            wr_t.record_type = ( WorkProject.find_by_name(params[:work_project]).present? ? WorkProject.find_by_name(params[:work_project]).record_type : 0 )
-            wr_t.farming_category = wr.farming_category
-            wr_t.filed_code = wr.filed_code
-            wr_t.work_project = wr.work_project
-            wr_t.work_time = wr.created_at
-            wr_t.weight = wr.weight
-            wr_t.save!
-            if WorkRecordImageLog.last.url != "X"
-              wri_t = WorkRecordImage.new
-              wri_t.work_record_id = wr_t.id
-              wri_t.url = WorkRecordImageLog.last.url
-              fb_to_aw = Hash.new
-              fb_to_aw["remote_file_url"] = WorkRecordImageLog.last.url
-              aa = FbToAw.new(fb_to_aw)
-              aa.save!
-              aa.update_urls_success?
-              wri_t.cover_url = aa.cover_url
-              wri_t.origin_url = aa.origin_url
-              wri_t.show_url = aa.file.show.url
-              wri_t.enabled = true
-              wri_t.save!
-            end
-          end
-        end
+        wr_t = WorkRecord.new
+        wr_t.owner_id = up.user_id
+        wr_t.record_type = ( WorkProject.find_by_name(params[:work_project]).present? ? WorkProject.find_by_name(params[:work_project]).record_type : 0 )
+        wr_t.farming_category = wr.farming_category
+        wr_t.filed_code = wr.filed_code
+        wr_t.work_project = wr.work_project
+        wr_t.work_time = wr.created_at
+        wr_t.weight = wr.weight
+        wr_t.save!
+    		# params[:photo].each do |k, v|
+    		# 	wri = WorkRecordImageLog.new
+    		# 	wri.work_record_log_id = wr.id
+    		# 	wri.url = v
+    		# 	wri.save!
+    		# end
+        # last_five_ids = WorkRecord.last(5).reverse.map {|work| work.id }
+        # cwr = WorkRecord.where(:id => last_five_ids, :farming_category => wr.farming_category, :filed_code => wr.filed_code, :owner_id => wr.owner_id, :work_project => wr.work_project ).where("created_at > '#{Time.now.strftime("%Y-%m-%d")}'").limit(1)
+        # if wr.filed_code != "X" 
+        #   if cwr.present?
+        #     wri_t = WorkRecordImage.new
+        #     wri_t.work_record_id = cwr.first.id
+        #     wri_t.url = WorkRecordImageLog.last.url
+        #     fb_to_aw = Hash.new
+        #     fb_to_aw["remote_file_url"] = WorkRecordImageLog.last.url
+        #     aa = FbToAw.new(fb_to_aw)
+        #     aa.save!
+        #     aa.update_urls_success?
+        #     wri_t.cover_url = aa.cover_url
+        #     wri_t.origin_url = aa.origin_url
+        #     wri_t.show_url = aa.show_url
+        #     wri_t.enabled = true
+        #     wri_t.save!
+        #   else
+        #     wr_t = WorkRecord.new
+        #     wr_t.owner_id = up.user_id
+        #     wr_t.record_type = ( WorkProject.find_by_name(params[:work_project]).present? ? WorkProject.find_by_name(params[:work_project]).record_type : 0 )
+        #     wr_t.farming_category = wr.farming_category
+        #     wr_t.filed_code = wr.filed_code
+        #     wr_t.work_project = wr.work_project
+        #     wr_t.work_time = wr.created_at
+        #     wr_t.weight = wr.weight
+        #     wr_t.save!
+        #     if WorkRecordImageLog.last.url != "X"
+        #       wri_t = WorkRecordImage.new
+        #       wri_t.work_record_id = wr_t.id
+        #       wri_t.url = WorkRecordImageLog.last.url
+        #       fb_to_aw = Hash.new
+        #       fb_to_aw["remote_file_url"] = WorkRecordImageLog.last.url
+        #       aa = FbToAw.new(fb_to_aw)
+        #       aa.save!
+        #       aa.update_urls_success?
+        #       wri_t.cover_url = aa.cover_url
+        #       wri_t.origin_url = aa.origin_url
+        #       wri_t.show_url = aa.file.show.url
+        #       wri_t.enabled = true
+        #       wri_t.save!
+        #     end
+        #   end
+        # end
     		render json: "[{" + '"status":"work_record create ok"' + "}]" and return
       when "behavior"
         ub = UserBehavior.new

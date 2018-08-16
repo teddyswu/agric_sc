@@ -13,14 +13,18 @@ class MultiImageUploadsController < ApplicationController
         image.save!
         image.update_urls_success?
         user = UserProfile.find_by_name(@option["name"])
-        work_record = WorkRecord.where(:owner_id => user.user_id).order(:id).last
-        work_record_image = WorkRecordImage.new
-        work_record_image.work_record_id = work_record.id
-        work_record_image.cover_url = image.cover_url
-        work_record_image.origin_url = image.origin_url
-        work_record_image.show_url = image.show_url
-        work_record_image.enabled = true
-        work_record_image.save!
+        last_five_ids = WorkDiary.last(5).reverse.map {|work| work.id }
+        wdc = WorkDiary.where(:id => last_five_ids, :comment => "", :owner_id => user.user_id ).where("created_at > '#{Time.now - 9.hour}'").limit(1)
+        if wdc.present?
+          wdc[0].work_diary_images.create( :url => "", :cover_url => image.cover_url, :origin_url => image.origin_url, :show_url => image.show_url, :enabled => true )
+        else
+          wd = WorkDiary.new
+          wd.owner_id = user.user_id
+          wd.comment = ""
+          wd.diary_time = Time.now
+          wd.save!
+          wd.work_diary_images.create( :url => "", :cover_url => image.cover_url, :origin_url => image.origin_url, :show_url => image.show_url, :enabled => true )
+        end
         render json: {:thumb => image.file.show.url, :big => image.file.show.url, :original => image.file.show.url}
       end
 		end
