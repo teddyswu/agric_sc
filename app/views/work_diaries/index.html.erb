@@ -1,0 +1,71 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">資料</a></li>
+              <li class="active">農場日誌</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">Table List</strong>
+              </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">農友</th>
+                        <th scope="col">作物種類</th>
+                        <th scope="col">田區代號</th>
+                        <th scope="col">紀錄事項</th>
+                        <th scope="col">採收量(臺斤)</th>
+                        <th scope="col">工作時間</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @diaries.each do |diary|%>
+                        <tr>
+                          <td scope="row"><%= diary.id%></td>
+                          <td><%= diary.user.user_profile.name %></td>
+                          <td><%= diary.comment%></td>
+                          <td><%= diary.diary_time.strftime('%Y-%m-%d') %></td>
+                        </tr>
+                        <%(diary.work_diary_images || []).each do |image|%>
+                          <tbody style="font-size: 10px">
+                            <td></td>
+                            <td colspan="4"><%= link_to image.origin_url , image.origin_url, target: "_blank"%></td>
+                            <td><%=link_to (image.enabled == true ? "[開啟]": "[隱藏]") ,record_img_work_diary_path(image.id) %></td>
+                          </tbody>
+                        <%end%>
+                      <% end %>
+                    </tbody>
+                  </table>
+                  <%= will_paginate @diaries %>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

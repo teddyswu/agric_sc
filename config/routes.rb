@@ -46,6 +46,9 @@ Rails.application.routes.draw do
     get "record_img", :on => :member
   end
   resources :work_projects
+  resources :work_diaries do
+    get "record_img", :on => :member
+  end
   resources :farming_categories do
     get "binding", :on => :collection
     post "create_binding", :on => :collection
