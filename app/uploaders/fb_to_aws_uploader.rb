@@ -36,7 +36,9 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   # end
 
   version :show do
+    process :auto_orient, :if => :is_jpg_file?
     process :resize_and_pad => [536, 600, "black"], :if => :is_jpg_file?
+    process :strip, :if => :is_jpg_file?
   end
 
   def png_name for_file, version_name
@@ -54,6 +56,14 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
 
   def set_content_type_png(*args)
     self.file.instance_variable_set(:@content_type, "image/png")
+  end
+
+  def strip
+    manipulate! do |img|
+      img.strip
+      img = yield(img) if block_given?
+      img
+    end
   end
 
   def auto_orient
