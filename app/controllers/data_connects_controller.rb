@@ -388,6 +388,13 @@ class DataConnectsController < ApplicationController
       		end
       		render json: wording
       	end
+      when "reply_word"
+        effect_words = ReplyWord.where("start_time < ? and end_time > ? and enabled = true", Time.now, Time.now).order(:end_time).limit(10)
+        wording = Array.new
+        effect_words.each do |effect_word|
+          wording << effect_word.show_name
+        end
+        render json: wording
       end
 		end
 	end

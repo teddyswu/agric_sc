@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180814072539) do
+ActiveRecord::Schema.define(version: 20180821083942) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -87,6 +87,16 @@ ActiveRecord::Schema.define(version: 20180814072539) do
     t.string   "filed_code_name", limit: 255
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+  end
+
+  create_table "reply_words", force: :cascade do |t|
+    t.string   "category",   limit: 255
+    t.string   "show_name",  limit: 255
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.boolean  "enabled"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "stories", force: :cascade do |t|

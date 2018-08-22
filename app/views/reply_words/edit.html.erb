@@ -1,0 +1,119 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">資料</a></li>
+              <li class="active">回覆管理</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">編輯</strong>
+              </div>
+              <div class="card-body">
+                <%= form_for @reply_word, :url => reply_word_path(@reply_word), :method => :patch, :html => {:class => 'form-horizontal'} do |f| %>
+                  <div class="row form-group">
+                    <div class="col col-md-3">
+                      <label for="text-input" class=" form-control-label">類別</label>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= f.select "category", "<option selected='selected'>節氣</option><option>節慶</option><option>時事</option><option>問候</option>".html_safe, class: 'form-control-sm form-control' %>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col col-md-3">
+                      <%= f.label("顯示名稱", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= f.text_field(:show_name, :class => "form-control")%>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col col-md-3">
+                      <%= f.label("有效時間", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= radio_button_tag 'datetimeStyle', 'custom', true, :onclick=>"choose_datetime_style();" %>自定義
+                      <%= radio_button_tag 'datetimeStyle', 'forever', false, :onclick=>"choose_datetime_style();" %>永久
+                    </div>
+                  </div>
+                  <div class="row form-group" id="datetime_section_one">
+                    <div class="col col-md-3">
+                      <%= f.label("開始時間", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= f.datetime_select(:start_time, start_year: 2018)%>
+                    </div>
+                  </div>
+                  <div class="row form-group" id="datetime_section_two">
+                    <div class="col col-md-3">
+                      <%= f.label("結束時間", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= f.datetime_select(:end_time, start_year: 2018, default: 30.days.from_now)%>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col col-md-3">
+                      <label for="text-input" class=" form-control-label">狀態</label>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= f.select "enabled", options_for_select([["開啟", "1"], ["關閉", "0"]]), class: 'form-control-sm form-control' %>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                      <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                    <button type="reset" class="btn btn-danger btn-sm">
+                      <i class="fa fa-ban"></i> Reset
+                    </button>
+                  </div>
+
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $( document ).ready(function() {
+      if($("#reply_word_end_time_1i").val() == "2999"){
+        $("#datetime_section_one").hide();
+        $("#datetime_section_two").hide();
+        $('#datetimeStyle_forever').attr("checked",true);
+      }
+    });
+    function choose_datetime_style(){
+      if($('#datetimeStyle_custom').is(':checked')) {
+        $("#datetime_section_one").show("slide");
+        $("#datetime_section_two").show("slide");
+        $("#reply_word_end_time_1i").val("<%= Time.now.year %>")
+      }else{
+        $("#datetime_section_one").hide();
+        $("#datetime_section_two").hide();
+      }
+    }
+  </script>
+</body>
