@@ -97,23 +97,37 @@ class DataConnectsController < ApplicationController
           wd.comment = params[:comment]
           wd.save!
         else
-          fb_to_aw = Hash.new
-          fb_to_aw["remote_file_url"] = params[:photo]
-          aa = FbToAw.new(fb_to_aw)
-          aa.save!
-          aa.update_urls_success?
-          last_five_ids = WorkDiary.last(5).reverse.map {|work| work.id }
-          wdc = WorkDiary.where(:id => last_five_ids, :comment => params[:comment], :owner_id => up.user_id ).where("created_at > '#{Time.now - 9.hour}'").limit(1)
-          if wdc.present?
-            wdc[0].work_diary_images.create( :url => params[:photo], :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
-          else
-            wd = WorkDiary.new
-            wd.owner_id = up.user_id
-            wd.comment = params[:comment]
-            wd.diary_time = Time.now
-            wd.save!
-            wd.work_diary_images.create( :url => params[:photo], :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
+          wd = WorkDiary.new
+          wd.owner_id = up.user_id
+          wd.comment = params[:comment]
+          wd.diary_time = Time.now
+          wd.save!
+          params[:photo].split(',').each do |v|
+            fb_to_aw = Hash.new
+            fb_to_aw["remote_file_url"] = v
+            aa = FbToAw.new(fb_to_aw)
+            aa.save!
+            aa.update_urls_success?
+            wd.work_diary_images.create( :url => v, :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
           end
+
+          # fb_to_aw = Hash.new
+          # fb_to_aw["remote_file_url"] = params[:photo]
+          # aa = FbToAw.new(fb_to_aw)
+          # aa.save!
+          # aa.update_urls_success?
+          # last_five_ids = WorkDiary.last(5).reverse.map {|work| work.id }
+          # wdc = WorkDiary.where(:id => last_five_ids, :comment => params[:comment], :owner_id => up.user_id ).where("created_at > '#{Time.now - 9.hour}'").limit(1)
+          # if wdc.present?
+          #   wdc[0].work_diary_images.create( :url => params[:photo], :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
+          # else
+          #   wd = WorkDiary.new
+          #   wd.owner_id = up.user_id
+          #   wd.comment = params[:comment]
+          #   wd.diary_time = Time.now
+          #   wd.save!
+          #   wd.work_diary_images.create( :url => params[:photo], :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
+          # end
         end
         render json: "[{" + '"status":"work_diary create ok"' + "}]" and return
     	when "work_record"

@@ -16,7 +16,7 @@ namespace :data_conversion do
 			end
 		end
 		task :work_diary => :environment do
-			work_records = WorkRecord.all
+			work_records = WorkRecord.where.not(:filed_code => "X")
 			work_records.each do |wr|
 				p "wr:#{wr.id}"
 				if wr.work_record_images.present?
