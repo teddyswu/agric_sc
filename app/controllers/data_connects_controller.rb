@@ -92,7 +92,7 @@ class DataConnectsController < ApplicationController
           file.syswrite(%(#{Time.now.iso8601}: #{params} \n---------------------------------------------\n\n))
         end
         up = UserProfile.find_by_name(params[:name])
-        if params[:photo] == "X"
+        if params[:photo] == ""
           wd = WorkDiary.where(:owner_id => up.user_id, :comment => "multi_upload").last
           wd.comment = params[:comment]
           wd.save!
