@@ -102,13 +102,25 @@ class DataConnectsController < ApplicationController
           wd.comment = params[:comment]
           wd.diary_time = Time.now
           wd.save!
-          params[:photo].each do |v|
+          File.open("#{Rails.root}/log/diary.log", "a+") do |file|
+            file.syswrite(%(#{Time.now.iso8601}: #{params[:photo].class.to_s} \n---------------------------------------------\n\n))
+          end
+          if params[:photo].class.to_s == "Array"
+            params[:photo].each do |v|
+              fb_to_aw = Hash.new
+              fb_to_aw["remote_file_url"] = v
+              aa = FbToAw.new(fb_to_aw)
+              aa.save!
+              aa.update_urls_success?
+              wd.work_diary_images.create( :url => v, :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
+            end
+          else
             fb_to_aw = Hash.new
-            fb_to_aw["remote_file_url"] = v
+            fb_to_aw["remote_file_url"] = params[:photo]
             aa = FbToAw.new(fb_to_aw)
             aa.save!
             aa.update_urls_success?
-            wd.work_diary_images.create( :url => v, :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
+            wd.work_diary_images.create( :url => params[:photo], :cover_url => aa.cover_url, :origin_url => aa.origin_url, :show_url => aa.show_url, :enabled => true )
           end
         end
         render json: "[{" + '"status":"work_diary create ok"' + "}]" and return
