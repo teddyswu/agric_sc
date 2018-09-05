@@ -102,7 +102,7 @@ class DataConnectsController < ApplicationController
           wd.comment = params[:comment]
           wd.diary_time = Time.now
           wd.save!
-          params[:photo].split(',').each do |v|
+          params[:photo].each do |v|
             fb_to_aw = Hash.new
             fb_to_aw["remote_file_url"] = v
             aa = FbToAw.new(fb_to_aw)
@@ -338,7 +338,9 @@ class DataConnectsController < ApplicationController
       	end
       when "reply_word"
         effect_words = ReplyWord.where("start_time < ? and end_time > ? and enabled = true", Time.now, Time.now).order(:end_time).limit(10)
+        first_word = WorkRecord.last
         wording = Array.new
+        wording << first_word.work_project
         effect_words.each do |effect_word|
           wording << effect_word.show_name
         end
