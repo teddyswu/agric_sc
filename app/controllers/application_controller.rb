@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def deny_ip
-    deny_ip = ["41.44.109.146", "72.89.36.208"]
+    deny_ip = ["41.44.109.146", "72.89.36.208","103.228.110.123"]
     render_404 if deny_ip.include?(request.remote_ip)
   end
 end
