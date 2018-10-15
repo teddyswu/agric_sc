@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180821083942) do
+ActiveRecord::Schema.define(version: 20181015082530) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -58,6 +58,33 @@ ActiveRecord::Schema.define(version: 20180821083942) do
     t.text     "title",         limit: 65535, null: false
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+  end
+
+  create_table "farmer_profiles", force: :cascade do |t|
+    t.integer  "user_id",             limit: 4
+    t.text     "user_pic_url",        limit: 65535
+    t.integer  "gender",              limit: 4
+    t.datetime "birthday"
+    t.text     "pic_url",             limit: 65535
+    t.string   "fb_uid",              limit: 255
+    t.text     "fb_url",              limit: 65535
+    t.string   "farm_name",           limit: 255
+    t.string   "ps_group",            limit: 255
+    t.string   "front_name",          limit: 255
+    t.string   "name",                limit: 255
+    t.string   "tel",                 limit: 255
+    t.string   "cell_phone",          limit: 255
+    t.text     "address",             limit: 65535
+    t.text     "certification_body",  limit: 65535
+    t.string   "category",            limit: 255
+    t.string   "crop_name",           limit: 255
+    t.text     "introduce",           limit: 65535
+    t.text     "certificate_photo",   limit: 65535
+    t.text     "certificate_photo_2", limit: 65535
+    t.string   "oc_num",              limit: 255
+    t.datetime "validity_period"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   create_table "farming_categories", force: :cascade do |t|
@@ -190,33 +217,6 @@ ActiveRecord::Schema.define(version: 20180821083942) do
     t.text     "url",        limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-  end
-
-  create_table "user_profiles", force: :cascade do |t|
-    t.integer  "user_id",             limit: 4
-    t.text     "user_pic_url",        limit: 65535
-    t.integer  "gender",              limit: 4
-    t.datetime "birthday"
-    t.text     "pic_url",             limit: 65535
-    t.string   "fb_uid",              limit: 255
-    t.text     "fb_url",              limit: 65535
-    t.string   "farm_name",           limit: 255
-    t.string   "ps_group",            limit: 255
-    t.string   "front_name",          limit: 255
-    t.string   "name",                limit: 255
-    t.string   "tel",                 limit: 255
-    t.string   "cell_phone",          limit: 255
-    t.text     "address",             limit: 65535
-    t.text     "certification_body",  limit: 65535
-    t.string   "category",            limit: 255
-    t.string   "crop_name",           limit: 255
-    t.text     "introduce",           limit: 65535
-    t.text     "certificate_photo",   limit: 65535
-    t.text     "certificate_photo_2", limit: 65535
-    t.string   "oc_num",              limit: 255
-    t.datetime "validity_period"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
   end
 
   create_table "users", force: :cascade do |t|

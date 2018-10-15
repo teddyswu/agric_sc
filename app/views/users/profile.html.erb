@@ -29,7 +29,7 @@
           </ul>
         </div>
         <div class="col-12 col-lg-8">
-          <%= form_for @user.user_profile, :url => user_path(@user) do |f|%>
+          <%= form_for @user.farmer_profile, :url => user_path(@user) do |f|%>
             <div class="form-group row align-items-center">
               <label for="id" class="col-sm-2 col-form-label">
                 <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= @user.try(:authorizations)[0].try(:uid)%>/picture" alt="" style="width: 50px">

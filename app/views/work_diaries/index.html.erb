@@ -46,7 +46,7 @@
                       <% @diaries.each do |diary|%>
                         <tr>
                           <td scope="row"><%= diary.id%></td>
-                          <td><%= diary.user.user_profile.name %></td>
+                          <td><%= diary.user.farmer_profile.name %></td>
                           <td><%= diary.comment%></td>
                           <td><%= diary.diary_time.strftime('%Y-%m-%d') %></td>
                         </tr>

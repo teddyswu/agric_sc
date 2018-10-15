@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 	def create
 	end
 	def update
-		user = UserProfile.find_by_user_id(current_user.id)
+		user = FarmerProfile.find_by_user_id(current_user.id)
 		user.update(user_profile_params)
 		user.save
 
@@ -15,6 +15,6 @@ class UsersController < ApplicationController
 	end
 
 	def user_profile_params
-		params.require(:user_profile).permit(:front_name, :gender, :birthday, :introduce)
+		params.require(:farmer_profile).permit(:front_name, :gender, :birthday, :introduce)
 	end
 end

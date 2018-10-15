@@ -167,8 +167,8 @@
   }
 
   function appendImage (src) {
-    $('#user_profile_certificate_photo').val("清除中...");
-    $('#user_profile_certificate_photo').val(src.original);
+    $('#farmer_profile_certificate_photo').val("清除中...");
+    $('#farmer_profile_certificate_photo').val(src.original);
     $("#pic_1").attr('src', src.original);
   }
   $(function () {
@@ -239,8 +239,8 @@
     $('#progress').after('<br>').after(error);
   }
   function appendImage_2 (src) {
-    $('#user_profile_certificate_photo_2').val("清除中...");
-    $('#user_profile_certificate_photo_2').val(src.original);
+    $('#farmer_profile_certificate_photo_2').val("清除中...");
+    $('#farmer_profile_certificate_photo_2').val(src.original);
     $("#pic_2").attr('src', src.original);
   }
 
@@ -312,15 +312,15 @@
     $('#progress').after('<br>').after(error);
   }
   function user_pic_appendImage_2 (src) {
-    $('#user_profile_user_pic_url').val("清除中...");
-    $('#user_profile_user_pic_url').val(src.original);
+    $('#farmer_profile_user_pic_url').val("清除中...");
+    $('#farmer_profile_user_pic_url').val(src.original);
     $("#user_pic_url").attr('src', src.original);
   }
  $(document).ready(function(){
     $("#from_submit").click(function(){
-      if($("#user_profile_name").val()==""){
+      if($("#farmer_profile_name").val()==""){
         $("#name").html("你尚未填寫姓名");
-        $("#user_profile_name").focus();          
+        $("#farmer_profile_name").focus();          
       }else if($("#filed_code_1").val()==""){
         $("#filed_code").html("至少填寫一個田區代號");
         $("#filed_code_1").focus();       

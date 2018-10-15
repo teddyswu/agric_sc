@@ -12,7 +12,7 @@ class MultiImageUploadsController < ApplicationController
         image.file = params[:file]
         image.save!
         image.update_urls_success?
-        user = UserProfile.find_by_name(@option["name"])
+        user = FarmerProfile.find_by_name(@option["name"])
         last_five_ids = WorkDiary.last(5).reverse.map {|work| work.id }
         wdc = WorkDiary.where(:id => last_five_ids, :comment => "multi_upload", :owner_id => user.user_id ).where("created_at > '#{Time.now - 9.hour}'").limit(1)
         if wdc.present?

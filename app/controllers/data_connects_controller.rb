@@ -66,7 +66,7 @@ class DataConnectsController < ApplicationController
 				user_datum.save!
 				render json: "[{'encryption':" + "#{user.encryption}" + "},{'status':'create ok'}]" and return
     	when "farmer"
-    		check_uid = UserProfile.find_by_fb_uid(params[:uid])
+    		check_uid = FarmerProfile.find_by_fb_uid(params[:uid])
     		if check_uid.blank?
     			user = User.new
     			user.email = "#{Time.now.to_i}@temp.com.tw"
@@ -74,7 +74,7 @@ class DataConnectsController < ApplicationController
 		    	user.encrypted_password = "user_temp"
 		    	user.is_farmer = true
 		    	user.save!
-          user_profile = UserProfile.new
+          user_profile = FarmerProfile.new
           user_profile.user_id = user.id
           user_profile.fb_uid = params[:uid]
           user_profile.name = params[:name]
@@ -91,7 +91,7 @@ class DataConnectsController < ApplicationController
         File.open("#{Rails.root}/log/diary.log", "a+") do |file|
           file.syswrite(%(#{Time.now.iso8601}: #{params} \n---------------------------------------------\n\n))
         end
-        up = UserProfile.find_by_name(params[:name])
+        up = FarmerProfile.find_by_name(params[:name])
         if params[:photo] == nil
           wd = WorkDiary.where(:owner_id => up.user_id, :comment => "multi_upload").last
           wd.comment = params[:comment]
@@ -129,7 +129,7 @@ class DataConnectsController < ApplicationController
           file.syswrite(%(#{Time.now.iso8601}: #{params} \n---------------------------------------------\n\n))
         end
     		wr = WorkRecordLog.new
-        up = UserProfile.find_by_name(params[:name])
+        up = FarmerProfile.find_by_name(params[:name])
     		wr.owner_id = up.user_id
     		wr.record_type = params[:record_type]
     		wr.farming_category = params[:farming_category]
@@ -209,7 +209,7 @@ class DataConnectsController < ApplicationController
     	user = User.find_by_encryption(params[:encryption])
     	render json: user.user_datums.select(:user_data,:id) and return
     when "check_farmer"
-    	user_profile = UserProfile.find_by_name(params[:name])
+    	user_profile = FarmerProfile.find_by_name(params[:name])
     	if user_profile == nil
     		render json: '[{"check":false}]'
     	else
@@ -220,14 +220,14 @@ class DataConnectsController < ApplicationController
         end
     	end
     when "farmer_data"
-    	user_profile = UserProfile.find_by_name(params[:name])
+    	user_profile = FarmerProfile.find_by_name(params[:name])
     	if user_profile == nil
     		render json: "[{'status':no data}]"
     	else
     		render json: '{"uid":"' + user_profile.fb_uid.to_s + '","name":"' + user_profile.name.to_s + '","front_name":"' + user_profile.front_name.to_s + '","cell_phone":"' + user_profile.cell_phone.to_s + '","certificate":"' + user_profile.certificate_photo.to_s + '","certificate_2":"' + user_profile.certificate_photo_2.to_s + '","profile_pic":"' + user_profile.pic_url.to_s + '","farmer_info":"' + "http://story.sogi.com.tw/farmers/#{user_profile.user_id}" + '","farmer_record":"' + "http://story.sogi.com.tw/farmers/#{user_profile.user_id}/work_record\"}"
       end
     when "edit_farmer_data"
-  		user_profile = UserProfile.find_by_name(params[:name])
+  		user_profile = FarmerProfile.find_by_name(params[:name])
   		user_profile.cell_phone = params[:cell_phone] if params[:cell_phone].present?
   		user_profile.pic_url = params[:profile_pic] if params[:profile_pic].present?
   		user_profile.certificate_photo = params[:certificate] if params[:certificate].present?
@@ -235,13 +235,13 @@ class DataConnectsController < ApplicationController
   		user_profile.save!
   		render json: "[{'update':ok}]"
   	when "delete_farmer_data"
-  		user_profile = UserProfile.find_by_name(params[:name])
+  		user_profile = FarmerProfile.find_by_name(params[:name])
   		user_profile.destroy
   		render json: "[{'delete':ok}]"
     when "get"
     	case params[:type].downcase
     	when "filed_code"
-	    	user = User.joins(:user_profile).where("user_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
+	    	user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
 	    	filed_code = FiledCode.where(:user_id => user[0].id).order(:id)
 		    filed = Array.new
 		    filed_code.each do |code|
@@ -263,14 +263,14 @@ class DataConnectsController < ApplicationController
         end
         render json: work
       when "farmer_group"
-      	farmer_groups = UserProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group)
+      	farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group)
         farmer_group = Array.new
         farmer_groups.each do |fg|
         	farmer_group << fg.ps_group
         end
         render json: farmer_group
       when "farmer_list"
-      	farmer_lists = UserProfile.joins(:user).where("user_profiles.ps_group = ?",params[:group])
+      	farmer_lists = FarmerProfile.joins(:user).where("farmer_profiles.ps_group = ?",params[:group])
         farmer = Array.new
         farmer_lists.each do |fl|
           farmer_list = Hash.new

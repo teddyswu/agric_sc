@@ -19,14 +19,14 @@
           <div class="border-top border-bottom border-gray py-3">
             <div class="row">
               <div class="col-12 col-lg-2 my-2 text-center">
-                <img class="img-fluid rounded-circle" src="<%= @farmer.user_profile.user_pic_url.present? ? @farmer.user_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 150px;">
+                <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 150px;">
               </div>
               <div class="col-12 col-lg-10 my-2">
                 <div class="mb-2">
                   <div class="text-center text-md-left">
-                    <span class="h5"><%= @farmer.user_profile.front_name%></span>
+                    <span class="h5"><%= @farmer.farmer_profile.front_name%></span>
                     <span class="ml-3">
-                    	<%= link_to @farmer.user_profile.fb_url, class: "text-fb", target: "_blank" do %>
+                    	<%= link_to @farmer.farmer_profile.fb_url, class: "text-fb", target: "_blank" do %>
                         <i class="fab fa-fw fa-lg fa-facebook"></i>
                       <% end %>
                       <a class="text-danger btn-like" href="javascript:void();">
@@ -38,7 +38,7 @@
                 <ul class="nav nav-info">
                   <li class="nav-item my-1">
                   	<%= link_to farmer_path(@farmer.id), class: "nav-link" do%>
-                  		<u><%= @farmer.user_profile.farm_name%></u>
+                  		<u><%= @farmer.farmer_profile.farm_name%></u>
                   	<% end %>
                   </li>
                   <li class="nav-item my-1">
@@ -58,7 +58,7 @@
                   </li>
                 </ul>
                 <div class="mt-4 text-row-2 text-muted">
-                  <%= @farmer.user_profile.introduce%>
+                  <%= @farmer.farmer_profile.introduce%>
                 </div>
               </div>
           	</div>
@@ -139,8 +139,8 @@
               <div class="pt-4 px-4 pb-0">
                 <div class="row align-items-center">
                   <div class="media col">
-                    <img class="img-fluid rounded-circle" src="<%= @farmer.user_profile.user_pic_url.present? ? @farmer.user_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
-                    <div class="media-body align-self-center ml-3"><%= wd.user.user_profile.front_name%></div>
+                    <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
+                    <div class="media-body align-self-center ml-3"><%= wd.user.farmer_profile.front_name%></div>
                   </div>
                   <div class="col text-right">
                     <div class="btn-group">

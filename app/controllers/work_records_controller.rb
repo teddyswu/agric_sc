@@ -66,7 +66,7 @@ class WorkRecordsController < ApplicationController
   end
 
 	def outputs
-		up = UserProfile.find_by_name(params[:name])
+		up = FarmerProfile.find_by_name(params[:name])
 		@work_projects = "" 
     WorkProject.all.each do |wp|
       @work_projects << wp.name
