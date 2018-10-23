@@ -1,5 +1,6 @@
 class DataConnectsController < ApplicationController
 	skip_before_action :verify_authenticity_token
+  include ActionView::Helpers::NumberHelper
 	def story
 		case params[:motion]
 		when "new"
@@ -288,6 +289,39 @@ class DataConnectsController < ApplicationController
         user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
         url = "http://story.sogi.com.tw/farmers/#{user[0].id}"
         render json: url
+      when "farmer_proposal"
+        user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
+        groups = CampaignGroup.where(:user_id => user[0].id).limit(10)
+        campaign = Array.new
+        groups.each do |group|
+          if group.campaign.end_date > Date.today
+            remain_day = (group.campaign.end_date - Date.today).to_i
+            amount_raised = group.campaign.amount_raised
+            percentage = 100*(amount_raised.to_f / group.campaign.goal)
+            income = group.income
+            supporter = group.campaign.orders.is_paid.size
+            img = group.campaign.campaign_image.campaign_path
+            line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{group.campaign.slug}" + '"}]}'      
+            campaign << JSON.parse(line)
+          end
+        end
+        render json: campaign
+      when "recomm_proposal"
+        campaigns = Campaign.where(:status => 3).limit(10)
+        proposal = Array.new
+        campaigns.each do |campaign|
+          remain_day = (campaign.end_date - Date.today).to_i
+          amount_raised = campaign.amount_raised
+          percentage = 100*(amount_raised.to_f / campaign.goal)
+          description = campaign.description.first(40)
+          text = Hash.new
+          text["title"] = campaign.title
+          text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+          text["image_url"] = campaign.campaign_image.campaign_path
+          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "http://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+          proposal << text
+        end
+        render json: proposal
       when /message/
       	case params[:key]
       	when "list"
