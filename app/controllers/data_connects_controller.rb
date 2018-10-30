@@ -287,7 +287,8 @@ class DataConnectsController < ApplicationController
         render json: farmer
       when "farmer_work_wall"
         user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
-        url = "http://story.sogi.com.tw/farmers/#{user[0].id}"
+        url = Array.new
+        url << "http://story.sogi.com.tw/farmers/#{user[0].id}"
         render json: url
       when "farmer_proposal"
         user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
@@ -395,8 +396,9 @@ class DataConnectsController < ApplicationController
           wording << effect_word.show_name
         end
         render json: wording
-      when "proposal_link"
-        url = "http://swiss.i-sogi.com/orders"
+      when "proposal_link" #農友參與的提案
+        url = Array.new
+        url << "http://swiss.i-sogi.com/orders"
         render json: url
       end
 		end
