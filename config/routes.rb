@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "user/omniauth_callbacks"}
   resources :users do
     get "profile", on: :collection
+    get "fb_binding", on: :collection
   end
   
   get "agris/comic_del/:id", :to => "agris#comic_del", :as => "comic_del"

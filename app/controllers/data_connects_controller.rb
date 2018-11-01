@@ -319,10 +319,46 @@ class DataConnectsController < ApplicationController
           text["title"] = campaign.title
           text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
+          buttons = Array.new #[]
+          t1 = Hash.new
+          t1["type"] = "web_url"
+          t1["title"] = "追蹤♥"
+          t1["url"] = "http://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=#{params[:scoped_id]}&slug=#{campaign.slug}"
+          buttons << t1
+          t2 = Hash.new
+          t2["type"] = "web_url"
+          t2["title}"] = "查看內容"
+          t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
+          buttons << t2
+          text["buttons"] = buttons
+          proposal << text
+        end
+        render json: proposal
+      when "similar_proposal"
+        user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
+        similar_user = FarmerProfile.where(:category => user[0].farmer_profile.category).map {|user| user.user_id }
+        campaigns = Campaign.where(:status => 3, :user_id => similar_user).limit(10)
+        proposal = Array.new
+        campaigns.each do |campaign|
+          remain_day = (campaign.end_date - Date.today).to_i
+          amount_raised = campaign.amount_raised
+          percentage = 100*(amount_raised.to_f / campaign.goal)
+          description = campaign.description.first(40)
+          text = Hash.new
+          text["title"] = campaign.title
+          text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+          text["image_url"] = campaign.campaign_image.campaign_path
           text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "http://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
           proposal << text
         end
         render json: proposal
+      when "fb_track"
+        campaign = Campaign.find_by_slug(params[:slug])
+        fb_track = FbTrack.find_or_create_by(:scoped_id => params[:scoped_id], :campaign_id => campaign.id)
+        render json: "Track OK"
+      when "subscription"
+        subscription = UserSubscription.find_or_create_by(:scoped_id => params[:scoped_id], :full_name => params[:full_name])
+        render json: "Subscription completed"
       when /message/
       	case params[:key]
       	when "list"
@@ -355,6 +391,22 @@ class DataConnectsController < ApplicationController
       		end
       		render json: wording
       	end
+      when "b2c.project"
+        type = params[:type].upcase
+        mo = Wording.where("name like '%#{type}.#{params[:key]}%'").order(:name)
+        wording = Array.new
+        mo.each do |m|
+          wording << JSON.parse(m.content)
+        end
+        render json: wording
+      when "b2b.project"
+        type = params[:type].upcase
+        mo = Wording.where("name like '%#{type}.#{params[:key]}%'").order(:name)
+        wording = Array.new
+        mo.each do |m|
+          wording << JSON.parse(m.content)
+        end
+        render json: wording
       when /level/
       	case params[:key]
       	when "list"
@@ -400,6 +452,40 @@ class DataConnectsController < ApplicationController
         url = Array.new
         url << "http://swiss.i-sogi.com/orders"
         render json: url
+      when "user_proposal"
+        auth = Authorization.find_by_uid(params[:uid])
+        user_proposal = Array.new
+        auth.user.orders.order(:paid).each do |order|
+          if order.goody.campaign.end_date > Date.today
+            remain_day = (order.goody.campaign.end_date - Date.today).to_i
+            amount_raised = order.goody.campaign.amount_raised
+            percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+            text = Hash.new
+            text["title"] = order.goody.campaign.title
+            text["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+            text["image_url"] = order.goody.campaign.campaign_image.campaign_path
+            buttons = Array.new #[]
+            t1 = Hash.new
+            if order.paid == false
+              t1["type"] = "web_url"
+              t1["title"] = "付款去"
+              t1["url"] = "http://swiss.i-sogi.com/orders/#{order.id}/go_pay"
+            else
+              t1["type"] = "web_url"
+              t1["title"] = "查看詳細記錄"
+              t1["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}"
+            end
+            buttons << t1
+            t2 = Hash.new
+            t2["type"] = "web_url"
+            t2["title}"] = "查看最新進度"
+            t2["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}/updates"
+            buttons << t2
+            text["buttons"] = buttons
+            user_proposal << text
+          end
+        end
+        render json: user_proposal
       end
 		end
 	end

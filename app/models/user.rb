@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   devise :registerable, :confirmable
 
   after_save :create_encryption
+  has_many :orders
   has_many :user_datums
   has_many :user_farming_category_ships
   has_many :farming_categories, :through => :user_farming_category_ships
@@ -14,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :work_records, :foreign_key => "owner_id"
   has_many :work_record_reply
   has_many :authorizations
+  has_many :campaigns
 
   extend OmniauthCallbacks
 

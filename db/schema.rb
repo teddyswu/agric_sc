@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181015082530) do
+ActiveRecord::Schema.define(version: 20181101072012) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -93,6 +93,12 @@ ActiveRecord::Schema.define(version: 20181015082530) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "fb_bindings", force: :cascade do |t|
+    t.text     "binding_ip", limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
   create_table "fb_to_aws", force: :cascade do |t|
     t.string   "file",       limit: 255
     t.text     "cover_url",  limit: 65535
@@ -100,6 +106,13 @@ ActiveRecord::Schema.define(version: 20181015082530) do
     t.text     "show_url",   limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+  end
+
+  create_table "fb_tracks", force: :cascade do |t|
+    t.string   "scoped_id",   limit: 255
+    t.integer  "campaign_id", limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "file_lists", force: :cascade do |t|
@@ -217,6 +230,13 @@ ActiveRecord::Schema.define(version: 20181015082530) do
     t.text     "url",        limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+  end
+
+  create_table "user_subscriptions", force: :cascade do |t|
+    t.string   "scoped_id",  limit: 255
+    t.string   "full_name",  limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "users", force: :cascade do |t|

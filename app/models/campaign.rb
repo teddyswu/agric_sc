@@ -6,6 +6,7 @@ class Campaign < CrowdDbConnecter
   has_many :goodies, dependent: :destroy
   has_many :orders, through: :goodies
   has_one :campaign_image
+  belongs_to :user
 
 
   def amount_raised

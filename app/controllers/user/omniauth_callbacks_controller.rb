@@ -14,7 +14,12 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
                 render :text => "<script>alert('登入失敗，請檢查您的Facebook是否有電子郵件資料，並同意授權我們作為會員帳號使用，謝謝!');location.href='/footers/fb_faq';</script>" and return
               end
               if @user.persisted? 
-                sign_in_and_redirect @user, :event => :authentication
+                if FbBinding.find_by_binding_ip(request.remote_ip).present?
+                  FbBinding.destroy_all(:binding_ip => request.remote_ip)
+                  render :json => "綁定完成"
+                else
+                  sign_in_and_redirect @user, :event => :authentication
+                end
               else
                 redirect_to new_user_registration_url
               end
