@@ -62,7 +62,12 @@ class AgrisController < ApplicationController
   end
 
   def wording_list
-    @wording_lists = Wording.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
+    if params[:type].present?
+      type = params[:type].upcase
+      @wording_lists = Wording.where("name like '%#{type}%'").order(:name)
+    else
+      @wording_lists = Wording.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
+    end
   end
 
   def wording_new

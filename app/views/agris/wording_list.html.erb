@@ -27,6 +27,17 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
+                <strong>快搜類別</strong>
+              </div>
+              <div class="card-body">
+                <%= link_to "TEAFU.STORY.MESSAGE", wording_list_path(:type => "TEAFU.STORY.MESSAGE"), :class => "btn btn-outline-primary", :role => "button"%>
+                <%= link_to "TEAFU.STORY.LEVEL", wording_list_path(:type => "TEAFU.STORY.LEVEL"), :class => "btn btn-outline-secondary", :role => "button"%>
+                <%= link_to "TEAFU.MENU.B2B", wording_list_path(:type => "TEAFU.MENU.B2B"), :class => "btn btn-outline-success", :role => "button"%>
+                <%= link_to "TEAFU.MENU.B2C", wording_list_path(:type => "TEAFU.MENU.B2C"), :class => "btn btn-outline-danger", :role => "button"%>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
                 <strong class="card-title">Table List</strong> <%= link_to "新增", wording_new_path%>
               </div>
                 <div class="card-body">
@@ -48,7 +59,7 @@
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @wording_lists %>
+                  <%= will_paginate @wording_lists if params[:type].blank?%>
                 </div>
             </div>
           </div>
