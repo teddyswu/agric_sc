@@ -16,6 +16,7 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
               if @user.persisted? 
                 if FbBinding.find_by_binding_ip(request.remote_ip).present?
                   FbBinding.destroy_all(:binding_ip => request.remote_ip)
+                  sign_in @user
                   render :json => "綁定完成"
                 else
                   sign_in_and_redirect @user, :event => :authentication
