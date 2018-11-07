@@ -32,15 +32,20 @@
                   <%= f.label("名稱", :class => 'form-control-label') %><%= f.text_field(:name, :class => "form-control", placeholder: "輸入標題")%>
                 </div>
                 <div class="form-group">
-                  <%= f.label("內容", :class => 'form-control-label') %>
                   <button type="button" class="btn btn-secondary" id="import_text">
-                    <i class="fa fa-lightbulb-o"></i>&nbsp; 匯入[故事]對話格式(文字)
+                    <i class="fa fa-calendar"></i>&nbsp; [故事]對話格式(文)
                   </button>
                   <button type="button" class="btn btn-success" id="import_img">
-                    <i class="fa fa-magic"></i>&nbsp; 匯入[故事]對話格式(圖片)
+                    <i class="fa fa-calendar-o"></i>&nbsp; [故事]對話格式(圖)
                   </button>
                   <button type="button" class="btn btn-warning" id="import_card">
-                    <i class="fa fa-map-marker"></i>&nbsp; 匯入[故事]卡片格式
+                    <i class="fa fa-calendar-check-o"></i>&nbsp; [故事]卡片格式
+                  </button>
+                  <button type="button" class="btn btn-info" id="import_mes_farmer_text">
+                    <i class="fa fa-calendar-minus-o"></i>&nbsp; 主選單B2B對話
+                  </button>
+                  <button type="button" class="btn btn-info" id="import_mes_user_text">
+                    <i class="fa fa-calendar-minus-o"></i>&nbsp; 主選單B2C對話
                   </button>
                   <%= f.text_area(:content, :class => "form-control", placeholder: "輸入內容", rows: 20)%>
                 </div>
@@ -75,6 +80,14 @@
   $('#import_card').on('click', function () {
     $("#wording_name").val("TEAFU.STORY.LEVEL.[請輸入數字]");
     $("#wording_content").val("[\n{\n\"title\": \"我是台灣特有種\",\n\"subtitle\":\"我是一隻瀕臨絕種的小青蛙，身處在北部高山.....\",\n\"image_url\": \"http://story.sogi.com.tw/showjpg/story_001.jpg\",\n\"buttons\": [\n{\n\"type\": \"postback\",\n\"title\": \"我想了解茶福的身世\",\n\"payload\": \"01_ShenShi\"\n}\n]\n},\n{\n\"title\": \"我是被年改的公務員\",\n\"subtitle\":\"我是位繁忙的上班族，好想要來一杯文山包種茶.....\",\n\"image_url\": \"http://story.sogi.com.tw/showjpg/story_002.jpg\",\n\"buttons\": [\n{\n\"type\": \"postback\",\n\"title\": \"我想了解茶福的職業\",\n\"payload\": \"01_JOB\"\n}\n]\n},\n{\n\"title\": \"我的老家有年獸！\",\n\"subtitle\":\"牠！每年都會跑出來大鬧坪林街上一次.....\",\n\"image_url\": \"http://story.sogi.com.tw/showjpg/story_003.jpg\",\n\"buttons\": [\n{\n\"type\": \"postback\",\n\"title\": \"我想了解茶福的老家\",\n\"payload\": \"01_JOB\"\n}\n]\n}\n]");
+  })
+  $('#import_mes_farmer_text').on('click', function () {
+    $("#wording_name").val("TEAFU.MENU.B2B.[請輸入數字]");
+    $("#wording_content").val("[{\n\"NAME\": \"TEAFU.MENU.B2B.[請輸入數字].[請輸入數字]\",\n\"type\": \"text\",\n\"text\": \"您已完成追蹤，若有這項提案最新消息茶福會通知您唷。\",\n\"delay\": \"1\"\n},\n{\n\"NAME\": \"TEAFU.MENU.B2B.[請輸入數字].[請輸入數字]\",\n\"type\": \"text\",\n\"text\": \"還有～還有～其他提案也很精彩值得你關注喔。\",\n\"delay\": \"1\"\n}\n]");
+  })
+  $('#import_mes_user_text').on('click', function () {
+    $("#wording_name").val("TEAFU.MENU.B2C.[請輸入數字]");
+    $("#wording_content").val("[{\n\"NAME\": \"TEAFU.MENU.B2C.[請輸入數字].[請輸入數字]\",\n\"type\": \"text\",\n\"text\": \"您已完成追蹤，若有這項提案最新消息茶福會通知您唷。\",\n\"delay\": \"1\"\n},\n{\n\"NAME\": \"TEAFU.MENU.B2C.[請輸入數字].[請輸入數字]\",\n\"type\": \"text\",\n\"text\": \"還有～還有～其他提案也很精彩值得你關注喔。\",\n\"delay\": \"1\"\n}\n]");
   })
   $('#validate_json').on('click', function () {
     try {
