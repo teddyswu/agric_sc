@@ -391,7 +391,7 @@ class DataConnectsController < ApplicationController
       		end
       		render json: wording
       	end
-      when "teafu.menu.b2c"
+      when "menu.b2c"
         type = params[:type].upcase
         mo = Wording.where("name like '%#{type}.#{params[:key]}%'").order(:name)
         wording = Array.new
@@ -399,7 +399,7 @@ class DataConnectsController < ApplicationController
           wording << JSON.parse(m.content)
         end
         render json: wording
-      when "teafu.menu.b2b"
+      when "menu.b2b"
         type = params[:type].upcase
         mo = Wording.where("name like '%#{type}.#{params[:key]}%'").order(:name)
         wording = Array.new
