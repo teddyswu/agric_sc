@@ -418,9 +418,12 @@ class DataConnectsController < ApplicationController
           proposal << text
         end
         wording = Array.new
+
         mo.each do |m|
           if m.content.include? 'similar_proposal'
-            wording << proposal
+            aa = m.content.gsub("[similar_proposal]",proposal.to_s)
+            aa = aa.gsub("=>", ":")
+            wording << JSON.parse(aa)
           else
             wording << JSON.parse(m.content)
           end
