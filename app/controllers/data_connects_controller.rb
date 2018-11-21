@@ -402,9 +402,28 @@ class DataConnectsController < ApplicationController
       when "menu.b2b"
         type = params[:type].upcase
         mo = Wording.where("name like '%#{type}.#{params[:key]}%'").order(:name)
+        similar_user = FarmerProfile.where(:category => "茶").map {|user| user.user_id }
+        campaigns = Campaign.where(:status => 3, :user_id => similar_user).limit(10)
+        proposal = Array.new
+        campaigns.each do |campaign|
+          remain_day = (campaign.end_date - Date.today).to_i
+          amount_raised = campaign.amount_raised
+          percentage = 100*(amount_raised.to_f / campaign.goal)
+          description = campaign.description.first(40)
+          text = Hash.new
+          text["title"] = campaign.title
+          text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+          text["image_url"] = campaign.campaign_image.campaign_path
+          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "http://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+          proposal << text
+        end
         wording = Array.new
         mo.each do |m|
-          wording << JSON.parse(m.content)
+          if m.content.include? 'similar_proposal'
+            wording << proposal
+          else
+            wording << JSON.parse(m.content)
+          end
         end
         render json: wording
       when /level/
