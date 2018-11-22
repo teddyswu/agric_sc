@@ -286,27 +286,57 @@ class DataConnectsController < ApplicationController
         end
         render json: farmer
       when "farmer_work_wall"
-        user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
-        url = Array.new
-        url << "http://story.sogi.com.tw/farmers/#{user[0].id}"
-        render json: url
-      when "farmer_proposal"
-        user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
-        groups = CampaignGroup.where(:user_id => user[0].id).limit(10)
-        campaign = Array.new
-        groups.each do |group|
-          if group.campaign.end_date > Date.today
-            remain_day = (group.campaign.end_date - Date.today).to_i
-            amount_raised = group.campaign.amount_raised
-            percentage = 100*(amount_raised.to_f / group.campaign.goal)
-            income = group.income
-            supporter = group.campaign.orders.is_paid.size
-            img = group.campaign.campaign_image.campaign_path
-            line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{group.campaign.slug}" + '"}]}'      
-            campaign << JSON.parse(line)
-          end
+        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        total = Array.new
+        text = Array.new
+        result = Hash.new
+        if farmer_profile.present?
+          result["regiest"] = true
+          group = CampaignGroup.find_by(:user_id => farmer_profile.user_id)
+          group.present? ? result["join"] = true : result["join"] = false
+        else
+          result["regiest"] = false
+          result["join"] = false
         end
-        render json: campaign
+        text << result
+        total << text
+        ua = Array.new
+        url = Hash.new
+        url[:url] = "http://story.sogi.com.tw/farmers/#{farmer_profile.user_id}" if farmer_profile.present?
+        ua << url if farmer_profile.present?
+        total << ua if farmer_profile.present?
+        render json: total
+      when "farmer_proposal"
+        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        total = Array.new
+        text = Array.new
+        result = Hash.new
+        if farmer_profile.present?
+          result["regiest"] = true
+          group = CampaignGroup.find_by(:user_id => farmer_profile.user_id)
+          group.present? ? result["join"] = true : result["join"] = false
+          campaign = Array.new
+          groups = CampaignGroup.where(:user_id => farmer_profile.user_id).limit(10)
+          groups.each do |group|
+            if group.campaign.end_date > Date.today
+              remain_day = (group.campaign.end_date - Date.today).to_i
+              amount_raised = group.campaign.amount_raised
+              percentage = 100*(amount_raised.to_f / group.campaign.goal)
+              income = group.income
+              supporter = group.campaign.orders.is_paid.size
+              img = group.campaign.campaign_image.campaign_path
+              line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{group.campaign.slug}" + '"}]}'      
+              campaign << JSON.parse(line)
+            end
+          end
+        else
+          result["regiest"] = false
+          result["join"] = false
+        end
+        text << result
+        total << text
+        total << campaign if campaign != nil
+        render json: total
       when "recomm_proposal"
         campaigns = Campaign.where(:status => 3).limit(10)
         proposal = Array.new
@@ -471,9 +501,30 @@ class DataConnectsController < ApplicationController
         end
         render json: wording
       when "proposal_link" #農友參與的提案
+        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        total = Array.new
+        text = Array.new
+        result = Hash.new
         url = Array.new
-        url << "http://swiss.i-sogi.com/orders"
-        render json: url
+        ua = Hash.new
+        if farmer_profile.present?
+          result["regiest"] = true
+          group = CampaignGroup.find_by(:user_id => farmer_profile.user_id)
+          if group.present?
+            result["join"] = true
+            ua[:url] = "http://swiss.i-sogi.com/orders"
+            url << ua
+          else
+            result["join"] = false
+          end
+        else
+          result["regiest"] = false
+          result["join"] = false
+        end
+        text << result
+        total << text
+        total << url if url != []
+        render json: total
       when "user_proposal"
         auth = Authorization.find_by_uid(params[:uid])
         user_proposal = Array.new
