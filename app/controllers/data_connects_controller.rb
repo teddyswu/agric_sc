@@ -508,6 +508,20 @@ class DataConnectsController < ApplicationController
           end
         end
         render json: user_proposal
+      when "farmer_determine"
+        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        text = Array.new
+        result = Hash.new
+        if farmer_profile.present?
+          result["regiest"] = true
+          group = CampaignGroup.find_by(:user_id => farmer_profile.user_id)
+          group.present? ? result["join"] = true : result["join"] = false
+        else
+          result["regiest"] = false
+          result["join"] = false
+        end
+        text << result
+        render json: text
       end
 		end
 	end
