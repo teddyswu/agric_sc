@@ -225,7 +225,7 @@ class DataConnectsController < ApplicationController
     	if user_profile == nil
     		render json: "[{'status':no data}]"
     	else
-    		render json: '{"uid":"' + user_profile.fb_uid.to_s + '","name":"' + user_profile.name.to_s + '","front_name":"' + user_profile.front_name.to_s + '","cell_phone":"' + user_profile.cell_phone.to_s + '","certificate":"' + user_profile.certificate_photo.to_s + '","certificate_2":"' + user_profile.certificate_photo_2.to_s + '","profile_pic":"' + user_profile.pic_url.to_s + '","farmer_info":"' + "http://story.sogi.com.tw/farmers/#{user_profile.user_id}" + '","farmer_record":"' + "http://story.sogi.com.tw/farmers/#{user_profile.user_id}/work_record\"}"
+    		render json: '{"uid":"' + user_profile.fb_uid.to_s + '","name":"' + user_profile.name.to_s + '","front_name":"' + user_profile.front_name.to_s + '","cell_phone":"' + user_profile.cell_phone.to_s + '","certificate":"' + user_profile.certificate_photo.to_s + '","certificate_2":"' + user_profile.certificate_photo_2.to_s + '","profile_pic":"' + user_profile.pic_url.to_s + '","farmer_info":"' + "https://story.sogi.com.tw/farmers/#{user_profile.user_id}" + '","farmer_record":"' + "https://story.sogi.com.tw/farmers/#{user_profile.user_id}/work_record\"}"
       end
     when "edit_farmer_data"
   		user_profile = FarmerProfile.find_by_name(params[:name])
@@ -280,8 +280,8 @@ class DataConnectsController < ApplicationController
           farmer_list["front_name"] = fl.front_name
         	farmer_list["user_pic_url"] = fl.user_pic_url
         	farmer_list["introduce"] = fl.introduce
-          farmer_list["farmer_info"] = "http://story.sogi.com.tw/farmers/#{fl.user_id}"
-          farmer_list["farmer_record"] = "http://story.sogi.com.tw/farmers/#{fl.user_id}/work_record"
+          farmer_list["farmer_info"] = "https://story.sogi.com.tw/farmers/#{fl.user_id}"
+          farmer_list["farmer_record"] = "https://story.sogi.com.tw/farmers/#{fl.user_id}/work_record"
           farmer << farmer_list
         end
         render json: farmer
@@ -302,7 +302,8 @@ class DataConnectsController < ApplicationController
         total << text
         ua = Array.new
         url = Hash.new
-        url[:url] = "http://story.sogi.com.tw/farmers/#{farmer_profile.user_id}" if farmer_profile.present?
+        url[:type] = "text"
+        url[:text] = "https://story.sogi.com.tw/farmers/#{farmer_profile.user_id}" if farmer_profile.present?
         ua << url if farmer_profile.present?
         total << ua if farmer_profile.present?
         render json: total
@@ -353,7 +354,7 @@ class DataConnectsController < ApplicationController
           t1 = Hash.new
           t1["type"] = "web_url"
           t1["title"] = "追蹤♥"
-          t1["url"] = "http://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=#{params[:scoped_id]}&slug=#{campaign.slug}"
+          t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=#{params[:scoped_id]}&slug=#{campaign.slug}"
           buttons << t1
           t2 = Hash.new
           t2["type"] = "web_url"
@@ -378,7 +379,7 @@ class DataConnectsController < ApplicationController
           text["title"] = campaign.title
           text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
-          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "http://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
           proposal << text
         end
         render json: proposal
@@ -444,7 +445,7 @@ class DataConnectsController < ApplicationController
           text["title"] = campaign.title
           text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
-          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "http://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
           proposal << text
         end
         wording = Array.new
@@ -512,7 +513,8 @@ class DataConnectsController < ApplicationController
           group = CampaignGroup.find_by(:user_id => farmer_profile.user_id)
           if group.present?
             result["join"] = true
-            ua[:url] = "http://swiss.i-sogi.com/orders"
+            ua[:type] = "text"
+            ua[:text] = "http://swiss.i-sogi.com/orders"
             url << ua
           else
             result["join"] = false
