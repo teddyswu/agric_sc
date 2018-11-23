@@ -33,19 +33,28 @@
                 </div>
                 <div class="form-group">
                   <button type="button" class="btn btn-secondary" id="import_text">
-                    <i class="fa fa-calendar"></i>&nbsp; [故事]對話格式(文)
+                    [故事]對話格式(文)
                   </button>
                   <button type="button" class="btn btn-success" id="import_img">
-                    <i class="fa fa-calendar-o"></i>&nbsp; [故事]對話格式(圖)
+                    [故事]對話格式(圖)
                   </button>
                   <button type="button" class="btn btn-warning" id="import_card">
-                    <i class="fa fa-calendar-check-o"></i>&nbsp; [故事]卡片格式
+                    [故事]卡片格式
                   </button>
                   <button type="button" class="btn btn-info" id="import_mes_farmer_text">
-                    <i class="fa fa-calendar-minus-o"></i>&nbsp; 主選單B2B對話
+                    主選單B2B對話
                   </button>
                   <button type="button" class="btn btn-info" id="import_mes_user_text">
-                    <i class="fa fa-calendar-minus-o"></i>&nbsp; 主選單B2C對話
+                    主選單B2C對話
+                  </button>
+                  <button type="button" class="btn btn-primary" id="import_survey_or_test_1">
+                    四層調查or測驗[快速回覆]
+                  </button>
+                  <button type="button" class="btn btn-primary" id="import_survey_or_test_2">
+                    四層調查or測驗[單一卡片]
+                  </button>
+                  <button type="button" class="btn btn-primary" id="import_survey_or_test_3">
+                    四層調查or測驗[多張卡片]
                   </button>
                   <%= f.text_area(:content, :class => "form-control", placeholder: "輸入內容", rows: 20)%>
                 </div>
@@ -88,6 +97,18 @@
   $('#import_mes_user_text').on('click', function () {
     $("#wording_name").val("TEAFU.MENU.B2C.[請輸入數字]");
     $("#wording_content").val("[{\n\"NAME\": \"TEAFU.MENU.B2C.[請輸入數字].[請輸入數字]\",\n\"type\": \"text\",\n\"text\": \"您已完成追蹤，若有這項提案最新消息茶福會通知您唷。\",\n\"delay\": \"1\"\n},\n{\n\"NAME\": \"TEAFU.MENU.B2C.[請輸入數字].[請輸入數字]\",\n\"type\": \"text\",\n\"text\": \"還有～還有～其他提案也很精彩值得你關注喔。\",\n\"delay\": \"1\"\n}\n]");
+  })
+  $('#import_survey_or_test_1').on('click', function () {
+    $("#wording_name").val("TEAFU.[CSI].[keyword].[number].[LEVEL]");
+    $("#wording_content").val("[{\n\"NAME\":\"TEAFU.[CSI].[keyword].[number].[LEVEL]\",\n\"type\":\"text\",\n\"text\":\"[請輸入文字]\",\n\"delay\":\"3\"\n},{\n\"text\": \"TEXT\",\n\"quick_replies\": \n[{\n\"content_type\":\"text\",\n\"title\": \"[選項A]\",\n\"image_url\": \"https://d2lfcsub12kx0l.cloudfront.net/tw/article/img/201811/2018111605251613437_ExtraLargeSize-640x640.jpg\",\n\"payload\": \"P_01_01\"\n},{\n\"content_type\":\"text\",\n\"title\": \"[選項B]\",\n\"image_url\": \"https://d2lfcsub12kx0l.cloudfront.net/tw/article/img/201811/201811160735160687_ExtraLargeSize-640x640.jpg\",\n\"payload\": \"P_01_02\"\n}]\n}]\n#image_url可不放");
+  })
+  $('#import_survey_or_test_2').on('click', function () {
+    $("#wording_name").val("TEAFU.[CSI].[keyword].[number].[LEVEL]");
+    $("#wording_content").val("[{\n\"title\": \"我是台灣特有種\",\n\"subtitle\":\"故事中哪一點打動你的心？\",\n\"image_url\": \"http://story.sogi.com.tw/showjpg/story_001.jpg\",\n\"buttons\": [\n{\n\"type\": \"postback\",\n\"title\": \"解決問題\",\n\"payload\": \"01_solve\"\n},{\n\"type\": \"postback\",\n\"title\": \"幫助別人\",\n\"payload\": \"02_help\"\n},{\n\"type\": \"postback\",\n\"title\": \"故事感動\",\n\"payload\": \"03_moving\"\n}]\n}]");
+  })
+  $('#import_survey_or_test_3').on('click', function () {
+    $("#wording_name").val("TEAFU.[CSI].[keyword].[number].[LEVEL]");
+    $("#wording_content").val("[\n{\n\"title\": \"單手拿杯子，另一手做事\",\n\"subtitle\":\"單手拿杯子，另一手做事\",\n\"image_url\": \"http://story.sogi.com.tw/showjpg/story_001.jpg\",\n\"buttons\": [\n{\n\"type\": \"postback\",\n\"title\": \"我選A\",\n\"payload\": \"[keyword]_01_A\"\n}]},{\n\"title\": \"單手拿杯，另一手輕碰杯口\",\n\"subtitle\":\"單手拿杯，另一手輕碰杯口\",\n\"image_url\": \"http://story.sogi.com.tw/showjpg/story_002.jpg\",\n\"buttons\": [\n{\n\"type\": \"postback\",\n\"title\": \"我選B\",\n\"payload\": \"[keyword]_01_B\"\n}]},{\n\"title\": \"雙手拿\",\n\"subtitle\":\"雙手拿\",\n\"image_url\": \"http://story.sogi.com.tw/showjpg/story_003.jpg\",\n\"buttons\": [\n{\n\"type\": \"postback\",\n\"title\": \"我選C\",\n\"payload\": \"[keyword]_01_c\"\n}\n]}\n]");
   })
   $('#validate_json').on('click', function () {
     try {
