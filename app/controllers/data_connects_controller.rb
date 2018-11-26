@@ -340,7 +340,7 @@ class DataConnectsController < ApplicationController
           else
             result["join"] = false
             text_0 = Hash.new
-            text_0["name"] = "TEAFU.MENU.B2B.05.02"
+            text_0["name"] = "TEAFU.MENU.B2B.05.01"
             text_0["type"] = "text"
             text_0["text"] = "[[FULLNAME]]您好，您目前沒有參與任何提案。"
             text_0["delay"] = 1
@@ -371,7 +371,7 @@ class DataConnectsController < ApplicationController
           result["register"] = false
           result["join"] = false
           text_0 = Hash.new
-          text_0["name"] = "TEAFU.MENU.B2B.04.02"
+          text_0["name"] = "TEAFU.MENU.B2B.04.01"
           text_0["type"] = "text"
           text_0["text"] = "[[FULLNAME]]您好，您是否還未完成我們的小農註冊呢？ 如果還沒請點選下方網址，立即體驗免費的服務喔，請點選："
           text_0["delay"] = 1
