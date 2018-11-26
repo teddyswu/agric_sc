@@ -325,6 +325,7 @@ class DataConnectsController < ApplicationController
             text_0["text"] = "[[FULLNAME]]這是您目前參與的提案："
             text_0["delay"] = 1
             proposal << text_0
+            proposal_1 = Array.new
             groups.each do |group|
               if group.campaign.end_date > Date.today
                 remain_day = (group.campaign.end_date - Date.today).to_i
@@ -334,7 +335,7 @@ class DataConnectsController < ApplicationController
                 supporter = group.campaign.orders.is_paid.size
                 img = group.campaign.campaign_image.campaign_path
                 line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{group.campaign.slug}" + '"}]}'      
-                proposal << JSON.parse(line)
+                proposal_1 << JSON.parse(line)
               end
             end
           else
