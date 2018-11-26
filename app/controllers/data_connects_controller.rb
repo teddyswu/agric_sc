@@ -286,7 +286,7 @@ class DataConnectsController < ApplicationController
         end
         render json: farmer
       when "farmer_work_wall"
-        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        farmer_profile = FarmerProfile.find_by(:name => params[:name])#, :fb_uid => params[:uid])
         total = Array.new
         text = Array.new
         result = Hash.new
@@ -308,7 +308,7 @@ class DataConnectsController < ApplicationController
         total << ua if farmer_profile.present?
         render json: total
       when "farmer_proposal"
-        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        farmer_profile = FarmerProfile.find_by(:name => params[:name])#, :fb_uid => params[:uid])
         total = Array.new
         text = Array.new
         result = Hash.new
@@ -393,7 +393,7 @@ class DataConnectsController < ApplicationController
         proposal = Array.new
         proposal_1 = Array.new
         result = Hash.new
-        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        farmer_profile = FarmerProfile.find_by(:name => params[:name])#, :fb_uid => params[:uid])
         result["register"] = farmer_profile.present? ? true : false
         campaign_ids = Campaign.where(:status => 3).map {|campaign| campaign.id }
         groups = CampaignGroup.where(:user_id => farmer_profile.user_id, :campaign_id => campaign_ids).limit(10)
@@ -562,7 +562,7 @@ class DataConnectsController < ApplicationController
         end
         render json: wording
       when "proposal_link" #農友參與的提案
-        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        farmer_profile = FarmerProfile.find_by(:name => params[:name])#, :fb_uid => params[:uid])
         total = Array.new
         text = Array.new
         text_a = Array.new
@@ -671,7 +671,7 @@ class DataConnectsController < ApplicationController
         end
         render json: user_proposal
       when "farmer_determine"
-        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        farmer_profile = FarmerProfile.find_by(:name => params[:name])#, :fb_uid => params[:uid])
         text = Array.new
         result = Hash.new
         if farmer_profile.present?
