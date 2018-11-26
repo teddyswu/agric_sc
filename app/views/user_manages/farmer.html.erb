@@ -35,7 +35,8 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Email</th>
-                        <th scope='col'>Full Name
+                        <th scope='col'>Full Name</th>
+                        <th scope='col'>顯示姓名</th>
                         <th scope="col">是否審核</th>
                         <th scpoe="col">編輯</th>
                       </tr>
@@ -45,7 +46,8 @@
                         <tr>
                           <th scope="row"><%= user.id %></th>
                           <td><%= user.email%></td>
-                          <td><%= user.try(:farmer_profile).try(:name)%>
+                          <td><%= user.try(:farmer_profile).try(:name)%></td>
+                          <td><%= user.try(:farmer_profile).try(:front_name)%></td>
                           <td><%= render_is_true(user.is_check_farmer) %></td>
                           <td><%= link_to "[edit]", edit_user_manage_path(user.id)%></td>
                         </tr>
