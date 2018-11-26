@@ -312,35 +312,94 @@ class DataConnectsController < ApplicationController
         total = Array.new
         text = Array.new
         result = Hash.new
+        proposal = Array.new
         if farmer_profile.present?
           result["register"] = true
-          group = CampaignGroup.find_by(:user_id => farmer_profile.user_id)
-          group.present? ? result["join"] = true : result["join"] = false
-          campaign = Array.new
-          groups = CampaignGroup.where(:user_id => farmer_profile.user_id).limit(10)
-          groups.each do |group|
-            if group.campaign.end_date > Date.today
-              remain_day = (group.campaign.end_date - Date.today).to_i
-              amount_raised = group.campaign.amount_raised
-              percentage = 100*(amount_raised.to_f / group.campaign.goal)
-              income = group.income
-              supporter = group.campaign.orders.is_paid.size
-              img = group.campaign.campaign_image.campaign_path
-              line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{group.campaign.slug}" + '"}]}'      
-              campaign << JSON.parse(line)
+          campaign_ids = Campaign.where(:status => 3).map {|campaign| campaign.id }
+          groups = CampaignGroup.where(:user_id => farmer_profile.user_id, :campaign_id => campaign_ids).limit(10)
+          if groups.present? 
+            result["join"] = true 
+            text_0 = Hash.new
+            text_0["name"] = "TEAFU.MENU.B2B.02.01"
+            text_0["type"] = "text"
+            text_0["text"] = "[[FULLNAME]]這是您目前參與的提案："
+            text_0["delay"] = 1
+            proposal << text_0
+            groups.each do |group|
+              if group.campaign.end_date > Date.today
+                remain_day = (group.campaign.end_date - Date.today).to_i
+                amount_raised = group.campaign.amount_raised
+                percentage = 100*(amount_raised.to_f / group.campaign.goal)
+                income = group.income
+                supporter = group.campaign.orders.is_paid.size
+                img = group.campaign.campaign_image.campaign_path
+                line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{group.campaign.slug}" + '"}]}'      
+                proposal << JSON.parse(line)
+              end
+            end
+          else
+            result["join"] = false
+            text_0 = Hash.new
+            text_0["name"] = "TEAFU.MENU.B2B.05.02"
+            text_0["type"] = "text"
+            text_0["text"] = "[[FULLNAME]]您好，您目前沒有參與任何提案。"
+            text_0["delay"] = 1
+            proposal << text_0
+            text_2 = Hash.new
+            text_2["name"] = "TEAFU.MENU.B2B.05.02"
+            text_2["type"] = "text"
+            text_2["text"] = "您也可以參考其他成員目前正在進行的活動："
+            text_2["delay"] = 1
+            proposal << text_2
+            user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
+            similar_user = FarmerProfile.where(:category => user[0].farmer_profile.category).map {|user| user.user_id }
+            campaigns = Campaign.where(:status => 3, :user_id => similar_user).limit(10)
+            campaigns.each do |campaign|
+              remain_day = (campaign.end_date - Date.today).to_i
+              amount_raised = campaign.amount_raised
+              percentage = 100*(amount_raised.to_f / campaign.goal)
+              description = campaign.description.first(40)
+              text_1 = Hash.new
+              text_1["title"] = campaign.title
+              text_1["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+              text_1["image_url"] = campaign.campaign_image.campaign_path
+              text_1["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+              proposal << text_1
             end
           end
         else
           result["register"] = false
           result["join"] = false
+          text_0 = Hash.new
+          text_0["name"] = "TEAFU.MENU.B2B.04.02"
+          text_0["type"] = "text"
+          text_0["text"] = "[[FULLNAME]]您好，您是否還未完成我們的小農註冊呢？ 如果還沒請點選下方網址，立即體驗免費的服務喔，請點選："
+          text_0["delay"] = 1
+          proposal << text_0
+          text_2 = Hash.new
+          text_2["name"] = "TEAFU.MENU.B2B.04.02"
+          text_2["type"] = "text"
+          text_2["text"] = "https://www.messenger.com/t/sogiagri"
+          text_2["delay"] = 1
+          proposal << text_2
         end
         text << result
         total << text
-        total << campaign if campaign != nil
+        total << proposal if proposal != nil
         render json: total
       when "recomm_proposal"
         campaigns = Campaign.where(:status => 3).limit(10)
+        total = Array.new
         proposal = Array.new
+        proposal_1 = Array.new
+        result = Hash.new
+        farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
+        result["register"] = farmer_profile.present? ? true : false
+        campaign_ids = Campaign.where(:status => 3).map {|campaign| campaign.id }
+        groups = CampaignGroup.where(:user_id => farmer_profile.user_id, :campaign_id => campaign_ids).limit(10)
+        result["join"] = groups.present? ? true : false
+        proposal << result
+        total << proposal
         campaigns.each do |campaign|
           remain_day = (campaign.end_date - Date.today).to_i
           amount_raised = campaign.amount_raised
@@ -354,7 +413,7 @@ class DataConnectsController < ApplicationController
           t1 = Hash.new
           t1["type"] = "web_url"
           t1["title"] = "追蹤♥"
-          t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=#{params[:scoped_id]}&slug=#{campaign.slug}"
+          t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
           buttons << t1
           t2 = Hash.new
           t2["type"] = "web_url"
@@ -362,9 +421,10 @@ class DataConnectsController < ApplicationController
           t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
           buttons << t2
           text["buttons"] = buttons
-          proposal << text
+          proposal_1 << text
         end
-        render json: proposal
+        total << proposal_1
+        render json: total
       when "similar_proposal"
         user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
         similar_user = FarmerProfile.where(:category => user[0].farmer_profile.category).map {|user| user.user_id }
