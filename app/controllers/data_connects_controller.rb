@@ -351,6 +351,7 @@ class DataConnectsController < ApplicationController
             text_2["text"] = "您也可以參考其他成員目前正在進行的活動："
             text_2["delay"] = 1
             proposal << text_2
+            proposal_1 = Array.new
             user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
             similar_user = FarmerProfile.where(:category => user[0].farmer_profile.category).map {|user| user.user_id }
             campaigns = Campaign.where(:status => 3, :user_id => similar_user).limit(10)
@@ -364,7 +365,7 @@ class DataConnectsController < ApplicationController
               text_1["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_1["image_url"] = campaign.campaign_image.campaign_path
               text_1["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
-              proposal << text_1
+              proposal_1 << text_1
             end
           end
         else
@@ -386,6 +387,7 @@ class DataConnectsController < ApplicationController
         text << result
         total << text
         total << proposal if proposal != nil
+        total << proposal_1 if proposal_1 != nil
         render json: total
       when "recomm_proposal"
         campaigns = Campaign.where(:status => 3).limit(10)
