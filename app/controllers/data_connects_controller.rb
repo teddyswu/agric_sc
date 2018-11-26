@@ -565,27 +565,76 @@ class DataConnectsController < ApplicationController
         farmer_profile = FarmerProfile.find_by(:name => params[:name], :fb_uid => params[:uid])
         total = Array.new
         text = Array.new
+        text_a = Array.new
         result = Hash.new
-        url = Array.new
-        ua = Hash.new
         if farmer_profile.present?
           result["register"] = true
           group = CampaignGroup.find_by(:user_id => farmer_profile.user_id)
           if group.present?
+            text_1 = Hash.new
+            text_1["name"] = "TEAFU.MENU.B2B.03.01"
+            text_1["type"] = "text"
+            text_1["text"] = "[[FULLNAME]]您好，這是您參與的所有提案，請點選下方網址："
+            text_1["delay"] = 1
+            text_a << text_1
+            text_2 = Hash.new
+            text_2["name"] = "TEAFU.MENU.B2B.03.02"
+            text_2["type"] = "text"
+            text_2["text"] = "http://swiss.i-sogi.com/campaigns"
+            text_2["delay"] = 1
+            text_a << text_2
             result["join"] = true
-            ua[:type] = "text"
-            ua[:text] = "http://swiss.i-sogi.com/orders"
-            url << ua
           else
             result["join"] = false
+            text_1 = Hash.new
+            text_1["name"] = "TEAFU.MENU.B2B.05.01"
+            text_1["type"] = "text"
+            text_1["text"] = "[[FULLNAME]]您好，您目前沒有參與任何提案。"
+            text_1["delay"] = 1
+            text_a << text_1
+            text_2 = Hash.new
+            text_2["name"] = "TEAFU.MENU.B2B.05.02"
+            text_2["type"] = "text"
+            text_2["text"] = "您也可以參考其他成員目前正在進行的活動："
+            text_2["delay"] = 1
+            text_a << text_2
+            proposal = Array.new
+            user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
+            similar_user = FarmerProfile.where(:category => user[0].farmer_profile.category).map {|user| user.user_id }
+            campaigns = Campaign.where(:status => 3, :user_id => similar_user).limit(10)
+            campaigns.each do |campaign|
+              remain_day = (campaign.end_date - Date.today).to_i
+              amount_raised = campaign.amount_raised
+              percentage = 100*(amount_raised.to_f / campaign.goal)
+              description = campaign.description.first(40)
+              text_3 = Hash.new
+              text_3["title"] = campaign.title
+              text_3["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+              text_3["image_url"] = campaign.campaign_image.campaign_path
+              text_3["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+              proposal << text_3
+            end
           end
         else
           result["register"] = false
           result["join"] = false
+          text_1 = Hash.new
+          text_1["name"] = "TEAFU.MENU.B2B.04.01"
+          text_1["type"] = "text"
+          text_1["text"] = "[[FULLNAME]]您好，您是否還未完成我們的小農註冊呢？ 如果還沒請點選下方網址，立即體驗免費的服務喔，請點選："
+          text_1["delay"] = 1
+          text_a << text_1
+          text_2 = Hash.new
+          text_2["name"] = "TEAFU.MENU.B2B.04.02"
+          text_2["type"] = "text"
+          text_2["text"] = "https://www.messenger.com/t/sogiagri"
+          text_2["delay"] = 1
+          text_a << text_2
         end
         text << result
         total << text
-        total << url if url != []
+        total << text_a
+        total << proposal if proposal.present?
         render json: total
       when "user_proposal"
         auth = Authorization.find_by_uid(params[:uid])
