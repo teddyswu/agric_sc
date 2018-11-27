@@ -428,7 +428,7 @@ class DataConnectsController < ApplicationController
           buttons << t1
           t2 = Hash.new
           t2["type"] = "web_url"
-          t2["title}"] = "查看內容"
+          t2["title"] = "查看內容"
           t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
           buttons << t2
           text["buttons"] = buttons
@@ -679,7 +679,7 @@ class DataConnectsController < ApplicationController
               buttons << t1
               t2 = Hash.new
               t2["type"] = "web_url"
-              t2["title}"] = "查看最新進度"
+              t2["title"] = "查看最新進度"
               t2["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}/updates"
               buttons << t2
               text_2["buttons"] = buttons
@@ -723,7 +723,7 @@ class DataConnectsController < ApplicationController
               buttons << t1
               t2 = Hash.new
               t2["type"] = "web_url"
-              t2["title}"] = "查看內容"
+              t2["title"] = "查看內容"
               t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
               buttons << t2
               text_c["buttons"] = buttons
