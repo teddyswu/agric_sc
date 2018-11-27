@@ -583,7 +583,7 @@ class DataConnectsController < ApplicationController
             text_2 = Hash.new
             text_2["name"] = "TEAFU.MENU.B2B.03.02"
             text_2["type"] = "text"
-            text_2["text"] = "http://swiss.i-sogi.com/campaigns"
+            text_2["text"] = "https://teddyswu.github.io/user-activity.html"
             text_2["delay"] = 1
             text_a << text_2
             result["join"] = true
