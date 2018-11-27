@@ -396,13 +396,21 @@ class DataConnectsController < ApplicationController
         proposal = Array.new
         proposal_1 = Array.new
         result = Hash.new
+        text_t = Array.new
+        text_2 = Hash.new
         farmer_profile = FarmerProfile.find_by(:name => params[:name])#, :fb_uid => params[:uid])
         result["register"] = farmer_profile.present? ? true : false
         campaign_ids = Campaign.where(:status => 3).map {|campaign| campaign.id }
-        groups = CampaignGroup.where(:user_id => farmer_profile.user_id, :campaign_id => campaign_ids).limit(10)
+        groups = CampaignGroup.where(:campaign_id => campaign_ids).limit(10)
         result["join"] = groups.present? ? true : false
         proposal << result
         total << proposal
+        text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
+        text_2["type"] = "text"
+        text_2["text"] = "快來看看這些提案，會有您喜歡的："
+        text_2["delay"] = 1
+        text_t << text_2
+        total << text_t
         campaigns.each do |campaign|
           remain_day = (campaign.end_date - Date.today).to_i
           amount_raised = campaign.amount_raised
@@ -640,39 +648,108 @@ class DataConnectsController < ApplicationController
         total << proposal if proposal.present?
         render json: total
       when "user_proposal"
+        total = Array.new
+        text = Array.new
+        text_a = Array.new
+        result = Hash.new
+        text_1 = Hash.new
         auth = Authorization.find_by_uid(params[:uid])
-        user_proposal = Array.new
-        auth.user.orders.order(:paid).each do |order|
-          if order.goody.campaign.end_date > Date.today
-            remain_day = (order.goody.campaign.end_date - Date.today).to_i
-            amount_raised = order.goody.campaign.amount_raised
-            percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
-            text = Hash.new
-            text["title"] = order.goody.campaign.title
-            text["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
-            text["image_url"] = order.goody.campaign.campaign_image.campaign_path
-            buttons = Array.new #[]
-            t1 = Hash.new
-            if order.paid == false
-              t1["type"] = "web_url"
-              t1["title"] = "付款去"
-              t1["url"] = "http://swiss.i-sogi.com/orders/#{order.id}/go_pay"
-            else
-              t1["type"] = "web_url"
-              t1["title"] = "查看詳細記錄"
-              t1["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}"
+        if auth.present?
+          result["register"] = true
+          auth.user.orders.order(:paid).each do |order|
+            if order.goody.campaign.end_date > Date.today
+              remain_day = (order.goody.campaign.end_date - Date.today).to_i
+              amount_raised = order.goody.campaign.amount_raised
+              percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+              text_2 = Hash.new
+              text_2["title"] = order.goody.campaign.title
+              text_2["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+              text_2["image_url"] = order.goody.campaign.campaign_image.campaign_path
+              buttons = Array.new #[]
+              t1 = Hash.new
+              if order.paid == false
+                t1["type"] = "web_url"
+                t1["title"] = "付款去"
+                t1["url"] = "http://swiss.i-sogi.com/orders/#{order.id}/go_pay"
+              else
+                t1["type"] = "web_url"
+                t1["title"] = "查看詳細記錄"
+                t1["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}"
+              end
+              buttons << t1
+              t2 = Hash.new
+              t2["type"] = "web_url"
+              t2["title}"] = "查看最新進度"
+              t2["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}/updates"
+              buttons << t2
+              text_2["buttons"] = buttons
+              text_a << text_2
             end
-            buttons << t1
-            t2 = Hash.new
-            t2["type"] = "web_url"
-            t2["title}"] = "查看最新進度"
-            t2["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}/updates"
-            buttons << t2
-            text["buttons"] = buttons
-            user_proposal << text
           end
+          if auth.user.orders.size > 0 
+            result["join"] = true
+          else
+            result["join"] = false
+            text_1["name"] = "TEAFU.MENU.B2C.05.01"
+            text_1["type"] = "text"
+            text_1["text"] = "咦！目前您尚未有紀錄喔。這是最新最熱門的提案，若有喜歡記得加入愛心，我會通知第一手的訊息給您。"
+            text_1["delay"] = 1
+            total = Array.new
+            proposal = Array.new
+            proposal_1 = Array.new
+            text_t = Array.new
+            text_2 = Hash.new
+            campaigns = Campaign.where(:status => 3).limit(10)       
+            campaign_ids = Campaign.where(:status => 3).map {|campaign| campaign.id }
+            groups = CampaignGroup.where(:campaign_id => campaign_ids).limit(10)
+            text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
+            text_2["type"] = "text"
+            text_2["text"] = "快來看看這些提案，會有您喜歡的："
+            text_2["delay"] = 1
+            campaigns.each do |campaign|
+              remain_day = (campaign.end_date - Date.today).to_i
+              amount_raised = campaign.amount_raised
+              percentage = 100*(amount_raised.to_f / campaign.goal)
+              description = campaign.description.first(40)
+              text_c = Hash.new
+              text_c["title"] = campaign.title
+              text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+              text_c["image_url"] = campaign.campaign_image.campaign_path
+              buttons = Array.new #[]
+              t1 = Hash.new
+              t1["type"] = "web_url"
+              t1["title"] = "追蹤♥"
+              t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
+              buttons << t1
+              t2 = Hash.new
+              t2["type"] = "web_url"
+              t2["title}"] = "查看內容"
+              t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
+              buttons << t2
+              text_c["buttons"] = buttons
+              proposal_1 << text_c
+            end
+          end
+        else
+          result["register"] = false
+          result["join"] = false
+          text_1["name"] = "TEAFU.MENU.B2C.03.01"
+          text_1["type"] = "text"
+          text_1["text"] = "要查詢服務嗎！茶福只要您的首次同意就能為您服務，請先開啟傳送門進行登入，完成後記得提醒我喔。"
+          text_1["delay"] = 1
+          text_2 = Hash.new
+          text_2["name"] = "TEAFU.MENU.B2C.03.02"
+          text_2["type"] = "text"
+          text_2["text"] = "http://story.sogi.com.tw/users/fb_binding"
+          text_2["delay"] = 1
         end
-        render json: user_proposal
+        text << result
+        total << text
+        text_a << text_1 if text_1 != {}
+        text_a << text_2 if text_2.present?
+        total << text_a
+        total << proposal_1 if proposal_1.present?
+        render json: total
       when "farmer_determine"
         farmer_profile = FarmerProfile.find_by(:name => params[:name])#, :fb_uid => params[:uid])
         text = Array.new

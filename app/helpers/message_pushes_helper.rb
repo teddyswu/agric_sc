@@ -1,0 +1,2 @@
+module MessagePushesHelper
+end
