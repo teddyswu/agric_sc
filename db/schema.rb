@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181127041710) do
+ActiveRecord::Schema.define(version: 20181128074319) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -49,6 +49,22 @@ ActiveRecord::Schema.define(version: 20181127041710) do
   end
 
   add_index "ckeditor_assets", ["type"], name: "index_ckeditor_assets_on_type", using: :btree
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   limit: 4,     default: 0, null: false
+    t.integer  "attempts",   limit: 4,     default: 0, null: false
+    t.text     "handler",    limit: 65535,             null: false
+    t.text     "last_error", limit: 65535
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by",  limit: 255
+    t.string   "queue",      limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "digital_resource_ships", force: :cascade do |t|
     t.string   "resource_type", limit: 255,   null: false
@@ -130,10 +146,12 @@ ActiveRecord::Schema.define(version: 20181127041710) do
   end
 
   create_table "message_pushes", force: :cascade do |t|
-    t.string   "model_name", limit: 255
-    t.datetime "push_time"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "model_name",     limit: 255
+    t.string   "user_list",      limit: 255
+    t.integer  "delayed_job_id", limit: 4
+    t.datetime "complete_time"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "reply_words", force: :cascade do |t|

@@ -456,8 +456,81 @@ class DataConnectsController < ApplicationController
         render json: proposal
       when "fb_track"
         campaign = Campaign.find_by_slug(params[:slug])
-        fb_track = FbTrack.find_or_create_by(:scoped_id => params[:scoped_id], :campaign_id => campaign.id)
-        render json: "Track OK"
+        is_subscription = UserBehavior.where("name = ? and payload LIKE ?", params[:scoped_id], "%04.0%")
+        if is_subscription.present?
+          fb_track = FbTrack.find_or_create_by(:scoped_id => params[:scoped_id], :campaign_id => campaign.id)
+          total = Array.new
+          text = Array.new
+          text_1 = Hash.new
+          # text_1["name"] = "TEAFU.MENU.B2C.06.01"
+          text_1["type"] = "text"
+          text_1["text"] = "您已完成追蹤，若有這項提案最新消息茶福會通知您唷。"
+          text_1["delay"] = 1
+          text << text_1
+          text_2 = Hash.new
+          # text_2["name"] = "TEAFU.MENU.B2C.06.02"
+          text_2["type"] = "text"
+          text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
+          text_2["delay"] = 1
+          text << text_2
+          total << text
+          card = Array.new
+          campaigns = Campaign.where("status = 3 and start_date > #{Date.today}").limit(10)
+          campaigns.each do |campaign|
+            remain_day = (campaign.end_date - Date.today).to_i
+            amount_raised = campaign.amount_raised
+            percentage = 100*(amount_raised.to_f / campaign.goal)
+            description = campaign.description.first(40)
+            card_text = Hash.new
+            card_text["title"] = campaign.title
+            card_text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+            card_text["image_url"] = campaign.campaign_image.campaign_path
+            buttons = Array.new #[]
+            t1 = Hash.new
+            t1["type"] = "web_url"
+            t1["title"] = "追蹤♥"
+            t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
+            buttons << t1
+            t2 = Hash.new
+            t2["type"] = "web_url"
+            t2["title"] = "查看內容"
+            t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
+            buttons << t2
+            card_text["buttons"] = buttons
+            card << card_text
+          end
+          total << card 
+        else
+          total = Array.new
+          text = Array.new
+          text_1 = Hash.new
+          # text_1["name"] = "TEAFU.MENU.B2C.07.01"
+          text_1["type"] = "text"
+          text_1["text"] = "茶福需要你的同意，我才能幫您紀錄喔，拜託幫我點一下。"
+          text_1["delay"] = 1
+          text << text_1
+          total << text
+          card = Array.new
+          card_text = Hash.new
+          card_text["title"] = "我願意訂閱"
+          card_text["subtitle"] = ""
+          card_text["image_url"] = "http://story.sogi.com.tw/showjpg/user_A007.jpg"
+          buttons = Array.new
+          t1 = Hash.new
+          t1["type"] = "postback"
+          t1["title"] = "我願意訂閱"
+          t1["payload"] = "04.01"
+          buttons << t1
+          card_text["buttons"] = buttons
+          card << card_text
+          total << card
+        end
+        customization = YAML.load_file("config/customization.yml")
+        uri = URI(customization[:user_message_post])
+        user = customization[:user]
+        password = customization[:password]
+        res = Net::HTTP.post_form(uri, 'recepient_id' => params[:scoped_id], 'user' => user, 'password' => password, 'elements' => total.to_json)
+        render js: "window.close();"
       when "subscription"
         subscription = UserSubscription.find_or_create_by(:scoped_id => params[:scoped_id], :full_name => params[:full_name])
         render json: "Subscription completed"

@@ -1,0 +1,65 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">聊天內容</a></li>
+              <li class="active">推送</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">Table List</strong> <%= link_to "新增", new_message_push_path%>
+              </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">模組名稱</th>
+                        <th scope="col">發送清單</th>
+                        <th scope="col">發送時間</th>
+                        <th scope="col">實際完成時間</th>
+                        <th scope="col">刪除</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @message_pushes.each do |message_push|%>
+                        <tr>
+                          <th scope="row"><%= message_push.id %></th>
+                          <td><%= message_push.name %></td>
+                          <td><%= message_push.user_list %></td>
+                          <td><%= Dela%></td>
+                          <td><%= message_push.complete_time %></td>
+                          <td><%= link_to "[del]", message_push_path(message_push.id), :method => :delete %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                  <%= will_paginate @message_pushes %>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

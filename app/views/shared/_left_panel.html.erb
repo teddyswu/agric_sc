@@ -19,6 +19,9 @@
         <li <%= "class='active'".html_safe if request.url.include?("wording") %>>
           <%= link_to " <i class='menu-icon fa fa-pencil'></i>文案 ".html_safe,  wording_list_path %>
         </li>
+        <li <%= "class='active'".html_safe if request.url.include?("message") %>>
+          <%= link_to " <i class='menu-icon fa fa-comment'></i>訊息推送 ".html_safe, message_pushes_path  %>
+        </li>
         <!-- <li <%#= "class='active'".html_safe if request.url.include?("movie") %>>
           <%#= link_to " <i class='menu-icon fa fa-film'></i>影片 ".html_safe,  movie_agris_path %>
         </li>
@@ -48,7 +51,7 @@
         <li <%= "class='active'".html_safe if request.url.include?("project") %>>
           <%= link_to " <i class='menu-icon fa fa-list-ul'></i>工作事項 ".html_safe, work_projects_path  %>
         </li>
-        <li <%= "class='active'".html_safe if request.url.include?("word") %>>
+        <li <%= "class='active'".html_safe if request.url.include?("reply") %>>
           <%= link_to " <i class='menu-icon fa fa-comment'></i>回覆管理 ".html_safe, reply_words_path  %>
         </li>
         <h3 class="menu-title"></h3>
