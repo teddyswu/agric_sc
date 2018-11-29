@@ -154,6 +154,7 @@ class DataConnectsController < ApplicationController
       when "behavior"
         ub = UserBehavior.new
         ub.name = params[:name]
+        ub.scoped_id = params[:scoped_id]
         ub.payload = params[:payload]
         ub.save!
         render json: "[{" + '"status":"activity create ok"' + "}]" and return
@@ -456,7 +457,7 @@ class DataConnectsController < ApplicationController
         render json: proposal
       when "fb_track"
         campaign = Campaign.find_by_slug(params[:slug])
-        is_subscription = UserBehavior.where("name = ? and payload LIKE ?", params[:scoped_id], "%04.0%")
+        is_subscription = UserBehavior.where("scoped_id = ? and payload LIKE ?", params[:scoped_id], "%04.0%")
         if is_subscription.present?
           fb_track = FbTrack.find_or_create_by(:scoped_id => params[:scoped_id], :campaign_id => campaign.id)
           total = Array.new
@@ -512,25 +513,29 @@ class DataConnectsController < ApplicationController
           total << text
           card = Array.new
           card_text = Hash.new
-          card_text["title"] = "我願意訂閱"
-          card_text["subtitle"] = ""
-          card_text["image_url"] = "http://story.sogi.com.tw/showjpg/user_A007.jpg"
-          buttons = Array.new
+          card_text["text"] = "TEXT"
+          quick_replies = Array.new
           t1 = Hash.new
-          t1["type"] = "postback"
+          t1["content_type"] = "text"
           t1["title"] = "我願意訂閱"
           t1["payload"] = "04.01"
-          buttons << t1
-          card_text["buttons"] = buttons
+          quick_replies << t1
+          card_text["quick_replies"] = quick_replies
           card << card_text
           total << card
         end
         customization = YAML.load_file("config/customization.yml")
-        uri = URI(customization[:user_message_post])
+        uri = URI.parse(customization[:user_message_post])
         user = customization[:user]
         password = customization[:password]
-        res = Net::HTTP.post_form(uri, 'recepient_id' => params[:scoped_id], 'user' => user, 'password' => password, 'elements' => total.to_json)
-        render js: "window.close();"
+        post_data = {'recepient_id'=> params[:scoped_id], 'user' => user, 'password' => password, 'elements' => total }.to_json
+        https = Net::HTTP.new(uri.host,uri.port)
+        https.use_ssl = true
+        req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+        req.body = post_data
+        res = https.request(req)
+        # render json: total.to_json
+        render partial: "shared/fb"
       when "subscription"
         subscription = UserSubscription.find_or_create_by(:scoped_id => params[:scoped_id], :full_name => params[:full_name])
         render json: "Subscription completed"
