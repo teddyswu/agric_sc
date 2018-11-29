@@ -539,6 +539,9 @@ class DataConnectsController < ApplicationController
           file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
         end
         File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
+        end
+        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
           file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
         end
         render partial: "shared/fb"
