@@ -827,7 +827,7 @@ class DataConnectsController < ApplicationController
           text_2 = Hash.new
           text_2["name"] = "TEAFU.MENU.B2C.03.02"
           text_2["type"] = "text"
-          text_2["text"] = "http://story.sogi.com.tw/users/fb_binding"
+          text_2["text"] = "https://story.sogi.com.tw/users/fb_binding"
           text_2["delay"] = 1
         end
         text << result
