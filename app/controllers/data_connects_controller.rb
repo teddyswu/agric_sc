@@ -535,6 +535,12 @@ class DataConnectsController < ApplicationController
         req.body = post_data
         res = https.request(req)
         # render json: total.to_json
+        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
+        end
+        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+        end
         render partial: "shared/fb"
       when "subscription"
         subscription = UserSubscription.find_or_create_by(:scoped_id => params[:scoped_id], :full_name => params[:full_name])

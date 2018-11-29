@@ -7,5 +7,18 @@ class MessagePushesController < ApplicationController
 	end
 
 	def new
+		@message_pushes = MessagePush.new
 	end
+
+	def create
+		@message_pushes = MessagePush.new(message_push_params)
+		pm = PostMessageApiJob.set(wait_until: @message_pushes.run_at).perform_later
+		@message_pushes.delayed_job_id = pm.job_id
+		@message_pushes.save!
+    redirect_to :action => :index
+	end
+
+	def message_push_params
+		params.require(:message_push).permit(:module_name, :user_list, :run_at)
+  end
 end

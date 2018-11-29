@@ -45,9 +45,9 @@
                       <% @message_pushes.each do |message_push|%>
                         <tr>
                           <th scope="row"><%= message_push.id %></th>
-                          <td><%= message_push.name %></td>
+                          <td><%= message_push.module_name %></td>
                           <td><%= message_push.user_list %></td>
-                          <td><%= Dela%></td>
+                          <td><%= message_push.run_at%></td>
                           <td><%= message_push.complete_time %></td>
                           <td><%= link_to "[del]", message_push_path(message_push.id), :method => :delete %></td>
                         </tr>
