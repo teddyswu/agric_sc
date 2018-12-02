@@ -408,7 +408,7 @@ class DataConnectsController < ApplicationController
         total << proposal
         text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
         text_2["type"] = "text"
-        text_2["text"] = "快來看看這些提案，會有您喜歡的："
+        text_2["text"] = "Hi [[FULLNAME]]！來看這些提案故事，一定會有您喜歡的。"
         text_2["delay"] = 1
         text_t << text_2
         total << text_t
@@ -513,18 +513,18 @@ class DataConnectsController < ApplicationController
         https.use_ssl = true
         req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
         req.body = post_data
-        # res = https.request(req)
-        # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-        #   file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
-        # # end
-        # # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-        #   file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
-        # # end
-        # # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-        #   file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+        res = https.request(req)
+        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
         # end
-        render json: post_data
-        # render partial: "shared/fb"
+        # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
+        # end
+        # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+        end
+        # render json: post_data
+        render partial: "shared/fb"
       when "subscription"
         subscription = UserSubscription.find_or_create_by(:scoped_id => params[:scoped_id], :full_name => params[:full_name])
         render json: "Subscription completed"
