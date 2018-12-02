@@ -16,7 +16,7 @@ class UsersController < ApplicationController
 
 	def fb_binding
 		binding_ip = request.remote_ip
-		fb = FbBinding.create(:binding_ip => binding_ip, :scoped_id =>params[:scoped_id])
+		fb = FbBinding.create(:binding_ip => binding_ip, :scoped_id => params[:scoped_id])
 	end
 
 	def user_profile_params
