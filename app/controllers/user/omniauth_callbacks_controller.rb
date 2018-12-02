@@ -19,7 +19,7 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
                   Authorization.create(:provider => "facebook", :uid => aa.scoped_id, :user_id => @user.id)
                   FbBinding.destroy_all(:binding_ip => request.remote_ip)
                   sign_in @user
-                  render :json => "綁定完成"
+                  render partial: "shared/fb"
                 else
                   sign_in_and_redirect @user, :event => :authentication
                 end

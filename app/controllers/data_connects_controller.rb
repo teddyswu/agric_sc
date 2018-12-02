@@ -457,8 +457,9 @@ class DataConnectsController < ApplicationController
         render json: proposal
       when "fb_track"
         campaign = Campaign.find_by_slug(params[:slug])
-        is_subscription = UserBehavior.where("scoped_id = ? and payload LIKE ?", params[:scoped_id], "%04.0%")
-        if is_subscription.present?
+        is_binding = Authorization.find_by(:uid => params[:scoped_id])
+        # UserBehavior.where("scoped_id = ? and payload LIKE ?", params[:scoped_id], "%04.0%")
+        if is_binding.present?
           fb_track = FbTrack.find_or_create_by(:scoped_id => params[:scoped_id], :campaign_id => campaign.id)
           total = Array.new
           text = Array.new
@@ -476,7 +477,8 @@ class DataConnectsController < ApplicationController
           text << text_2
           total << text
           card = Array.new
-          campaigns = Campaign.where("status = 3 and start_date > #{Date.today}").limit(10)
+          tracked_ids = FbTrack.where(:scoped_id => params[:scoped_id]).map {|campaign| campaign.campaign_id }
+          campaigns = Campaign.where("status = 3 and start_date > #{Date.today} and end_date > #{Date.today}").where.not(id: tracked_ids).limit(10)
           campaigns.each do |campaign|
             remain_day = (campaign.end_date - Date.today).to_i
             amount_raised = campaign.amount_raised
@@ -501,28 +503,6 @@ class DataConnectsController < ApplicationController
             card << card_text
           end
           total << card 
-        else
-          total = Array.new
-          text = Array.new
-          text_1 = Hash.new
-          # text_1["name"] = "TEAFU.MENU.B2C.07.01"
-          text_1["type"] = "text"
-          text_1["text"] = "茶福需要你的同意，我才能幫您紀錄喔，拜託幫我點一下。"
-          text_1["delay"] = 1
-          text << text_1
-          total << text
-          card = Array.new
-          card_text = Hash.new
-          card_text["text"] = "TEXT"
-          quick_replies = Array.new
-          t1 = Hash.new
-          t1["content_type"] = "text"
-          t1["title"] = "我願意訂閱"
-          t1["payload"] = "04.01"
-          quick_replies << t1
-          card_text["quick_replies"] = quick_replies
-          card << card_text
-          total << card
         end
         customization = YAML.load_file("config/customization.yml")
         uri = URI.parse(customization[:user_message_post])
@@ -533,18 +513,18 @@ class DataConnectsController < ApplicationController
         https.use_ssl = true
         req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
         req.body = post_data
-        res = https.request(req)
-        # render json: total.to_json
-        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-          file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
-        end
-        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-          file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
-        end
-        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-          file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
-        end
-        render partial: "shared/fb"
+        # res = https.request(req)
+        # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+        #   file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
+        # # end
+        # # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+        #   file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
+        # # end
+        # # File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+        #   file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+        # end
+        render json: post_data
+        # render partial: "shared/fb"
       when "subscription"
         subscription = UserSubscription.find_or_create_by(:scoped_id => params[:scoped_id], :full_name => params[:full_name])
         render json: "Subscription completed"
@@ -740,41 +720,48 @@ class DataConnectsController < ApplicationController
         text_a = Array.new
         result = Hash.new
         text_1 = Hash.new
+        text_3 = Hash.new
         auth = Authorization.find_by_uid(params[:uid])
         if auth.present?
           result["register"] = true
-          auth.user.orders.order(:paid).each do |order|
-            if order.goody.campaign.end_date > Date.today
-              remain_day = (order.goody.campaign.end_date - Date.today).to_i
-              amount_raised = order.goody.campaign.amount_raised
-              percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
-              text_2 = Hash.new
-              text_2["title"] = order.goody.campaign.title
-              text_2["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
-              text_2["image_url"] = order.goody.campaign.campaign_image.campaign_path
-              buttons = Array.new #[]
-              t1 = Hash.new
-              if order.paid == false
-                t1["type"] = "web_url"
-                t1["title"] = "付款去"
-                t1["url"] = "http://swiss.i-sogi.com/orders/#{order.id}/go_pay"
-              else
-                t1["type"] = "web_url"
-                t1["title"] = "查看詳細記錄"
-                t1["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}"
-              end
-              buttons << t1
-              t2 = Hash.new
-              t2["type"] = "web_url"
-              t2["title"] = "查看最新進度"
-              t2["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}/updates"
-              buttons << t2
-              text_2["buttons"] = buttons
-              text_a << text_2
-            end
-          end
           if auth.user.orders.size > 0 
+            text_3_a = Array.new
             result["join"] = true
+            text_3["name"] = "TEAFU.MENU.B2C.05.01"
+            text_3["type"] = "text"
+            text_3["text"] = "[[FULLNAME]]您好，這是您支持中的提案："
+            text_3["delay"] = 1
+            text_3_a << text_3
+            auth.user.orders.order(:paid).each do |order|
+              if order.goody.campaign.end_date > Date.today
+                remain_day = (order.goody.campaign.end_date - Date.today).to_i
+                amount_raised = order.goody.campaign.amount_raised
+                percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+                text_2_c = Hash.new
+                text_2_c["title"] = order.goody.campaign.title
+                text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+                buttons = Array.new #[]
+                t1 = Hash.new
+                if order.paid == false
+                  t1["type"] = "web_url"
+                  t1["title"] = "付款去"
+                  t1["url"] = "http://swiss.i-sogi.com/orders/#{order.id}/go_pay"
+                else
+                  t1["type"] = "web_url"
+                  t1["title"] = "查看詳細記錄"
+                  t1["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}"
+                end
+                buttons << t1
+                t2 = Hash.new
+                t2["type"] = "web_url"
+                t2["title"] = "查看最新進度"
+                t2["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}/updates"
+                buttons << t2
+                text_2_c["buttons"] = buttons
+                text_a << text_2_c
+              end
+            end
           else
             result["join"] = false
             text_1["name"] = "TEAFU.MENU.B2C.05.01"
@@ -791,7 +778,7 @@ class DataConnectsController < ApplicationController
             groups = CampaignGroup.where(:campaign_id => campaign_ids).limit(10)
             text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
             text_2["type"] = "text"
-            text_2["text"] = "快來看看這些提案，會有您喜歡的："
+            text_2["text"] = "Hi [[FULLNAME]]！來看這些提案故事，一定會有您喜歡的。"
             text_2["delay"] = 1
             campaigns.each do |campaign|
               remain_day = (campaign.end_date - Date.today).to_i
@@ -822,16 +809,28 @@ class DataConnectsController < ApplicationController
           result["join"] = false
           text_1["name"] = "TEAFU.MENU.B2C.03.01"
           text_1["type"] = "text"
-          text_1["text"] = "要查詢服務嗎！茶福只要您的首次同意就能為您服務，請先開啟傳送門進行登入，完成後記得提醒我喔。"
+          text_1["text"] = "[[FULLNAME]]要查詢服務嗎？茶福需要您的同意才能開啟所有服務，請先點擊下方連結進行登入，完成後記得提醒我喔。"
           text_1["delay"] = 1
           text_2 = Hash.new
           text_2["name"] = "TEAFU.MENU.B2C.03.02"
           text_2["type"] = "text"
           text_2["text"] = "https://story.sogi.com.tw/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
           text_2["delay"] = 1
+          proposal_1 = Array.new
+          card_text = Hash.new
+          card_text["text"] = "TEXT"
+          quick_replies = Array.new
+          t1 = Hash.new
+          t1["content_type"] = "text"
+          t1["title"] = "茶福～我完成了！"
+          t1["payload"] = "f0.01"
+          quick_replies << t1
+          card_text["quick_replies"] = quick_replies
+          proposal_1 << card_text
         end
         text << result
         total << text
+        total << text_3_a if text_3_a.present?
         text_a << text_1 if text_1 != {}
         text_a << text_2 if text_2.present?
         total << text_a
@@ -851,6 +850,34 @@ class DataConnectsController < ApplicationController
         end
         text << result
         render json: text
+      when "finish_subscription"
+        card = Array.new
+        card_text = Hash.new
+        card_text["text"] = "TEXT"
+        quick_replies = Array.new
+        t1 = Hash.new
+        t1["content_type"] = "text"
+        t1["title"] = "茶福～我完成喔！"
+        t1["payload"] = "f0.01"
+        quick_replies << t1
+        card_text["quick_replies"] = quick_replies
+        card << card_text
+        customization = YAML.load_file("config/customization.yml")
+        uri = URI.parse(customization[:user_message_post])
+        user = customization[:user]
+        password = customization[:password]
+        post_data = {'recepient_id'=> params[:scoped_id], 'user' => user, 'password' => password, 'elements' => card }.to_json
+        https = Net::HTTP.new(uri.host,uri.port)
+        https.use_ssl = true
+        req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+        req.body = post_data
+        res = https.request(req)
+        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
+          file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
+          file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+        end
+        render text: "ok"
       end
 		end
 	end
