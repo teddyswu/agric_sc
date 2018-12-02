@@ -732,7 +732,7 @@ class DataConnectsController < ApplicationController
             text_3["text"] = "[[FULLNAME]]您好，這是您支持中的提案："
             text_3["delay"] = 1
             text_3_a << text_3
-            auth.user.orders.order(:paid).each do |order|
+            auth.user.orders.order(:paid).limit(10).each do |order|
               if order.goody.campaign.end_date > Date.today
                 remain_day = (order.goody.campaign.end_date - Date.today).to_i
                 amount_raised = order.goody.campaign.amount_raised
