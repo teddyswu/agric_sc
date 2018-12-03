@@ -823,7 +823,7 @@ class DataConnectsController < ApplicationController
           t1 = Hash.new
           t1["content_type"] = "text"
           t1["title"] = "茶福～我完成了！"
-          t1["payload"] = "f0.01"
+          t1["payload"] = "D_3"
           quick_replies << t1
           card_text["quick_replies"] = quick_replies
           proposal_1 << card_text
