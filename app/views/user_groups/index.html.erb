@@ -14,8 +14,8 @@
           <div class="page-title">
             <ol class="breadcrumb text-right">
               <li><a href="#">Dashboard</a></li>
-              <li><a href="#">聊天內容</a></li>
-              <li class="active">推送</li>
+              <li><a href="#">資料</a></li>
+              <li class="active">會員群組</li>
             </ol>
           </div>
         </div>
@@ -27,34 +27,27 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
-                <strong class="card-title">Table List</strong> <%= link_to "新增", new_message_push_path%>
+                <strong class="card-title">Table List</strong> <%= link_to "新增", new_user_group_path%>
               </div>
                 <div class="card-body">
                   <table class="table">
                     <thead class="thead-dark">
                       <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">模組名稱</th>
-                        <th scope="col">發送清單</th>
-                        <th scope="col">發送時間</th>
-                        <th scope="col">實際完成時間</th>
-                        <th scope="col">刪除</th>
+                        <th scope="col">群組名稱</th>
+                        <th scpoe="col">編輯</th>
+                        <th scpoe="col">刪除</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% @message_pushes.each do |message_push|%>
+                      <% @groups.each do |group|%>
                         <tr>
-                          <th scope="row"><%= message_push.id %></th>
-                          <td><%= message_push.module_name %></td>
-                          <td><%= message_push.group.name %></td>
-                          <td><%= message_push.run_at%></td>
-                          <td><%= message_push.complete_time %></td>
-                          <td><%= link_to "[del]", message_push_path(message_push.id), :method => :delete %></td>
+                          <th scope="row"><%= group.name %></th>
+                          <td><%= link_to "[edit]", edit_user_group_path(group.id)%></td>
+                          <td><%= link_to "[del]", user_group_path(group.id), :method => :delete%></td>
                         </tr>
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @message_pushes %>
                 </div>
             </div>
           </div>

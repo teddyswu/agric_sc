@@ -30,6 +30,8 @@ Rails.application.routes.draw do
 
   resources :reply_words
 
+  resources :user_groups
+
   resources :agris do
     get "comic",:on => :collection
     post "comic_create", :on => :collection

@@ -8,6 +8,7 @@ class MessagePushesController < ApplicationController
 
 	def new
 		@message_pushes = MessagePush.new
+		@user_list = Group.all
 	end
 
 	def create
@@ -18,7 +19,15 @@ class MessagePushesController < ApplicationController
     redirect_to :action => :index
 	end
 
+	def destroy
+		mp = MessagePush.find(params[:id])
+		pma = Delayed::Job.where("handler like ?", mp.delayed_job_id)
+		mp.destroy
+		pma.destroy_all
+		redirect_to :action => :index
+	end
+
 	def message_push_params
-		params.require(:message_push).permit(:module_name, :user_list, :run_at)
+		params.require(:message_push).permit(:module_name, :group_id, :run_at)
   end
 end
