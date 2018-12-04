@@ -476,33 +476,6 @@ class DataConnectsController < ApplicationController
           text_2["delay"] = 1
           text << text_2
           total << text
-          card = Array.new
-          tracked_ids = FbTrack.where(:scoped_id => params[:scoped_id]).map {|campaign| campaign.campaign_id }
-          campaigns = Campaign.where("status = 3 and start_date > #{Date.today} and end_date > #{Date.today}").where.not(id: tracked_ids).limit(10)
-          campaigns.each do |campaign|
-            remain_day = (campaign.end_date - Date.today).to_i
-            amount_raised = campaign.amount_raised
-            percentage = 100*(amount_raised.to_f / campaign.goal)
-            description = campaign.description.first(40)
-            card_text = Hash.new
-            card_text["title"] = campaign.title
-            card_text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
-            card_text["image_url"] = campaign.campaign_image.campaign_path
-            buttons = Array.new #[]
-            t1 = Hash.new
-            t1["type"] = "web_url"
-            t1["title"] = "追蹤♥"
-            t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
-            buttons << t1
-            t2 = Hash.new
-            t2["type"] = "web_url"
-            t2["title"] = "查看內容"
-            t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
-            buttons << t2
-            card_text["buttons"] = buttons
-            card << card_text
-          end
-          total << card 
         end
         customization = YAML.load_file("config/customization.yml")
         uri = URI.parse(customization[:user_message_post])
@@ -763,8 +736,15 @@ class DataConnectsController < ApplicationController
               end
             end
           else
+            if ((Time.now - auth.created_at)/60) <  3
+              text_e = Hash.new
+              text_e["name"] = "TEAFU.MENU.B2C.05.01"
+              text_e["type"] = "text"
+              text_e["text"] = "茶福感謝您訂閱。"
+              text_e["delay"] = 1 
+            end
             result["join"] = false
-            text_1["name"] = "TEAFU.MENU.B2C.05.01"
+            text_1["name"] = "TEAFU.MENU.B2C.05.02"
             text_1["type"] = "text"
             text_1["text"] = "咦！目前您尚未有紀錄喔。這是最新最熱門的提案，若有喜歡記得加入愛心，我會通知第一手的訊息給您。"
             text_1["delay"] = 1
@@ -831,6 +811,7 @@ class DataConnectsController < ApplicationController
         text << result
         total << text
         total << text_3_a if text_3_a.present?
+        text_a << text_e if text_e.present?
         text_a << text_1 if text_1 != {}
         text_a << text_2 if text_2.present?
         total << text_a
