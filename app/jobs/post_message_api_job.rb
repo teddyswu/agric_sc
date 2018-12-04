@@ -6,7 +6,7 @@ class PostMessageApiJob < ActiveJob::Base
     mo = Wording.where("name like '%#{mp.module_name}%'").order(:name)
     message = Array.new
     mo.each do |m|
-      message << m.name
+      message << m.content
     end
     customization = YAML.load_file("config/customization.yml")
     uri = URI.parse(customization[:user_message_post])
