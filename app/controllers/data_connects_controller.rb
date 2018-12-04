@@ -736,7 +736,7 @@ class DataConnectsController < ApplicationController
               end
             end
           else
-            if ((Time.now - auth.created_at)/60) <  3
+            if ((Time.now - auth.created_at)/60) < 2
               text_e = Hash.new
               text_e["name"] = "TEAFU.MENU.B2C.05.01"
               text_e["type"] = "text"
