@@ -12,8 +12,8 @@ class PostMessageApiJob < ActiveJob::Base
     uri = URI.parse(customization[:user_message_post])
     user = customization[:user]
     password = customization[:password]
-    mp.group.group_user_ships.each do |uid|
-      post_data = {'recepient_id'=> uid, 'user' => user, 'password' => password, 'elements' => message }.to_json
+    mp.group.group_user_ships.each do |group|
+      post_data = {'recepient_id'=> group.uid, 'user' => user, 'password' => password, 'elements' => message }.to_json
       https = Net::HTTP.new(uri.host,uri.port)
       https.use_ssl = true
       req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
@@ -21,7 +21,7 @@ class PostMessageApiJob < ActiveJob::Base
       res = https.request(req)
       File.open("#{Rails.root}/log/mm.log", "a+") do |file|
         file.syswrite(%(#{Time.now.iso8601}: #{uid} \n---------------------------------------------\n\n))
-        file.syswrite(%(#{Time.now.iso8601}: #{message} \n---------------------------------------------\n\n))
+        file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
         file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
       end
     end
