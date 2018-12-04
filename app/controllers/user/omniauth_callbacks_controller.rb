@@ -6,8 +6,13 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         def #{provider}
           User.transaction do
             if !current_user.blank?
-              current_user.bind_service(env["omniauth.auth"])#Add an auth to existing
-              redirect_to root_path(), :notice => "Bind #{provider} account successfully."
+              aa = FbBinding.find_by_binding_ip(request.remote_ip)
+              Authorization.find_or_create_by(:provider => "facebook", :uid => aa.scoped_id, :user_id => current_user.id)
+              FbBinding.destroy_all(:binding_ip => request.remote_ip)
+              # sign_in @user
+              render partial: "shared/fb"
+              # current_user.bind_service(env["omniauth.auth"])#Add an auth to existing
+              # redirect_to root_path(), :notice => "Bind #{provider} account successfully."
             else
               @user = User.find_or_create_for_#{provider}(env["omniauth.auth"])
               if @user == nil
