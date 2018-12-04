@@ -6,7 +6,7 @@ class PostMessageApiJob < ActiveJob::Base
     mo = Wording.where("name like '%#{mp.module_name}%'").order(:name)
     message = Array.new
     mo.each do |m|
-      message << m.content
+      message << JSON.parse(m.content)
     end
     customization = YAML.load_file("config/customization.yml")
     uri = URI.parse(customization[:user_message_post])
@@ -25,7 +25,6 @@ class PostMessageApiJob < ActiveJob::Base
         file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
       end
     end
-    
     mp.complete_time = Time.now
     mp.save!
   end
