@@ -21,7 +21,7 @@ class PostMessageApiJob < ActiveJob::Base
       res = https.request(req)
       File.open("#{Rails.root}/log/mm.log", "a+") do |file|
         file.syswrite(%(#{Time.now.iso8601}: #{uid} \n---------------------------------------------\n\n))
-        file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
+        file.syswrite(%(#{Time.now.iso8601}: #{message} \n---------------------------------------------\n\n))
         file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
       end
     end
