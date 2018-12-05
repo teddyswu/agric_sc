@@ -736,13 +736,6 @@ class DataConnectsController < ApplicationController
               end
             end
           else
-            if ((Time.now - auth.created_at)/60) < 2
-              text_e = Hash.new
-              text_e["name"] = "TEAFU.MENU.B2C.05.01"
-              text_e["type"] = "text"
-              text_e["text"] = "茶福感謝您訂閱。"
-              text_e["delay"] = 1 
-            end
             result["join"] = false
             text_1["name"] = "TEAFU.MENU.B2C.05.02"
             text_1["type"] = "text"
@@ -754,8 +747,6 @@ class DataConnectsController < ApplicationController
             text_t = Array.new
             text_2 = Hash.new
             campaigns = Campaign.where(:status => 3).limit(10)       
-            campaign_ids = Campaign.where(:status => 3).map {|campaign| campaign.id }
-            groups = CampaignGroup.where(:campaign_id => campaign_ids).limit(10)
             text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
             text_2["type"] = "text"
             text_2["text"] = "Hi [[FULLNAME]]！來看這些提案故事，一定會有您喜歡的。"
@@ -796,17 +787,6 @@ class DataConnectsController < ApplicationController
           text_2["type"] = "text"
           text_2["text"] = "https://story.sogi.com.tw/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
           text_2["delay"] = 1
-          proposal_1 = Array.new
-          card_text = Hash.new
-          card_text["text"] = ""
-          quick_replies = Array.new
-          t1 = Hash.new
-          t1["content_type"] = "text"
-          t1["title"] = "茶福～我完成了！"
-          t1["payload"] = "C_0"
-          quick_replies << t1
-          card_text["quick_replies"] = quick_replies
-          proposal_1 << card_text
         end
         text << result
         total << text
@@ -855,7 +835,7 @@ class DataConnectsController < ApplicationController
         res = https.request(req)
         File.open("#{Rails.root}/log/mm.log", "a+") do |file|
           file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
-          file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
+          file.syswrite(%(#{Time.now.iso8601}: #{card} \n---------------------------------------------\n\n))
           file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
         end
         render text: "ok"
