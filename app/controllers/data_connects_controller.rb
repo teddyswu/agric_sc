@@ -791,7 +791,6 @@ class DataConnectsController < ApplicationController
         text << result
         total << text
         total << text_3_a if text_3_a.present?
-        text_a << text_e if text_e.present?
         text_a << text_1 if text_1 != {}
         text_a << text_2 if text_2.present?
         total << text_a
