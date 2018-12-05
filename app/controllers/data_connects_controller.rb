@@ -747,10 +747,10 @@ class DataConnectsController < ApplicationController
             text_t = Array.new
             text_2 = Hash.new
             campaigns = Campaign.where(:status => 3).limit(10)       
-            text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
-            text_2["type"] = "text"
-            text_2["text"] = "Hi [[FULLNAME]]！來看這些提案故事，一定會有您喜歡的。"
-            text_2["delay"] = 1
+            # text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
+            # text_2["type"] = "text"
+            # text_2["text"] = "Hi [[FULLNAME]]！來看這些提案故事，一定會有您喜歡的。"
+            # text_2["delay"] = 1
             campaigns.each do |campaign|
               remain_day = (campaign.end_date - Date.today).to_i
               amount_raised = campaign.amount_raised
