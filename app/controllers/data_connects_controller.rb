@@ -838,6 +838,13 @@ class DataConnectsController < ApplicationController
           file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
         end
         render text: "ok"
+      when "active_ivg"
+        mo = Wording.where("name like '%TEAFU.CSI%' or name like '%TEAFU.TEST%'").order(:name)
+        wording = Array.new
+        mo.each do |m|
+          wording << JSON.parse(m.content)
+        end
+        render json: wording
       end
 		end
 	end

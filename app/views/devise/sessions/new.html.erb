@@ -1,3 +1,62 @@
+<body id="top">
+  <nav class="pushy pushy-left bg-white">
+    <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+          <div class="row bg-white bs">
+            <div class="col-12 col-lg-6 px-8 pt-8 pb-20 py-lg-8 text-center bg-login">
+              <div class="h5 font-weight-bold text-center mb-3">快速登入</div>
+              <div class="">
+                <%= link_to user_omniauth_authorize_path(:facebook), class: "btn btn-block btn-fb" do %>
+                  <div class="float-left">
+                    <i class="fab fa-lg fa-fw fa-facebook-f"></i>
+                  </div>
+                  <span>Facebook登入</span>
+                <% end %>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 p-8">
+              <div class="h5 font-weight-bold text-center mb-3">新註冊</div>
+              <a class="btn btn-block btn-primary" href="">
+                <div class="float-left">
+                  <i class="fas fa-lg fa-fw fa-user"></i>
+                </div>
+                <span>小農請由此註冊</span>
+              </a>
+              <a class="btn btn-block btn-fb" href="">
+                <div class="float-left">
+                  <i class="fab fa-lg fa-fw fa-facebook-f"></i>
+                </div>
+                <span>Facebook帳號註冊</span>
+              </a>
+              <div class="mt-5">
+                <p>
+                  創建帳戶即表示您同意<a href=""><u>使用條款</u></a>和<a href=""><u>隱私政策</u></a>。
+                </p>
+                <p>
+                  註冊會員需要您授權在FB的信箱，請確認您的FB帳戶內有填寫信箱。
+                </p>
+                <p class="mb-0 text-center">
+                  <a href=""><u>FB帳戶註冊或登入遇到問題?</u></a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%= render "shared/footer" %>
+  <div id="fb-root"></div>
+
+</body>
+<!--
 <body class="bg-dark">
   <div class="sufee-login d-flex align-content-center flex-wrap">
     <div class="container">
@@ -8,32 +67,32 @@
           </a>
         </div>
         <div class="flash">
-          <% flash.each do |type, message| -%>
-            <div class="message <%= type %>">
-              <p><%= message %></p>
+          <%# flash.each do |type, message| -%>
+            <div class="message <%#= type %>">
+              <p><%#= message %></p>
             </div>
-          <% end -%>
+          <%# end -%>
         </div>
         <div class="login-form">
-          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <%#= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
             <div class="form-group">
               <label>Email address</label>
-              <%= f.email_field :email, autofocus: true, placeholder: "Email", class: "form-control"%>
+              <%#= f.email_field :email, autofocus: true, placeholder: "Email", class: "form-control"%>
             </div>
             <div class="form-group">
               <label>Password</label>
-              <%= f.password_field :password, autocomplete: "off", class: "form-control", placeholder: "Password" %>
+              <%#= f.password_field :password, autocomplete: "off", class: "form-control", placeholder: "Password" %>
             </div>
             <div class="checkbox">
               <label>
-                <%= f.check_box :remember_me %> Remember Me
+                <%#= f.check_box :remember_me %> Remember Me
               </label>
               <label class="pull-right">
                   <a href="#">Forgotten Password?</a>
               </label>
             </div>
-            <%= f.submit "Log in", class: "btn btn-success btn-flat m-b-30 m-t-30" %>
-          <% end %>
+            <%#= f.submit "Log in", class: "btn btn-success btn-flat m-b-30 m-t-30" %>
+          <%# end %>
         </div>
       </div>
     </div>
@@ -43,4 +102,4 @@
   <script src="/assets/js/popper.min.js"></script>
   <script src="/assets/js/plugins.js"></script>
   <script src="/assets/js/main.js"></script>
-</body>
+ </body> -->
