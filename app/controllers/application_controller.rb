@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :deny_ip
 
   def after_sign_in_path_for(resource_or_scope)
-  	current_user.is_admin == true ? agris_path : profile_users_path
+  	current_user.is_admin == true ? agris_path : root_path
   end
   def is_admin
     if current_user.is_admin != true
