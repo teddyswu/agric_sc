@@ -27,6 +27,7 @@ class PostMessageApiJob < ActiveJob::Base
       a+=1 if rr["#{b}"]["data"]!="null"
     end
     mp.delivery_number = a
+    mp.total_number = res_body["Results"].size
     mp.save!
   end
 end

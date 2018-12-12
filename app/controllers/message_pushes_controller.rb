@@ -19,6 +19,10 @@ class MessagePushesController < ApplicationController
     redirect_to :action => :index
 	end
 
+	def show
+		@message_push = MessagePush.find(params[:id])
+	end
+
 	def destroy
 		mp = MessagePush.find(params[:id])
 		pma = Delayed::Job.where("handler like ?", mp.delayed_job_id)

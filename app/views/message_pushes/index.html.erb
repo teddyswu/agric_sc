@@ -29,33 +29,33 @@
               <div class="card-header">
                 <strong class="card-title">Table List</strong> <%= link_to "新增", new_message_push_path%>
               </div>
-                <div class="card-body">
-                  <table class="table">
-                    <thead class="thead-dark">
+              <div class="card-body">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">模組名稱</th>
+                      <th scope="col">發送清單</th>
+                      <th scope="col">發送時間</th>
+                      <th scope="col">刪除</th>
+                      <th scope="col">更多資訊</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @message_pushes.each do |message_push|%>
                       <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">模組名稱</th>
-                        <th scope="col">發送清單</th>
-                        <th scope="col">發送時間</th>
-                        <th scope="col">實際完成時間</th>
-                        <th scope="col">刪除</th>
+                        <th scope="row"><%= message_push.id %></th>
+                        <td><%= message_push.module_name %></td>
+                        <td><%= message_push.group.name %></td>
+                        <td><%= message_push.run_at%></td>
+                        <td><%= link_to "[del]", message_push_path(message_push.id), :method => :delete %></td>
+                        <td><%= link_to "[go]", message_push_path(message_push.id)%></td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      <% @message_pushes.each do |message_push|%>
-                        <tr>
-                          <th scope="row"><%= message_push.id %></th>
-                          <td><%= message_push.module_name %></td>
-                          <td><%= message_push.group.name %></td>
-                          <td><%= message_push.run_at%></td>
-                          <td><%= message_push.complete_time %></td>
-                          <td><%= link_to "[del]", message_push_path(message_push.id), :method => :delete %></td>
-                        </tr>
-                      <% end %>
-                    </tbody>
-                  </table>
-                  <%= will_paginate @message_pushes %>
-                </div>
+                    <% end %>
+                  </tbody>
+                </table>
+                <%= will_paginate @message_pushes %>
+              </div>
             </div>
           </div>
         </div>
