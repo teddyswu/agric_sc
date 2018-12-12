@@ -20,6 +20,13 @@ class PostMessageApiJob < ActiveJob::Base
       file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
     end
     mp.complete_time = Time.now
+    res_body = JSON.parse(res.body)
+    a = 0
+    res_body["Results"].each_with_index do |rr, i|
+      b = i + 1
+      a+=1 if rr["#{b}"]["data"]!="null"
+    end
+    mp.delivery_number = a
     mp.save!
   end
 end

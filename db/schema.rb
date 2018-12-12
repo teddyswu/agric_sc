@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181203044253) do
+ActiveRecord::Schema.define(version: 20181212070556) do
 
   create_table "article_images", force: :cascade do |t|
     t.integer  "article_id",   limit: 4
@@ -160,13 +160,15 @@ ActiveRecord::Schema.define(version: 20181203044253) do
   end
 
   create_table "message_pushes", force: :cascade do |t|
-    t.string   "module_name",    limit: 255
-    t.text     "delayed_job_id", limit: 65535
+    t.string   "module_name",     limit: 255
+    t.text     "delayed_job_id",  limit: 65535
     t.datetime "run_at"
+    t.integer  "delivery_number", limit: 4
+    t.integer  "read_number",     limit: 4
     t.datetime "complete_time"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "group_id",       limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "group_id",        limit: 4
   end
 
   create_table "reply_words", force: :cascade do |t|
