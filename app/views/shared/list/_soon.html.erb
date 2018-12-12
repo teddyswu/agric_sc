@@ -1,0 +1,37 @@
+<div class="border item mb-4">
+  <div class="row no-gutters bg-light">
+    <div class="col-12 col-lg-5">
+      <%= link_to "#{@project_domain}/campaigns/#{campaign.slug}", :class => "d-block position-relative" do %>
+      	<%= render_status_tag(campaign)%>
+        <img class="img-fluid text-center" src="<%= campaign.campaign_image.try(:campaign_path) %>" alt="">
+      <% end %>
+    </div>
+    <div class="col-12 col-lg-7 p-2">
+      <div class="font-small text-muted">
+        <%= campaign.created_at.strftime("%F %T") %>
+      </div>
+      <%= link_to campaign.title, "#{@project_domain}/campaigns/#{campaign.slug}", :class => "text-black text-row-1"%>
+      <hr class="my-3">
+      <div class="row">
+        <div class="col-12 col-md-10 col-lg-9">
+          <div class="text-muted">
+            預計收益：<%= number_to_currency(income, precision: 0) %><br>
+            提案期間：<%= campaign.start_date.strftime("%F") %> ~ <%= campaign.end_date.strftime("%F")%>
+          </div>
+        </div>
+        <div class="col-12 col-md-2 col-lg-3">
+          <%= render_link_or_div(campaign)%>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white border-top p-4">
+    <div class="row align-items-center">
+      <div class="col-12 col-lg-8 text-center text-lg-left">
+        <div class="text-success my-1 my-lg-0">
+          <i class="fas fa-fw fa-spinner"></i> 您的提案已通過審核，系統預設開始時間為當日中午12點整。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

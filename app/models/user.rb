@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   has_many :work_record_reply
   has_many :authorizations
   has_many :campaigns
+  has_many :campaign_groups
 
 
   extend OmniauthCallbacks

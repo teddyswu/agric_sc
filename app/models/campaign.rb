@@ -3,8 +3,9 @@ class Campaign < CrowdDbConnecter
   self.primary_key = "id"
 
   has_many :campaign_groups
-  has_many :goodies, dependent: :destroy
-  has_many :orders, through: :goodies
+  has_many :goodies, dependent: :destroy#, :class_name => "Goody"
+  has_many :supporters, through: :goodies#, :class_name => "Supporter"
+  has_many :orders, through: :goodies#, :class_name => "Order"
   has_one :campaign_image
   belongs_to :user
 

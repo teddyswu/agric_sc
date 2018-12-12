@@ -1,0 +1,51 @@
+<body id="top">
+  <nav class="pushy pushy-left bg-white">
+    <!-- module: nav-mobile -->
+    <%= render "shared/mobile" %>
+    <!-- module: ./nav-mobile -->
+  </nav>
+  <div class="site-overlay"></div>
+  <!-- module: global-header -->
+  <%= render "shared/header" %>
+  <!-- ./module: global-header -->
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-7">
+            <h1 class="font-weight-bold">友善農夫</h1>
+            <div class="h3">參與提案紀錄</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid border-bottom mb-6 pt-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="nav-responsive">
+	            <ul class="nav nav-tabs nav-justified border-bottom-0">
+                <li class="nav-item">
+                  <%= link_to "列印工作紀錄", outputs_work_records_path(), :class => "nav-link"%>
+                </li>
+                <li class="nav-item">
+                	<%= link_to "參與提案紀錄", join_projects_work_records_path, :class => "nav-link active"%>
+                </li>
+	            </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+        	<% @groups.each do |group|%>
+		        <%= render_camoaign_block(group.campaign, group.income)%>
+		      <% end %>
+		    </div>
+		  </div>
+		</div>
+	</div>
+	<%= render "shared/footer" %>
+</body>

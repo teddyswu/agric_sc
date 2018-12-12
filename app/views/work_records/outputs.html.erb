@@ -1,6 +1,6 @@
 <body>
   <nav class="pushy pushy-left bg-white">
-     <%= render "shared/mobile" %>
+    <%= render "shared/mobile" %>
   </nav>
   <div class="site-overlay"></div>
   <%= render "shared/header" %>
@@ -14,25 +14,27 @@
           </div>
         </div>
       </div>
-      <div class="row justify-content-center">
-        <div class="col-12 mb-6">
-          <div class="border-top border-bottom border-gray py-5">
-            <ul class="nav justify-content-center">
-              <li class="nav-item">
-                <a class="nav-link" href="#">帳號設定</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">追蹤紀錄</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="farm-info.html">活動紀錄</a>
-              </li>
-              <li class="nav-item">
-                <%= link_to "列印工作紀錄", outputs_work_records_path(:name => params[:name]), class: "nav-link"%>
-              </li>
-            </ul>
+    </div>
+    <div class="container-fluid border-bottom mb-6 pt-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="nav-responsive">
+              <ul class="nav nav-tabs nav-justified border-bottom-0">
+                <li class="nav-item">
+                  <%= link_to "列印工作紀錄", outputs_work_records_path(:name => params[:name]), :class => "nav-link active"%>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "參與提案紀錄", join_projects_work_records_path, :class => "nav-link"%>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row justify-content-center">
         <div class="col-12 col-lg-8 mb-10">
           <%= form_for :anything, url: outputs_work_records_path, method: :get, :html => {:class => 'form-inline justify-content-center'} do |f| %>
             <%= hidden_field_tag :name, params[:name]%>

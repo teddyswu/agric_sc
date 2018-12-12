@@ -51,6 +51,8 @@ Rails.application.routes.draw do
     get "outputs", :on => :collection
     get "mood", :on => :collection
     get "record_img", :on => :member
+    get "rate", :on => :member
+    get "join_projects", :on => :collection
   end
   resources :work_projects
   resources :work_diaries do

@@ -1,5 +1,5 @@
 class WorkRecordsController < ApplicationController
-  before_filter :authenticate_user!, only: [:index]
+  before_filter :authenticate_user!, only: [:index, :join_projects]
   before_action :is_admin, only: [:index]
 
 	def index
@@ -57,12 +57,23 @@ class WorkRecordsController < ApplicationController
     record_mood.update_column(:mood, mood)
 	end
 
+  def rate
+    @campaign = Campaign.find(params[:id])
+    render layout: 'story'
+  end
+
   def record_img
     img = WorkRecordImage.find(params[:id])
     img.enabled = (img.enabled == true ? false :true)
     img.save!
 
     redirect_to work_records_path  
+  end
+
+  def join_projects
+    @project_domain = YAML.load_file("config/customization.yml")[:campaign_domain]
+    @groups = current_user.campaign_groups
+    render layout: 'story'
   end
 
 	def outputs
