@@ -368,7 +368,7 @@ class DataConnectsController < ApplicationController
               text_1["title"] = campaign.title
               text_1["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_1["image_url"] = campaign.campaign_image.campaign_path
-              text_1["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
+              text_1["buttons"] = JSON.parse("[{\"type\": \"web_url\",\"title\": \"追蹤♥\",\"url\": \"#{@root_domain}/stories/13\"}, {\"type\": \"web_url\",\"title\": \"查看內容\",\"url\": \"" + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
               proposal_1 << text_1
             end
           end
@@ -453,7 +453,7 @@ class DataConnectsController < ApplicationController
           text["title"] = campaign.title
           text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
-          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
+          text["buttons"] = JSON.parse("[{\"type\": \"web_url\",\"title\": \"追蹤♥\",\"url\": \"#{@root_domain}/stories/13\"}, {\"type\": \"web_url\",\"title\": \"查看內容\",\"url\": \"" + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
           proposal << text
         end
         render json: proposal
@@ -558,7 +558,7 @@ class DataConnectsController < ApplicationController
           text["title"] = campaign.title
           text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
-          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
+          text["buttons"] = JSON.parse("[{\"type\": \"web_url\",\"title\": \"追蹤♥\",\"url\": \"#{@root_domain}/stories/13\"}, {\"type\": \"web_url\",\"title\": \"查看內容\",\"url\": \"" + "http://#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
           proposal << text
         end
         wording = Array.new
@@ -664,7 +664,7 @@ class DataConnectsController < ApplicationController
               text_3["title"] = campaign.title
               text_3["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_3["image_url"] = campaign.campaign_image.campaign_path
-              text_3["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
+              text_3["buttons"] = JSON.parse("[{\"type\": \"web_url\",\"title\": \"追蹤♥\",\"url\": \"#{@root_domain}/stories/13\"}, {\"type\": \"web_url\",\"title\": \"查看內容\",\"url\": \"" + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
               proposal << text_3
             end
           end
