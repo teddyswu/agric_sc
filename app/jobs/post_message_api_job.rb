@@ -20,7 +20,7 @@ class PostMessageApiJob < ActiveJob::Base
       file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
     end
     mp.complete_time = Time.now
-    res_body = JSON.parse(res.body)
+    res_body = JSON res.body[1..-2].gsub('\\', '')
     a = 0
     res_body["Results"].each_with_index do |rr, i|
       b = i + 1
