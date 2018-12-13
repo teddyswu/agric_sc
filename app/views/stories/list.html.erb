@@ -65,7 +65,7 @@
 <% content_for :javascript do %>
   <script>
     $('.article').infiniteScroll({
-      <% url = params[:tag].present? ? "list?tag=#{params[:tag]}&page={{#}}" : "list?page={{#}}"%>
+      <% url = params[:tag].present? ? "#{request.url}?tag=#{params[:tag]}&page={{#}}" : "#{request.url}?page={{#}}"%>
       path: '<%= url.html_safe %>',
       append: '.post',
       status: ".scroller-status"
