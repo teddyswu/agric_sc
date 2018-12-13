@@ -3,7 +3,7 @@ class DataConnectsController < ApplicationController
   include ActionView::Helpers::NumberHelper
 	def story
     @root_domain = YAML.load_file("config/customization.yml")[:root_domain]
-    @project_domain = YAML.load_file("config/customization.yml")[:root_domain]
+    @project_domain = YAML.load_file("config/customization.yml")[:campaign_domain]
 		case params[:motion]
 		when "new"
 			case params[:type]
