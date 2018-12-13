@@ -2,6 +2,8 @@ class DataConnectsController < ApplicationController
 	skip_before_action :verify_authenticity_token
   include ActionView::Helpers::NumberHelper
 	def story
+    @root_domain = YAML.load_file("config/customization.yml")[:root_domain]
+    @project_domain = YAML.load_file("config/customization.yml")[:root_domain]
 		case params[:motion]
 		when "new"
 			case params[:type]
@@ -226,7 +228,7 @@ class DataConnectsController < ApplicationController
     	if user_profile == nil
     		render json: "[{'status':no data}]"
     	else
-    		render json: '{"uid":"' + user_profile.fb_uid.to_s + '","name":"' + user_profile.name.to_s + '","front_name":"' + user_profile.front_name.to_s + '","cell_phone":"' + user_profile.cell_phone.to_s + '","certificate":"' + user_profile.certificate_photo.to_s + '","certificate_2":"' + user_profile.certificate_photo_2.to_s + '","profile_pic":"' + user_profile.pic_url.to_s + '","farmer_info":"' + "https://story.sogi.com.tw/farmers/#{user_profile.user_id}" + '","farmer_record":"' + "https://story.sogi.com.tw/farmers/#{user_profile.user_id}/work_record\"}"
+    		render json: '{"uid":"' + user_profile.fb_uid.to_s + '","name":"' + user_profile.name.to_s + '","front_name":"' + user_profile.front_name.to_s + '","cell_phone":"' + user_profile.cell_phone.to_s + '","certificate":"' + user_profile.certificate_photo.to_s + '","certificate_2":"' + user_profile.certificate_photo_2.to_s + '","profile_pic":"' + user_profile.pic_url.to_s + '","farmer_info":"' + "#{@root_domain}/farmers/#{user_profile.user_id}" + '","farmer_record":"' + "#{@root_domain}/farmers/#{user_profile.user_id}/work_record\"}"
       end
     when "edit_farmer_data"
   		user_profile = FarmerProfile.find_by_name(params[:name])
@@ -281,8 +283,8 @@ class DataConnectsController < ApplicationController
           farmer_list["front_name"] = fl.front_name
         	farmer_list["user_pic_url"] = fl.user_pic_url
         	farmer_list["introduce"] = fl.introduce
-          farmer_list["farmer_info"] = "https://story.sogi.com.tw/farmers/#{fl.user_id}"
-          farmer_list["farmer_record"] = "https://story.sogi.com.tw/farmers/#{fl.user_id}/work_record"
+          farmer_list["farmer_info"] = "#{@root_domain}/farmers/#{fl.user_id}"
+          farmer_list["farmer_record"] = "#{@root_domain}/farmers/#{fl.user_id}/work_record"
           farmer << farmer_list
         end
         render json: farmer
@@ -304,7 +306,7 @@ class DataConnectsController < ApplicationController
         ua = Array.new
         url = Hash.new
         url[:type] = "text"
-        url[:text] = "https://story.sogi.com.tw/farmers/#{farmer_profile.user_id}" if farmer_profile.present?
+        url[:text] = "#{@root_domain}/farmers/#{farmer_profile.user_id}" if farmer_profile.present?
         ua << url if farmer_profile.present?
         total << ua if farmer_profile.present?
         render json: total
@@ -335,7 +337,7 @@ class DataConnectsController < ApplicationController
                 income = group.income
                 supporter = group.campaign.orders.is_paid.size
                 img = group.campaign.campaign_image.campaign_path
-                line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{group.campaign.slug}" + '"}]}'      
+                line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "#{@project_domain}/campaigns/#{group.campaign.slug}" + '"}]}'      
                 proposal_1 << JSON.parse(line)
               end
             end
@@ -366,7 +368,7 @@ class DataConnectsController < ApplicationController
               text_1["title"] = campaign.title
               text_1["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_1["image_url"] = campaign.campaign_image.campaign_path
-              text_1["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+              text_1["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
               proposal_1 << text_1
             end
           end
@@ -425,12 +427,12 @@ class DataConnectsController < ApplicationController
           t1 = Hash.new
           t1["type"] = "web_url"
           t1["title"] = "追蹤♥"
-          t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
+          t1["url"] = "#{@root_domain}/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
           buttons << t1
           t2 = Hash.new
           t2["type"] = "web_url"
           t2["title"] = "查看內容"
-          t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
+          t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
           buttons << t2
           text["buttons"] = buttons
           proposal_1 << text
@@ -451,7 +453,7 @@ class DataConnectsController < ApplicationController
           text["title"] = campaign.title
           text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
-          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
           proposal << text
         end
         render json: proposal
@@ -556,7 +558,7 @@ class DataConnectsController < ApplicationController
           text["title"] = campaign.title
           text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
-          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+          text["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
           proposal << text
         end
         wording = Array.new
@@ -662,7 +664,7 @@ class DataConnectsController < ApplicationController
               text_3["title"] = campaign.title
               text_3["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_3["image_url"] = campaign.campaign_image.campaign_path
-              text_3["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "https://story.sogi.com.tw/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "http://swiss.i-sogi.com/campaigns/#{campaign.slug}" + '"}]')
+              text_3["buttons"] = JSON.parse('[{"type": "web_url","title": "追蹤♥","url": "#{@root_domain}/stories/13"}, {"type": "web_url","title": "查看內容","url": "' + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
               proposal << text_3
             end
           end
@@ -719,17 +721,17 @@ class DataConnectsController < ApplicationController
                 if order.paid == false
                   t1["type"] = "web_url"
                   t1["title"] = "付款去"
-                  t1["url"] = "http://swiss.i-sogi.com/orders/#{order.id}/go_pay"
+                  t1["url"] = "#{@project_domain}/orders/#{order.id}/go_pay"
                 else
                   t1["type"] = "web_url"
                   t1["title"] = "查看詳細記錄"
-                  t1["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}"
+                  t1["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}"
                 end
                 buttons << t1
                 t2 = Hash.new
                 t2["type"] = "web_url"
                 t2["title"] = "查看最新進度"
-                t2["url"] = "http://swiss.i-sogi.com/campaigns/#{order.goody.campaign.slug}/updates"
+                t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
                 buttons << t2
                 text_2_c["buttons"] = buttons
                 text_a << text_2_c
@@ -764,12 +766,12 @@ class DataConnectsController < ApplicationController
               t1 = Hash.new
               t1["type"] = "web_url"
               t1["title"] = "追蹤♥"
-              t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
+              t1["url"] = "#{@root_domain}/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
               buttons << t1
               t2 = Hash.new
               t2["type"] = "web_url"
               t2["title"] = "查看內容"
-              t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
+              t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
               buttons << t2
               text_c["buttons"] = buttons
               proposal_1 << text_c
@@ -780,12 +782,12 @@ class DataConnectsController < ApplicationController
           result["join"] = false
           text_1["name"] = "TEAFU.MENU.B2C.03.01"
           text_1["type"] = "text"
-          text_1["text"] = "[[FULLNAME]]要查詢服務嗎？茶福需要您的同意才能開啟所有服務，請先點擊下方連結進行登入，完成後記得提醒我喔。"
+          text_1["text"] = "[[FULLNAME]]要查詢服務嗎？茶福需要您的同意才能開啟所有服務，請先點擊下方連結進行登入。"
           text_1["delay"] = 1
           text_2 = Hash.new
           text_2["name"] = "TEAFU.MENU.B2C.03.02"
           text_2["type"] = "text"
-          text_2["text"] = "https://story.sogi.com.tw/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
+          text_2["text"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
           text_2["delay"] = 1
         end
         text << result

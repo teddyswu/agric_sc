@@ -55,6 +55,8 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def first_start(scoped_id)
+    @root_domain = YAML.load_file("config/customization.yml")[:root_domain]
+    @project_domain = YAML.load_file("config/customization.yml")[:root_domain]
     total = Array.new
     text = Array.new
     text_1 = Hash.new
@@ -85,12 +87,12 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       t1 = Hash.new
       t1["type"] = "web_url"
       t1["title"] = "追蹤♥"
-      t1["url"] = "https://story.sogi.com.tw/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
+      t1["url"] = "#{@root_domain}/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
       buttons << t1
       t2 = Hash.new
       t2["type"] = "web_url"
       t2["title"] = "查看內容"
-      t2["url"] = "http://swiss.i-sogi.com/campaigns/#{campaign.slug}"
+      t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
       buttons << t2
       text_a["buttons"] = buttons
       card << text_a

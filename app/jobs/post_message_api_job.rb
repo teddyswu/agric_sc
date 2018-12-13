@@ -24,10 +24,10 @@ class PostMessageApiJob < ActiveJob::Base
     a = 0
     res_body["Results"].each_with_index do |rr, i|
       b = i + 1
-      a+=1 if rr["#{b}"]["data"]!="null"
+      a+=1 if rr["#{b}"]["message_id"].present?
     end
     mp.delivery_number = a
-    mp.total_number = res_body["Results"].size
+    mp.total_number = res_body["Count"].to_i
     mp.save!
   end
 end
