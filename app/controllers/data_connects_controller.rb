@@ -725,7 +725,7 @@ class DataConnectsController < ApplicationController
                 else
                   t1["type"] = "web_url"
                   t1["title"] = "查看詳細記錄"
-                  t1["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}"
+                  t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
                 end
                 buttons << t1
                 t2 = Hash.new
