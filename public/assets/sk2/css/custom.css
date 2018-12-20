@@ -385,7 +385,7 @@ a.text-line:hover {
   font-size: .875rem;
   text-transform: uppercase; }
 
-/* This for loop creates the  necessary css animation names
+/* This for loop creates the 	necessary css animation names
 Due to the split circle of progress-left and progress right, we must use the animations on each side.
 */
 .progress-circle[data-percentage="10"] .progress-right .progress-bar {

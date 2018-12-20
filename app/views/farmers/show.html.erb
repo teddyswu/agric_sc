@@ -1,6 +1,6 @@
 <body>
   <nav class="pushy pushy-left bg-white">
-     <%= render "shared/mobile" %>
+    <%= render "shared/mobile" %>
   </nav>
   <div class="site-overlay"></div>
   <%= render "shared/header" %>
@@ -66,10 +66,10 @@
         </div>
       </div>
       <div class="row article">
-        <% @work_records.each_with_index do |wr| %>
+        <% @work_records.each_with_index do |wr, i| %>
           <% if wr.work_diary_images.normal_state.size > 0 %>
             <div class="col-6 col-lg-4 my-3 post" >
-              <%= link_to "javascript:void();",class: "position-relative d-block btn-info",style: "background-color:#fff", data: {toggle: "modal", target:"#modal-detail_#{wr.id}"} do %>
+              <%= link_to "javascript:void();",class: "position-relative d-block btn-info",style: "background-color:#fff", data: {toggle: "modal", target:"#modal-detail_#{i+1}"} do %>
                 <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_diary_images.normal_state.size > 1%>
                 <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
                   <div class="mb-auto"></div>
@@ -109,17 +109,16 @@
       </div>
     </div>
   </div>
-
-  <% @work_record_all.each_with_index do |wd| %>
-    <div class="modal fade" id="modal-detail_<%= wd.id %>" tabindex="-1" role="dialog">
+  <% @work_record_all.each_with_index do |wd, i| %>
+    <div class="modal fade" id="modal-detail_<%= i+1 %>" tabindex="-1" role="dialog">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
       <div class="nav-modal">
-        <a class="btn-left" href="javascript:void();">
+        <a class="btn-left" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{i}\"".html_safe if i != 0%>>
           <i class="fas fa-2x fa-chevron-left"></i>
         </a>
-        <a class="btn-right" href="javascript:void();">
+        <a class="btn-right" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{i+2}\"".html_safe if @work_record_all.size != i+1 %>>
           <i class="fas fa-2x fa-chevron-right"></i>
         </a>
       </div>
@@ -187,17 +186,12 @@
                       <span class="badge badge-light badge-pill"><%#= wd.dislike.to_i %> 個不喜歡</span>
                     </li>
                   </ul>
-                  <form class="mt-3">
-                    <a class="" href="">請先登入</a>
-                    <div class="form-row">
-                      <div class="col-9">
-                        <textarea class="form-control bg-light" rows="1" placeholder="留言..."></textarea>
-                      </div>
-                      <div class="col">
-                        <button class="btn btn-block btn-outline-info">送出</button>
-                      </div>
-                    </div>
-                  </form>
+                  <div class="text-muted font-small mt-1">
+                    <%= wd.diary_time.strftime("%F %H:%M")%>
+                  </div>
+                  <div class="mt-1">
+                    <div class="fb-comments" data-width="100%" data-href="<%= "#{YAML.load_file("config/customization.yml")[:root_domain]}/farmers/#{params[:id]}/mobile_img/#{wd.id}"%>" data-numposts="1"></div>
+                  </div>
                 </div>
                 <div class="mt-3 py-3 font-small comment">
                   <div class="">
@@ -230,22 +224,12 @@
                       <span class="badge badge-light badge-pill"><%#= wd.dislike.to_i %> 個不喜歡</span>
                     </li>
                   </ul>
-                  <%# if current_user.present? %>
-                    <%#= form_for @wrr, :url => work_record_replies_path(), :method => :post, :html => {:class => 'mt-1'}, :remote => true do |f| %>
-                      <div class="form-row">
-                        <div class="col-9">
-                          <%#= f.text_area :content, class: "form-control bg-light", rows: 1, placeholder: "留言..." %>
-                          <%#= f.hidden_field :user_id, :value => current_user.id%>
-                          <%#= f.hidden_field :work_record_id, :value => wd.id%>
-                        </div>
-                        <div class="col">
-                          <%#= f.submit "送出", class: "btn btn-block btn-outline-info" %>
-                        </div>
-                      </div>
-                    <%# end %>
-                  <%# else %>
-                    <a class="" href="">請先登入</a>
-                  <%# end %>
+                  <div class="text-muted font-small mt-1">
+                    <%= wd.diary_time.strftime("%F %H:%M")%>
+                  </div>
+                  <div class="mt-1">
+                    <div class="fb-comments" data-width="100%" data-href="<%= "#{YAML.load_file("config/customization.yml")[:root_domain]}/farmers/#{params[:id]}/mobile_img/#{wd.id}"%>" data-numposts="1"></div>
+                  </div>
                 </div>
               </div>
             </div>

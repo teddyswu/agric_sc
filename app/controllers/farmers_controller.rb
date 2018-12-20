@@ -14,4 +14,7 @@ class FarmersController < ApplicationController
 		@work_records = WorkRecord.where(:owner_id => params[:id])
 		render layout: "story"
 	end
+
+	def mobile_img
+	end
 end

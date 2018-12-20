@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   resources :farmers do 
     get "work_record", on: :member
   end
+  get "farmers/:id/mobile_img/:record_id", :to => "farmers#mobile_img", :as => "farmer_mobile_img"
 
   resources :multi_image_uploads
 
