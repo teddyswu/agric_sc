@@ -16,4 +16,12 @@ module FarmersHelper
 			return image_tag "https://i.imgur.com/BQnEqUW.png", class: "img-fluid text-center"
 		end
 	end
+
+	def render_is_mobile_link(boo, id, record_id, i)
+		if boo == true
+			"<a class=\"position-relative d-block btn-info\" style=\"background-color:#fff\" href=\"#{farmer_mobile_img_path(id, record_id)}\">".html_safe
+		else
+			"<a class=\"position-relative d-block btn-info\" style=\"background-color:#fff\" data-toggle=\"modal\" data-target=\"#modal-detail_#{i}\" href=\"javascript:void();\">".html_safe
+		end
+	end
 end

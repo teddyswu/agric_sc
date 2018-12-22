@@ -43,7 +43,7 @@
         </div>   
       <% else %>
         <div class="dropdown">
-          <%= link_to new_user_session_path, class: "btn btn-sm btn-fb px-2" do %>
+          <%= link_to user_omniauth_authorize_path(:facebook), class: "btn btn-sm btn-fb px-2" do %>
             <i class="fab fa-facebook-f"></i>
             <span class="d-none d-lg-inline-block">登入</span>
           <% end %>

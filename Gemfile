@@ -17,6 +17,8 @@ gem "dalli"
 gem 'delayed_job_active_record'
 gem "daemons"
 
+gem "browser"
+
 gem 'will_paginate', '~> 3.1.0'
 gem 'rails-jquery-tokeninput'
 
