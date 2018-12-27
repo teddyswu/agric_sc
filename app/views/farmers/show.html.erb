@@ -29,8 +29,8 @@
                     	<%= link_to @farmer.farmer_profile.fb_url, class: "text-fb", target: "_blank" do %>
                         <i class="fab fa-fw fa-lg fa-facebook"></i>
                       <% end %>
-                      <a class="text-danger btn-like" href="javascript:void();">
-                        <i class="far fa-fw fa-lg fa-heart"></i>
+                      <a class="text-danger btn-like" href="javascript:AddFarmer(<%= @farmer.id %>);">
+                        <i class="<%= @is_favo.include?(@farmer.id)? "fas" : "far" if current_user.present? %> fa-fw fa-lg fa-heart" id="heart_<%= @farmer.id %>"></i>
                       </a>
                     </span>
                   </div>
@@ -84,9 +84,9 @@
                       <i class="far fa-comment-alt"></i> <%#= wr.work_record_reply.size %>
                     </div>
                     <div class="col-8 text-right">
-                      <span class="text-white ml-1" href=""><i class="far fa-smile"></i> <%#= wr.smile.to_i %></span>
-                      <span class="text-white ml-1" href=""><i class="far fa-meh"></i> <%#= wr.general.to_i %></span>
-                      <span class="text-white ml-1" href=""><i class="far fa-frown"></i> <%#= wr.dislike.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-smile"></i> <%= wr.smile.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-meh"></i> <%= wr.general.to_i %></span>
+                      <span class="text-white ml-1" href=""><i class="far fa-frown"></i> <%= wr.dislike.to_i %></span>
                     </div>
                   </div>
                 </div>
@@ -144,8 +144,8 @@
                     </div>
                     <div class="col text-right">
                       <div class="btn-group">
-                        <a class="text-danger btn btn-sm btn-like" href="javascript:void();">
-                          <i class="far fa-fw fa-lg fa-heart"></i>
+                        <a class="text-danger  btn btn-sm btn-like" href="javascript:AddFarmer(<%= @farmer.id %>);">
+                          <i class="<%= @is_favo.include?(@farmer.id)? "fas" : "far" if @is_favo.present? %> fa-fw fa-lg fa-heart" id="heart_<%= @farmer.id %>"></i>
                         </a>
                         <div class="dropdown">
                           <a class="text-dark btn btn-sm" href="javascript:void();" data-toggle="dropdown">
@@ -177,19 +177,19 @@
                         <a class="text-primary btn-smile" href="javascript:send_mood(<%= wd.id %>, 1);" remote=true>
                           <i id="like" class="far fa-lg fa-smile"></i>
                         </a>
-                        <span class="badge badge-light badge-pill"><%#= wd.smile.to_i %> 個喜歡</span>
+                        <span class="badge badge-light badge-pill"><%= wd.smile.to_i %> 個喜歡</span>
                       </li>
                       <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
                         <a class="text-primary btn-meh" href="javascript:send_mood(<%= wd.id %>, 2);">
                           <i id="like" class="far fa-lg fa-meh"></i>
                         </a>
-                        <span class="badge badge-light badge-pill"><%#= wd.general.to_i %> 個普通</span>
+                        <span class="badge badge-light badge-pill"><%= wd.general.to_i %> 個普通</span>
                       </li>
                       <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
                         <a class="text-primary btn-frown" href="javascript:send_mood(<%= wd.id %>, 3);">
                           <i id="like" class="far fa-lg fa-frown"></i>
                         </a>
-                        <span class="badge badge-light badge-pill"><%#= wd.dislike.to_i %> 個不喜歡</span>
+                        <span class="badge badge-light badge-pill"><%= wd.dislike.to_i %> 個不喜歡</span>
                       </li>
                     </ul>
                     <div class="text-muted font-small mt-1">
@@ -212,20 +212,36 @@
 </body>
 <% content_for :javascript do %>
   <script>
+    function AddFarmer(id){
+      <% if user_signed_in? %>
+      $.post( "<%= YAML.load_file("config/customization.yml")[:campaign_domain] %>/favo_farmers", { farmer_id: id })
+        .done(function( data ) {
+          if ($("#heart_"+id).attr('data-prefix').indexOf("fas") == 0){
+            $("#heart_"+id).attr('data-prefix', "far");
+          }
+          else
+          {
+            $("#heart_"+id).attr('data-prefix', "fas");
+          }        
+        });
+      <% else %>
+      alert("請先登入");
+      <% end %>
+    }
     $('.article').infiniteScroll({
       path: '<%= params[:id]%>?page={{#}}',
       append: '.post',
       status: ".scroller-status"
     });
-    // function send_mood(record_id, mood) {
-    //   <%# if current_user.present? %>
-    //   $.get( "/work_records/mood", { work_record_id: record_id, user_id: <%#= current_user.id %>, mood: mood } )
-    //   .done(function( data ) {
-    //     data;
-    //   });
-    //   <%#else%>
-    //   alert("請先登入");
-    //   <%# end %>
-    // }
+    function send_mood(record_id, mood) {
+      <% if current_user.present? %>
+      $.get( "/work_records/mood", { work_diary_id: record_id, user_id: <%= current_user.id %>, mood: mood } )
+      .done(function( data ) {
+        data;
+      });
+      <%else%>
+      alert("請先登入");
+      <% end %>
+    }
   </script>
 <% end %>

@@ -42,6 +42,7 @@ class StoriesController < ApplicationController
 		@story = Story.find(params[:id])
 		@story_tags = StoryTag.all
 		@story_tag_ship = StoryTagShip.where(:story_id => params[:id]).map {|sts| sts.story_tag_id }
+		@is_headline = Headline.exists?(:resource_type => "Story", :resource_id => params[:id])
 	end
 
 	def update
@@ -61,7 +62,7 @@ class StoriesController < ApplicationController
 			@story_tag_ship.story_tag_id = tap
 			@story_tag_ship.save!
 		end
-
+		params[:headerline] == "true" ? Headline.find_or_create_by(:resource_type => "Story", :resource_id => @story.id) : Headline.find_by(:resource_type => "Story", :resource_id => @story.id).destroy
 
 	  redirect_to :action => :index
 	end
@@ -78,6 +79,9 @@ class StoriesController < ApplicationController
 			@story_tag_ship.story_id = @story.id
 			@story_tag_ship.story_tag_id = tap
 			@story_tag_ship.save!
+		end
+		if params[:headerline] == true
+			headerline_story = Headerline.find_or_create_by(:resource_type => "Story", :resource_id => @story.id)
 		end
 
 		redirect_to :action => :index

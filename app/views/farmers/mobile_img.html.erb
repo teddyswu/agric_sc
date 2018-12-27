@@ -87,22 +87,22 @@
                 <div class="d-block">
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
-                      <a class="text-primary btn-smile" href="javascript:void();">
+                      <a class="text-primary btn-smile" href="javascript:send_mood(<%= @work_diary.id %>, 1);" remote=true>
                         <i id="like" class="far fa-fw fa-lg fa-smile"></i>
                       </a>
-                      <span class="badge badge-light badge-pill">14 個喜歡</span>
+                      <span class="badge badge-light badge-pill"><%= @work_diary.smile.to_i %> 個喜歡</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
-                      <a class="text-primary btn-meh" href="javascript:void();">
+                      <a class="text-primary btn-meh" href="javascript:send_mood(<%= @work_diary.id %>, 2);" remote=true>
                         <i id="like" class="far fa-fw fa-lg fa-meh"></i>
                       </a>
-                      <span class="badge badge-light badge-pill">14 個普通</span>
+                      <span class="badge badge-light badge-pill"><%= @work_diary.general.to_i %> 個普通</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
-                      <a class="text-primary btn-frown" href="javascript:void();">
+                      <a class="text-primary btn-frown" href="javascript:send_mood(<%= @work_diary.id %>, 3);" remote=true>
                         <i id="like" class="far fa-fw fa-lg fa-frown"></i>
                       </a>
-                      <span class="badge badge-light badge-pill">14 個不喜歡</span>
+                      <span class="badge badge-light badge-pill"><%= @work_diary.dislike.to_i %> 個不喜歡</span>
                     </li>
                   </ul>
                   <div class="text-muted font-small mt-1">
@@ -120,3 +120,15 @@
     </div>
   </div>
 </body>
+<script>
+  function send_mood(record_id, mood) {
+    <% if current_user.present? %>
+    $.get( "/work_records/mood", { work_diary_id: record_id, user_id: <%= current_user.id %>, mood: mood } )
+    .done(function( data ) {
+      data;
+    });
+    <%else%>
+    alert("請先登入");
+    <% end %>
+  }
+</script>

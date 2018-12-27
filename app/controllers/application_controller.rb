@@ -7,8 +7,9 @@ class ApplicationController < ActionController::Base
                 :http_check
 
   def after_sign_in_path_for(resource_or_scope)
-  	current_user.is_admin == true ? agris_path : root_path
+  	current_user.is_admin == true ? agris_path : request.env['omniauth.origin']
   end
+
   def is_admin
     if current_user.is_admin != true
       flash[:alert] = "您無此權限, 請洽詢相關工作人員"

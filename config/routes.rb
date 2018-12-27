@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   resources :stories do
     get "list", :on => :collection
   end
-  root :to => "stories#list"
+  root to: 'root#index'
   resources :work_records do 
     get "outputs", :on => :collection
     get "mood", :on => :collection

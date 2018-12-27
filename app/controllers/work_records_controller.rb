@@ -11,10 +11,10 @@ class WorkRecordsController < ApplicationController
 	end
 
 	def mood
-    record_mood = WorkRecordMood.find_or_create_by(work_record_id: params[:work_record_id], user_id: params[:user_id]) 
+    record_mood = WorkDiaryMood.find_or_create_by(work_diary_id: params[:work_diary_id], user_id: params[:user_id]) 
     record_mood.save!
     
-    record = WorkRecord.find(params[:work_record_id])
+    record = WorkDiary.find(params[:work_diary_id])
     case record_mood.mood.to_i
     when 0
     	case params[:mood].to_i
@@ -37,7 +37,7 @@ class WorkRecordsController < ApplicationController
     	record.general = record.general.to_i - 1
     	case params[:mood].to_i
     	when 1
-    		record.smile = record.smile.to_1 + 1 
+    		record.smile = record.smile.to_i + 1 
   		when 3
   			record.dislike = record.dislike.to_i + 1
   		end
@@ -45,7 +45,7 @@ class WorkRecordsController < ApplicationController
     	record.dislike = record.dislike.to_i - 1
     	case params[:mood].to_i
     	when 1 
-    		record.smile = record.smile.to_1 + 1 
+    		record.smile = record.smile.to_i + 1 
     	when 2
     		record.general = record.general.to_i + 1
     	end

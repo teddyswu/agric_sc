@@ -1,0 +1,352 @@
+<body>
+	<nav class="pushy pushy-left bg-white">
+	   <%= render "shared/mobile" %>
+	</nav>
+	<div class="site-overlay"></div>
+	<%= render "shared/header" %>
+	<div id="main" class="push mt-10 mt-lg-12">
+		<div class="slider-headlines">
+			<% @story.each do |story|%>
+				<%= link_to story_path(story.id), :class => "card card-headlines" do %>
+        	<%= image_tag story.story_image.url_headline, class: "card-img d-none d-xl-block" %>
+     			<%= image_tag story.story_image.url_cover, class: "card-img d-xl-none" %>
+          <div class="card-img-overlay">
+            <div>
+              <div class="h1 mb-4 mb-lg-14 d-block text-white"><%= story.title%></div>
+              <div class="d-none d-sm-block">
+                <div class="btn btn-outline-light px-10">繼續閱讀</div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      <% @project.each do |project|%>
+      	<%= link_to "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/campaigns/#{project.slug}", :class => "card card-headlines" do %>
+        	<%= image_tag project.campaign_image.landing_page, class: "card-img d-none d-xl-block" %>
+     			<%= image_tag project.campaign_image.campaign_path, class: "card-img d-xl-none" %>
+          <div class="card-img-overlay">
+            <div>
+              <div class="h1 mb-4 mb-lg-14 d-block text-white"><%= project.title%></div>
+              <div class="">
+                <div class="row mb-4 mb-lg-14 align-items-center">
+                  <div class="col-12 col-lg-4 my-1">
+                    <i class="far fa-fw fa-clock"></i> <%= render_remain_day(project.end_date) %>
+                  </div>
+                  <div class="col-12 col-lg-4 my-1">
+                    <i class="fas fa-fw fa-dollar-sign"></i> <span class="">目前達成金額</span>
+                    <strong><%= number_to_currency(project.amount_raised, precision: 0) %></strong>
+                  </div>
+                  <div class="col-12 col-lg-4 my-1 text-center">
+                    <div class="progress w-75 mx-auto">
+                      <div class="progress-bar" role="progressbar" style="width: <%= campaign_percentage(project) %>;" aria-valuenow="<%= campaign_percentage(project) %>" aria-valuemin="0" aria-valuemax="100"><%= campaign_percentage(project) %></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-none d-sm-block">
+                <div class="btn btn-outline-light px-10">查看內容</div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="mb-4 py-10">
+      <div class="text-center mb-10">
+        <div class="h1 font-weight-bold">工作牆</div>
+      </div>
+      <div class="row no-gutters">
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg1-mobile.jpg">
+              <div class="card-img-overlay">
+                開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg2.jpg">
+              <div class="card-img-overlay">
+                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg3.jpg">
+              <div class="card-img-overlay">
+                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg4.jpg">
+              <div class="card-img-overlay">
+                開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg1-mobile.jpg">
+              <div class="card-img-overlay">
+                開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg2.jpg">
+              <div class="card-img-overlay">
+                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg3.jpg">
+              <div class="card-img-overlay">
+                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg4.jpg">
+              <div class="card-img-overlay">
+                開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg1-mobile.jpg">
+              <div class="card-img-overlay">
+                開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg2.jpg">
+              <div class="card-img-overlay">
+                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg3.jpg">
+              <div class="card-img-overlay">
+                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
+              </div>
+            </a>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <a class="card card-wall" href="">
+              <img class="card-img" src="assets/img/uploads/article-lg4.jpg">
+              <div class="card-img-overlay">
+                開心農場
+              </div>
+            </a>
+          </div>
+      </div>
+      <div class="text-center mt-6">
+        <a class="btn btn-outline-primary px-10" href="project-list.html">更多</a>
+      </div>
+    </div>
+    <div class="container-fluid bg-light mb-4 py-10">
+            <div class="container">
+              <%= render_big_project_title(@att_projects, @new_projects) %>
+                <ul class="nav nav-index justify-content-center mb-7">
+                  <%= render_att_project_title(@att_projects)%>
+                  <%= render_hot_project(@att_projects, @new_projects)%>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane fade show active" id="tab-project-hot">
+                    <div class="row">
+                      <% @att_projects.each do |att|%>
+                        <div class="col-12 col-sm-6 col-lg-3 my-3">
+                          <%= link_to "#{@project_domain}campaigns/#{att.slug}", :class => "item" do %>
+                            <div class="d-block position-relative">
+                              <%= campaign_tag(att)%>
+                              <img class="img-fluid text-center" src="<%= att.campaign_image.try(:campaign_path) %>" alt="">
+                            </div>
+                            <div class="p-2">
+                              <div class="item-title text-black">
+                                <%= att.title %>
+                              </div>
+                              <div class="text-muted mb-2">
+                                <small>
+                                  <i class="far fa-user"></i> <%= att.name%>
+                                </small>
+                                <small class="item-desc"><%= att.claim%></small>
+                              </div>
+                              <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: <%= campaign_percentage(att) %>;" aria-valuenow="<%= campaign_percentage(att) %>" aria-valuemin="0" aria-valuemax="100"><%= campaign_percentage(att) %></div>
+                              </div>
+                              <div class="mt-2 text-dark">
+                                <small class="d-block">
+                                  <i class="far fa-fw fa-clock"></i> <%= render_remain_day(att.end_date) %>
+                                </small>
+                                <small class="d-block">
+                                  <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
+                                  <strong><%= number_to_currency(att.amount_raised, precision: 0)%></strong>
+                                </small>
+                              </div>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="text-center my-3">
+                      <a class="btn btn-outline-primary px-10" href="project-list.html">更多</a>
+                    </div>
+                  </div>
+                    <div class="tab-pane fade" id="tab-project-new">
+                        <div class="row">
+                            <div class="col-12 col-sm-6 col-lg-3 my-3">
+                                <a class="item" href="project-detail.html">
+                                    <div class="d-block position-relative">
+                                        <span class="badge badge-primary">NEW</span>
+                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="item-title text-black">
+                                            有機日日茶·抹茶粉“NODOKA”有機日日茶·抹茶粉“NODOKA”有機日日茶·抹茶粉“NODOKA”
+                                        </div>
+                                        <div class="text-muted mb-2">
+                                            <small>
+                                                <i class="far fa-user"></i> steking
+                                            </small>
+                                            <small class="item-desc">
+                                                說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明
+                                            </small>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                                        </div>
+                                        <div class="mt-2 text-dark">
+                                            <small class="d-block">
+                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
+                                            </small>
+                                            <small class="d-block">
+                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
+                                                <strong>$10,000,000</strong>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3 my-3">
+                                <a class="item" href="project-detail.html">
+                                    <div class="d-block position-relative">
+                                        <span class="badge badge-danger">達成</span>
+                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="item-title text-black">
+                                            有機日日茶·抹茶粉
+                                        </div>
+                                        <div class="text-muted mb-2">
+                                            <small>
+                                                <i class="far fa-user"></i> steking
+                                            </small>
+                                            <small class="item-desc">
+                                                說明說明說明說明說明說明說明說明說明說明說明說
+                                            </small>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">150%</div>
+                                        </div>
+                                        <div class="mt-2 text-dark">
+                                            <small class="d-block">
+                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
+                                            </small>
+                                            <small class="d-block">
+                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
+                                                <strong>$10,000,000</strong>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3 my-3">
+                                <a class="item" href="project-detail.html">
+                                    <div class="d-block position-relative">
+                                        <span class="badge badge-danger">達成</span>
+                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="item-title text-black">
+                                            有機日日茶·抹茶粉
+                                        </div>
+                                        <div class="text-muted mb-2">
+                                            <small>
+                                                <i class="far fa-user"></i> steking
+                                            </small>
+                                            <small class="item-desc">
+                                                說明說明說明說明說明說明說明說明說明說明說明說
+                                            </small>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">150%</div>
+                                        </div>
+                                        <div class="mt-2 text-dark">
+                                            <small class="d-block">
+                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
+                                            </small>
+                                            <small class="d-block">
+                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
+                                                <strong>$10,000,000</strong>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3 my-3">
+                                <a class="item" href="project-detail.html">
+                                    <div class="d-block position-relative">
+                                        <span class="badge badge-danger">達成</span>
+                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="item-title text-black">
+                                            有機日日茶·抹茶粉
+                                        </div>
+                                        <div class="text-muted mb-2">
+                                            <small>
+                                                <i class="far fa-user"></i> steking
+                                            </small>
+                                            <small class="item-desc">
+                                                說明說明說明說明說明說明說明說明說明說明說明說
+                                            </small>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">150%</div>
+                                        </div>
+                                        <div class="mt-2 text-dark">
+                                            <small class="d-block">
+                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
+                                            </small>
+                                            <small class="d-block">
+                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
+                                                <strong>$10,000,000</strong>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="text-center my-3">
+                            <a class="btn btn-outline-primary px-10" href="project-list.html">更多</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+  <%= render "shared/footer" %>
+</boby>

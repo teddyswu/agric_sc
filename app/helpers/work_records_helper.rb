@@ -56,4 +56,18 @@ module WorkRecordsHelper
           </div>".html_safe
     end
   end
+
+  def campaign_tag(campaign)
+    if 100*(campaign.amount_raised.to_f / campaign.goal) > 100
+      "<span class='badge badge-danger'>達成</span>".html_safe
+    else
+      if (Date.today - campaign.start_date) < 7
+        "<span class='badge badge-primary'>NEW</span>".html_safe
+      else
+        if (campaign.end_date - Date.today).to_i < 1
+          "<span class='badge badge-warning'>結束</span>".html_safe
+        end
+      end
+    end
+  end
 end
