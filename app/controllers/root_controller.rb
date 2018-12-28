@@ -10,6 +10,8 @@ class RootController < ApplicationController
 		att_campaign.delete("id")
 		@att_projects = Campaign.where(:id => att_campaign).order("FIELD (#{att})")
 		@new_projects = Campaign.where("status = 3 and start_date < ? ", Date.today + 7.days).limit(4)
+		@story_cat_one = StoryCat.find_by_name("有機懶人包").stories.limit(3)
+		@story_cat_two = StoryCat.find_by_name("農村故事").stories.limit(4)
 		render layout: "story"
 	end
 

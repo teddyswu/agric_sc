@@ -158,195 +158,160 @@
       </div>
     </div>
     <div class="container-fluid bg-light mb-4 py-10">
-            <div class="container">
-              <%= render_big_project_title(@att_projects, @new_projects) %>
-                <ul class="nav nav-index justify-content-center mb-7">
-                  <%= render_att_project_title(@att_projects)%>
-                  <%= render_hot_project(@att_projects, @new_projects)%>
-                </ul>
-                <div class="tab-content">
-                  <div class="tab-pane fade show active" id="tab-project-hot">
-                    <div class="row">
-                      <% @att_projects.each do |att|%>
-                        <div class="col-12 col-sm-6 col-lg-3 my-3">
-                          <%= link_to "#{@project_domain}campaigns/#{att.slug}", :class => "item" do %>
-                            <div class="d-block position-relative">
-                              <%= campaign_tag(att)%>
-                              <img class="img-fluid text-center" src="<%= att.campaign_image.try(:campaign_path) %>" alt="">
-                            </div>
-                            <div class="p-2">
-                              <div class="item-title text-black">
-                                <%= att.title %>
-                              </div>
-                              <div class="text-muted mb-2">
-                                <small>
-                                  <i class="far fa-user"></i> <%= att.name%>
-                                </small>
-                                <small class="item-desc"><%= att.claim%></small>
-                              </div>
-                              <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: <%= campaign_percentage(att) %>;" aria-valuenow="<%= campaign_percentage(att) %>" aria-valuemin="0" aria-valuemax="100"><%= campaign_percentage(att) %></div>
-                              </div>
-                              <div class="mt-2 text-dark">
-                                <small class="d-block">
-                                  <i class="far fa-fw fa-clock"></i> <%= render_remain_day(att.end_date) %>
-                                </small>
-                                <small class="d-block">
-                                  <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
-                                  <strong><%= number_to_currency(att.amount_raised, precision: 0)%></strong>
-                                </small>
-                              </div>
-                            </div>
-                          <% end %>
-                        </div>
-                      <% end %>
+      <div class="container">
+        <%= render_big_project_title(@att_projects, @new_projects) %>
+        <ul class="nav nav-index justify-content-center mb-7">
+          <%= render_att_project_title(@att_projects)%>
+          <%= render_hot_project(@att_projects, @new_projects)%>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="tab-project-hot">
+            <div class="row">
+              <% @att_projects.each do |att|%>
+                <div class="col-12 col-sm-6 col-lg-3 my-3">
+                  <%= link_to "#{@project_domain}campaigns/#{att.slug}", :class => "item" do %>
+                    <div class="d-block position-relative">
+                      <%= campaign_tag(att)%>
+                      <img class="img-fluid text-center" src="<%= att.campaign_image.try(:campaign_path) %>" alt="">
                     </div>
-                    <div class="text-center my-3">
-                      <a class="btn btn-outline-primary px-10" href="project-list.html">更多</a>
+                    <div class="p-2">
+                      <div class="item-title text-black">
+                        <%= att.title %>
+                      </div>
+                      <div class="text-muted mb-2">
+                        <small>
+                          <i class="far fa-user"></i> <%= att.name%>
+                        </small>
+                        <small class="item-desc"><%= att.claim%></small>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: <%= campaign_percentage(att) %>;" aria-valuenow="<%= campaign_percentage(att) %>" aria-valuemin="0" aria-valuemax="100"><%= campaign_percentage(att) %></div>
+                      </div>
+                      <div class="mt-2 text-dark">
+                        <small class="d-block">
+                          <i class="far fa-fw fa-clock"></i> <%= render_remain_day(att.end_date) %>
+                        </small>
+                        <small class="d-block">
+                          <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
+                          <strong><%= number_to_currency(att.amount_raised, precision: 0)%></strong>
+                        </small>
+                      </div>
                     </div>
-                  </div>
-                    <div class="tab-pane fade" id="tab-project-new">
-                        <div class="row">
-                            <div class="col-12 col-sm-6 col-lg-3 my-3">
-                                <a class="item" href="project-detail.html">
-                                    <div class="d-block position-relative">
-                                        <span class="badge badge-primary">NEW</span>
-                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
-                                    </div>
-                                    <div class="p-2">
-                                        <div class="item-title text-black">
-                                            有機日日茶·抹茶粉“NODOKA”有機日日茶·抹茶粉“NODOKA”有機日日茶·抹茶粉“NODOKA”
-                                        </div>
-                                        <div class="text-muted mb-2">
-                                            <small>
-                                                <i class="far fa-user"></i> steking
-                                            </small>
-                                            <small class="item-desc">
-                                                說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明說明
-                                            </small>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                                        </div>
-                                        <div class="mt-2 text-dark">
-                                            <small class="d-block">
-                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
-                                            </small>
-                                            <small class="d-block">
-                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
-                                                <strong>$10,000,000</strong>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-12 col-sm-6 col-lg-3 my-3">
-                                <a class="item" href="project-detail.html">
-                                    <div class="d-block position-relative">
-                                        <span class="badge badge-danger">達成</span>
-                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
-                                    </div>
-                                    <div class="p-2">
-                                        <div class="item-title text-black">
-                                            有機日日茶·抹茶粉
-                                        </div>
-                                        <div class="text-muted mb-2">
-                                            <small>
-                                                <i class="far fa-user"></i> steking
-                                            </small>
-                                            <small class="item-desc">
-                                                說明說明說明說明說明說明說明說明說明說明說明說
-                                            </small>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">150%</div>
-                                        </div>
-                                        <div class="mt-2 text-dark">
-                                            <small class="d-block">
-                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
-                                            </small>
-                                            <small class="d-block">
-                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
-                                                <strong>$10,000,000</strong>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-12 col-sm-6 col-lg-3 my-3">
-                                <a class="item" href="project-detail.html">
-                                    <div class="d-block position-relative">
-                                        <span class="badge badge-danger">達成</span>
-                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
-                                    </div>
-                                    <div class="p-2">
-                                        <div class="item-title text-black">
-                                            有機日日茶·抹茶粉
-                                        </div>
-                                        <div class="text-muted mb-2">
-                                            <small>
-                                                <i class="far fa-user"></i> steking
-                                            </small>
-                                            <small class="item-desc">
-                                                說明說明說明說明說明說明說明說明說明說明說明說
-                                            </small>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">150%</div>
-                                        </div>
-                                        <div class="mt-2 text-dark">
-                                            <small class="d-block">
-                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
-                                            </small>
-                                            <small class="d-block">
-                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
-                                                <strong>$10,000,000</strong>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-12 col-sm-6 col-lg-3 my-3">
-                                <a class="item" href="project-detail.html">
-                                    <div class="d-block position-relative">
-                                        <span class="badge badge-danger">達成</span>
-                                        <img class="img-fluid text-center" src="assets/img/uploads/project-md3.jpg" alt="">
-                                    </div>
-                                    <div class="p-2">
-                                        <div class="item-title text-black">
-                                            有機日日茶·抹茶粉
-                                        </div>
-                                        <div class="text-muted mb-2">
-                                            <small>
-                                                <i class="far fa-user"></i> steking
-                                            </small>
-                                            <small class="item-desc">
-                                                說明說明說明說明說明說明說明說明說明說明說明說
-                                            </small>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">150%</div>
-                                        </div>
-                                        <div class="mt-2 text-dark">
-                                            <small class="d-block">
-                                                <i class="far fa-fw fa-clock"></i> 剩下<strong>19小時</strong>
-                                            </small>
-                                            <small class="d-block">
-                                                <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
-                                                <strong>$10,000,000</strong>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="text-center my-3">
-                            <a class="btn btn-outline-primary px-10" href="project-list.html">更多</a>
-                        </div>
-                    </div>
+                  <% end %>
                 </div>
+              <% end %>
             </div>
+            <div class="text-center my-3">
+              <%= link_to "更多", "#{@project_domain}", :class => "btn btn-outline-primary px-10"%>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="tab-project-new">
+            <div class="row">
+              <% @new_projects.each do |new_p|%>
+                <div class="col-12 col-sm-6 col-lg-3 my-3">
+                  <%= link_to "#{@project_domain}campaigns/#{new_p.slug}", :class => "item" do %>
+                    <div class="d-block position-relative">
+                      <%= campaign_tag(new_p)%>
+                      <img class="img-fluid text-center" src="<%= new_p.campaign_image.try(:campaign_path) %>" alt="">
+                    </div>
+                    <div class="p-2">
+                      <div class="item-title text-black">
+                        <%= new_p.title %>
+                      </div>
+                      <div class="text-muted mb-2">
+                        <small>
+                          <i class="far fa-user"></i> <%= new_p.name%>
+                        </small>
+                        <small class="item-desc">
+                          <%= new_p.claim%>
+                        </small>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: <%= campaign_percentage(new_p) %>;" aria-valuenow="<%= campaign_percentage(new_p) %>" aria-valuemin="0" aria-valuemax="100"><%= campaign_percentage(new_p) %></div>
+                      </div>
+                      <div class="mt-2 text-dark">
+                        <small class="d-block">
+                          <i class="far fa-fw fa-clock"></i> <%= render_remain_day(new_p.end_date) %>
+                        </small>
+                        <small class="d-block">
+                          <i class="fas fa-fw fa-dollar-sign"></i> <span class="text-muted">目前達成金額</span>
+                          <strong><%= number_to_currency(new_p.amount_raised, precision: 0)%></strong>
+                        </small>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div class="text-center my-3">
+              <%= link_to "更多", "#{@project_domain}", :class => "btn btn-outline-primary px-10"%>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="container-fluid py-10">
+      <div class="container">
+        <div class="text-center mb-3">
+          <div class="h1 font-weight-bold"><%= @story_cat_one[0].story_cat.name %></div>
+        </div>
+        <!-- <ul class="nav nav-index justify-content-center mb-7">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#tab-article-1">咖啡</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#tab-article-2">有機蔬果</a>
+          </li>
+        </ul> -->
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="tab-article-1">
+            <div class="row">
+              <% @story_cat_one.each do |story|%>
+                <div class="col-12 col-md-4 my-3 post">
+                  <%= link_to story_path(story.id) do%>
+                    <div class="text-center">
+                      <%= image_tag story.story_image.try(:url_cover), :class => "img-fluid" %>
+                    </div>
+                    <div class="my-1"></div>
+                    <div class="lead my-1 text-row-1 text-dark font-weight-bold"><%= story.title%></div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div class="text-center my-3">
+              <%= link_to "更多", list_stories_path, :class => "btn btn-outline-primary px-10"%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-4 py-10">
+      <div class="text-center mb-10">
+        <div class="h1 font-weight-bold"><%= @story_cat_two[0].story_cat.name %></div>
+      </div>
+      <div class="row no-gutters">
+        <% @story_cat_two.each do |story|%>
+          <div class="col-12 col-lg-6">
+            <%= link_to story_path(story.id), :class => "row no-gutters align-items-center bg-light btn-story" do%>
+              <div class="col-12 col-sm-6">
+                <img class="img-fluid" src="<%= story.story_image.try(:url_cover) %>">
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="p-4 text-dark">
+                  <div class="h5 font-weight-bold text-row-2 mb-3"><%= story.title %></div>
+                  <hr>
+                  <p class="text-row-3"><%= truncate(strip_tags(story.content), :length => 36)%>
+                  <div class="btn btn-outline-primary">繼續閱讀</div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <div class="text-center mt-6">
+        <%= link_to "更多", list_stories_path, :class => "btn btn-outline-primary px-10"%>
+      </div>
+    </div>
 	</div>
   <%= render "shared/footer" %>
 </boby>

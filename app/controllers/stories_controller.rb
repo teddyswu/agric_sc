@@ -9,7 +9,7 @@ class StoriesController < ApplicationController
 	def new
 		@story = Story.new
 		@story_tags = StoryTag.all
-
+		@story_cat = StoryCat.all
 	end
 
 	def list
@@ -43,6 +43,7 @@ class StoriesController < ApplicationController
 		@story_tags = StoryTag.all
 		@story_tag_ship = StoryTagShip.where(:story_id => params[:id]).map {|sts| sts.story_tag_id }
 		@is_headline = Headline.exists?(:resource_type => "Story", :resource_id => params[:id])
+		@story_cat = StoryCat.all
 	end
 
 	def update
@@ -62,8 +63,12 @@ class StoriesController < ApplicationController
 			@story_tag_ship.story_tag_id = tap
 			@story_tag_ship.save!
 		end
-		params[:headerline] == "true" ? Headline.find_or_create_by(:resource_type => "Story", :resource_id => @story.id) : Headline.find_by(:resource_type => "Story", :resource_id => @story.id).destroy
-
+		if params[:headerline] == "true" 
+			Headline.find_or_create_by(:resource_type => "Story", :resource_id => @story.id) 
+		else
+			Headline.find_by(:resource_type => "Story", :resource_id => @story.id).destroy if Headline.exists?(:resource_type => "Story", :resource_id => @story.id)
+		end
+	  
 	  redirect_to :action => :index
 	end
 
@@ -89,7 +94,7 @@ class StoriesController < ApplicationController
 
 
 	def story_params
-		params.require(:story).permit(:title, :content, :owner)
+		params.require(:story).permit(:title, :content, :owner, :story_cat_id)
   end
 
   def story_img_params

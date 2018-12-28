@@ -8,7 +8,7 @@ module RootHelper
 	end
 
 	def render_hot_project(att,new_p)
-		"<li class=\"nav-item\"><a class=\"nav-link\" data-toggle=\"tab\" href=\"#tab-project-new\">最新提案</a></li>".html_safe if att.size != 0 && new_p.size !=0
-		"<li class=\"nav-item\"><a class=\"nav-link active\" data-toggle=\"tab\" href=\"#tab-project-new\">最新提案</a></li>".html_safe if att.size == 0 && new_p.size !=0
+		return "<li class=\"nav-item\"><a class=\"nav-link\" data-toggle=\"tab\" href=\"#tab-project-new\">最新提案</a></li>".html_safe if att.size != 0 && new_p.size !=0
+		return "<li class=\"nav-item\"><a class=\"nav-link active\" data-toggle=\"tab\" href=\"#tab-project-new\">最新提案</a></li>".html_safe if att.size == 0 && new_p.size !=0
 	end
 end
