@@ -6,6 +6,10 @@ class WorkDiariesController < ApplicationController
 		@diaries = WorkDiary.all.order(diary_time: :desc).paginate(:page => params[:page], per_page: 10)
 	end
 
+  def edit
+    @diary = WorkDiaryImage.find(params[:id])
+  end
+
 	def record_img
     img = WorkDiaryImage.find(params[:id])
     img.enabled = (img.enabled == true ? false :true)

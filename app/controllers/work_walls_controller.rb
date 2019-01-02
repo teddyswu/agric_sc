@@ -1,0 +1,2 @@
+class WorkWallsController < ApplicationController
+end
