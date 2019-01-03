@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190102094351) do
+ActiveRecord::Schema.define(version: 20190103042616) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -339,6 +339,8 @@ ActiveRecord::Schema.define(version: 20190102094351) do
     t.text     "origin_url",    limit: 65535
     t.text     "show_url",      limit: 65535
     t.boolean  "enabled"
+    t.string   "filter",        limit: 255
+    t.integer  "position",      limit: 4
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
@@ -372,8 +374,6 @@ ActiveRecord::Schema.define(version: 20190102094351) do
     t.text     "origin_url",     limit: 65535
     t.text     "show_url",       limit: 65535
     t.boolean  "enabled"
-    t.string   "filter",         limit: 255
-    t.integer  "position",       limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
@@ -420,14 +420,6 @@ ActiveRecord::Schema.define(version: 20190102094351) do
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.string   "work_project",     limit: 255
-  end
-
-  create_table "work_walls", force: :cascade do |t|
-    t.integer  "work_record_image_id", limit: 4
-    t.integer  "position",             limit: 4
-    t.string   "filter",               limit: 255
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
   end
 
 end

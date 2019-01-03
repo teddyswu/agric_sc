@@ -10,6 +10,13 @@ class WorkDiariesController < ApplicationController
     @diary = WorkDiaryImage.find(params[:id])
   end
 
+  def update
+    @diary = WorkDiaryImage.find(params[:id])
+    @diary.update(dairy_params)
+
+    redirect_to :action => :index
+  end
+
 	def record_img
     img = WorkDiaryImage.find(params[:id])
     img.enabled = (img.enabled == true ? false :true)
@@ -17,4 +24,9 @@ class WorkDiariesController < ApplicationController
 
     redirect_to work_diaries_path  
   end
+
+  def dairy_params
+    params.require(:work_diary_image).permit(:enabled, :position, :filter)
+  end
+
 end

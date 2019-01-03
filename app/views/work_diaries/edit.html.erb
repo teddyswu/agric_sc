@@ -37,36 +37,27 @@
                       <h3 class="text-center"></h3>
                     </div>
                     <hr>
-                    <form action="" method="post" novalidate="novalidate">
+                    <%= form_for @diary, :url => {:controller => 'work_diaries', :action => 'update', :id => @diary} do |f| %>
                       <div class="form-group">
                         <label for="cc-payment" class="control-label mb-1">圖片</label>
                         <img src="<%= @diary.show_url%>">
                       </div>
                       <div class="form-group">
                         <label for="cc-name" class="control-label mb-1">狀態</label>
-                        <input id="cc-name" name="cc-name" type="text" class="form-control cc-name valid" data-val="true" data-val-required="Please enter the name on card" autocomplete="cc-name" aria-required="true" aria-invalid="false" aria-describedby="cc-name-error">
-                        
+                        <%= f.select :enabled, options_for_select([['開啟', 1], ['關閉', 0]],@diary.enabled)%>                        
                       </div>
                       <div class="form-group">
                         <label for="cc-number" class="control-label mb-1">位置</label>
-                        <input id="cc-number" name="cc-number" type="tel" class="form-control cc-number identified visa" value="" data-val="true" data-val-required="Please enter the card number" data-val-cc-number="Please enter a valid card number" autocomplete="cc-number">
+                        <%= f.select :position, options_for_select([['大刊頭545*370', 1], ['小矩形(277*190)', 2], ['直條(277*380)', 3], ['橫條(555*190)', 4]],@diary.position), prompt: '請選擇'%>
                       </div>
-                      <div class="row">
-                        <div class="col-6">
-                          <div class="form-group">
-                            <label for="cc-exp" class="control-label mb-1">濾鏡</label>
-                            <input id="cc-exp" name="cc-exp" type="tel" class="form-control cc-exp" value="" data-val="true" data-val-required="Please enter the card expiration" data-val-cc-exp="Please enter a valid month and year" placeholder="MM / YY" autocomplete="cc-exp">
-                          </div>
-                        </div>
+                      <div class="form-group">
+                        <label for="cc-exp" class="control-label mb-1">濾鏡</label>
+                        <%= f.select :filter, options_for_select([['對比', "contrast"], ['飽和', "saturate"], ['灰階', "grayscale"], ['懷舊', "sepia"]],@diary.filter), prompt: '請選擇'%>
                       </div>
                       <div>
-                        <button id="payment-button" type="submit" class="btn btn-lg btn-info btn-block">
-                          <i class="fa fa-lock fa-lg"></i>&nbsp;
-                          <span id="payment-button-amount">Pay $100.00</span>
-                          <span id="payment-button-sending" style="display:none;">Sending…</span>
-                        </button>
+                        <%= f.submit "送出", :class => "btn btn-lg btn-info btn-block"%>
                       </div>
-                    </form>
+                    <% end %>
                   </div>
                 </div>
 
