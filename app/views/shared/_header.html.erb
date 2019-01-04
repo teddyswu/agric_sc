@@ -29,7 +29,7 @@
             <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= current_user.try(:authorizations)[0].try(:uid)%>/picture" alt="" style="width: 30px">
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="#">我的牆面</a>
+            <%= link_to "我的牆面", farmer_path(current_user.id), class: "dropdown-item" if current_user.is_check_farmer?%>
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/favo_farmers" %>">最愛小農</a>
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/orders" %>">支持紀錄</a>
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/tracks" %>">追蹤提案</a>
