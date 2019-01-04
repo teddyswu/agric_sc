@@ -13,7 +13,7 @@
             <%= link_to "工作牆", work_walls_path, class: "nav-link p-3" %>
           </li>
           <li class="nav-item">
-            <%= link_to "友善提案", "https://project.ugooz.cc", class: "nav-link p-3" %>
+            <%= link_to "友善提案", "#{YAML.load_file("config/customization.yml")[:campaign_domain]}", class: "nav-link p-3" %>
           </li>
           
           <li class="nav-item">
@@ -30,10 +30,10 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="#">我的牆面</a>
-            <a class="dropdown-item" href="#">最愛小農</a>
-            <a class="dropdown-item" href="https://project.ugooz.cc/orders?locale=zh-TW">支持紀錄</a>
-            <a class="dropdown-item" href="https://project.ugooz.cc/tracks?locale=zh-TW">追蹤提案</a>
-            <a class="dropdown-item" href="https://project.ugooz.cc/campaigns?locale=zh-TW">提案紀錄</a>
+            <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/favo_farmers" %>">最愛小農</a>
+            <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/orders" %>">支持紀錄</a>
+            <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/tracks" %>">追蹤提案</a>
+            <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/campaigns" %>">提案紀錄</a>
             <div class="dropdown-divider"></div>
             <%= link_to "工作管理", outputs_work_records_path(:name => current_user.farmer_profile.name), class: "dropdown-item" if current_user.is_check_farmer?%>
             <%= link_to "帳號管理", profile_users_path, class: "dropdown-item"%>
