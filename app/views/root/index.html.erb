@@ -56,102 +56,16 @@
         <div class="h1 font-weight-bold">工作牆</div>
       </div>
       <div class="row no-gutters">
+        <% @work_walls.each do |ww|%>
           <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg1-mobile.jpg">
+            <%= link_to farmer_mobile_img_path(ww.work_diary.owner_id,ww.work_diary_id), :class => "card card-wall" do %>
+              <img class="card-img" src="<%= ww.cover_url%>">
               <div class="card-img-overlay">
-                開心農場
+                <%= ww.work_diary.comment%>
               </div>
-            </a>
+            <% end %>
           </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg2.jpg">
-              <div class="card-img-overlay">
-                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg3.jpg">
-              <div class="card-img-overlay">
-                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg4.jpg">
-              <div class="card-img-overlay">
-                開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg1-mobile.jpg">
-              <div class="card-img-overlay">
-                開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg2.jpg">
-              <div class="card-img-overlay">
-                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg3.jpg">
-              <div class="card-img-overlay">
-                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg4.jpg">
-              <div class="card-img-overlay">
-                開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg1-mobile.jpg">
-              <div class="card-img-overlay">
-                開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg2.jpg">
-              <div class="card-img-overlay">
-                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg3.jpg">
-              <div class="card-img-overlay">
-                開心農場開心農場開心農場開心農場開心農場開心農場開心農場
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="">
-              <img class="card-img" src="assets/img/uploads/article-lg4.jpg">
-              <div class="card-img-overlay">
-                開心農場
-              </div>
-            </a>
-          </div>
+        <% end %>
       </div>
       <div class="text-center mt-6">
         <%= link_to "更多", work_walls_path, :class => "btn btn-outline-primary px-10"%>
