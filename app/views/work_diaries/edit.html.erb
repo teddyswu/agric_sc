@@ -48,11 +48,11 @@
                       </div>
                       <div class="form-group">
                         <label for="cc-number" class="control-label mb-1">位置</label>
-                        <%= f.select :position, options_for_select([['大刊頭545*370', 1], ['小矩形(277*190)', 2], ['直條(277*380)', 3], ['橫條(555*190)', 4]],@diary.position), prompt: '請選擇'%>
+                        <%= f.select :position, options_for_select([['不使用', nil], ['大刊頭545*370', 1], ['小矩形(277*190)', 2], ['直條(277*380)', 3], ['橫條(555*190)', 4]],@diary.position)%>
                       </div>
                       <div class="form-group">
                         <label for="cc-exp" class="control-label mb-1">濾鏡</label>
-                        <%= f.select :filter, options_for_select([['對比', "contrast"], ['飽和', "saturate"], ['灰階', "grayscale"], ['懷舊', "sepia"]],@diary.filter), prompt: '請選擇'%>
+                        <%= f.select :filter, options_for_select([['不使用', nil], ['對比', "contrast"], ['飽和', "saturate"], ['灰階', "grayscale"], ['懷舊', "sepia"]],@diary.filter)%>
                       </div>
                       <div>
                         <%= f.submit "送出", :class => "btn btn-lg btn-info btn-block"%>

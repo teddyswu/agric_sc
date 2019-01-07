@@ -36,7 +36,7 @@
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/campaigns" %>">提案紀錄</a>
             <div class="dropdown-divider"></div>
             <%= link_to "工作管理", outputs_work_records_path(:name => current_user.farmer_profile.name), class: "dropdown-item" if current_user.is_check_farmer?%>
-            <%= link_to "帳號管理", profile_users_path, class: "dropdown-item"%>
+            <%= link_to "帳號管理", "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/users/edit", class: "dropdown-item"%>
             <%= link_to "後台管理", agris_path, class: "dropdown-item" if current_user.is_admin == true%>
             <%= link_to "登出", destroy_user_session_path, :method => :delete, class: "dropdown-item" %>
           </div>
