@@ -21,7 +21,7 @@
         <% end %>
       <% end %>
       <% @project.each do |project|%>
-      	<%= link_to "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/campaigns/#{project.slug}", :class => "card card-headlines" do %>
+      	<%= link_to "#{@project_domain}/campaigns/#{project.slug}", :class => "card card-headlines" do %>
         	<%= image_tag project.campaign_image.landing_page, class: "card-img d-none d-xl-block" %>
      			<%= image_tag project.campaign_image.campaign_path, class: "card-img d-xl-none" %>
           <div class="card-img-overlay">
@@ -83,7 +83,7 @@
             <div class="row">
               <% @att_projects.each do |att|%>
                 <div class="col-12 col-sm-6 col-lg-3 my-3">
-                  <%= link_to "#{@project_domain}campaigns/#{att.slug}", :class => "item" do %>
+                  <%= link_to "#{@project_domain}/campaigns/#{att.slug}", :class => "item" do %>
                     <div class="d-block position-relative">
                       <%= campaign_tag(att)%>
                       <img class="img-fluid text-center" src="<%= att.campaign_image.try(:campaign_path) %>" alt="">
@@ -123,7 +123,7 @@
             <div class="row">
               <% @new_projects.each do |new_p|%>
                 <div class="col-12 col-sm-6 col-lg-3 my-3">
-                  <%= link_to "#{@project_domain}campaigns/#{new_p.slug}", :class => "item" do %>
+                  <%= link_to "#{@project_domain}/campaigns/#{new_p.slug}", :class => "item" do %>
                     <div class="d-block position-relative">
                       <%= campaign_tag(new_p)%>
                       <img class="img-fluid text-center" src="<%= new_p.campaign_image.try(:campaign_path) %>" alt="">
