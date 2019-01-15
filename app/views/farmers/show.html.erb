@@ -69,7 +69,7 @@
         <% @work_records.each_with_index do |wr, i| %>
           <% if wr.work_diary_images.normal_state.size > 0 %>
             <div class="col-6 col-lg-4 my-3 post" >
-              <%= render_is_mobile_link(browser.device.mobile?, params[:id], wr.id, i+1) %>
+              <%= render_is_mobile_link(browser.device.mobile?, params[:id], wr.id, 10 + i+1) %>
                 <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_diary_images.normal_state.size > 1%>
                 <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
                   <div class="mb-auto"></div>
@@ -110,17 +110,17 @@
     </div>
   </div>
   <%if browser.device.mobile? != true %>
-    <% cache ["#{params[:id]}_farmer_wall", @work_record_all.last ] do %>
-      <% @work_record_all.each_with_index do |wd, i| %>
-        <div class="modal fade" id="modal-detail_<%= i+1 %>" tabindex="-1" role="dialog">
+    <div id="modal">
+      <% @work_records.each_with_index do |wd, i| %>
+        <div class="modal fade" id="modal-detail_<%= 10 + i + 1 %>" tabindex="-1" role="dialog">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
           <div class="nav-modal">
-            <a class="btn-left" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{i}\"".html_safe if i != 0%>>
+            <a class="btn-left" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{10 + i}\"".html_safe if i != 0%>>
               <i class="fas fa-2x fa-chevron-left"></i>
             </a>
-            <a class="btn-right" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{i+2}\"".html_safe if @work_record_all.size != i+1 %>>
+            <a class="btn-right" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{10 + i + 2}\"".html_safe if @work_record_all.size != i+1 %>>
               <i class="fas fa-2x fa-chevron-right"></i>
             </a>
           </div>
@@ -207,7 +207,7 @@
           </div>
         </div>
       <% end %>
-    <% end %>
+    </div>
   <% end %>
   <%= render "shared/footer" %>
 </body>
@@ -230,7 +230,7 @@
       <% end %>
     }
     $('.article').infiniteScroll({
-      path: '<%= params[:id]%>?page={{#}}',
+      path: '<%= params[:id]%>/page/{{#}}',
       append: '.post',
       status: ".scroller-status"
     });

@@ -15,6 +15,13 @@ class FarmersController < ApplicationController
 		render layout: "story"
 	end
 
+	def page
+		@farmer = User.joins(:farmer_profile).find_by_id_and_is_farmer_and_is_check_farmer(params[:id], true ,true)
+		record_ids = WorkDiary.joins(:work_diary_images).where("work_diary_images.enabled = true and owner_id = #{params[:id]}").map {|rd| rd.id }
+		@work_records = WorkDiary.where(:id => record_ids).order(diary_time: :desc).paginate(:page => params[:page], per_page: 6)
+		render :layout => false
+	end
+
 	def mobile_img
 		@farmer = User.joins(:farmer_profile).find_by_id_and_is_farmer_and_is_check_farmer(params[:id], true ,true)
 		@work_diary = WorkDiary.find(params[:record_id])
