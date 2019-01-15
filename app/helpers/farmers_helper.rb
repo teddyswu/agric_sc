@@ -21,7 +21,7 @@ module FarmersHelper
 		if boo == true
 			"<a class=\"position-relative d-block btn-info\" style=\"background-color:#fff\" href=\"#{farmer_mobile_img_path(id, record_id)}\">".html_safe
 		else
-			"<a class=\"position-relative d-block btn-info\" style=\"background-color:#fff\" data-toggle=\"modal\" data-target=\"#modal-detail_#{i+1}\" href=\"javascript:void();\">".html_safe
+			"<a class=\"position-relative d-block block-info\" style=\"background-color:#fff\" data-toggle=\"modal\" data-target=\"#modal-detail_#{i}\" href=\"javascript:void();\">".html_safe
 		end
 	end
 end

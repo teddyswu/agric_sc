@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
                 :http_check
 
   def after_sign_in_path_for(resource_or_scope)
-  	request.env['omniauth.origin']
+  	session[:redirect_path].present? ? session[:redirect_path] : root_path
   end
 
   def is_admin
