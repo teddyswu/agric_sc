@@ -77,7 +77,7 @@ class WorkRecordsController < ApplicationController
   end
 
 	def outputs
-		up = FarmerProfile.find_by_name(params[:name])
+		up = current_user.present? ? FarmerProfile.find_by_user_id(current_user.id) : FarmerProfile.find_by_name(params[:name])
 		@work_projects = "" 
     WorkProject.all.each do |wp|
       @work_projects << wp.name

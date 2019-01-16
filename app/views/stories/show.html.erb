@@ -30,6 +30,7 @@
           <div class="content text-dark mt-3 lead">
             <%= @story.content.html_safe%>
           </div>
+          <div class="fb-comments d-none d-lg-block" data-width="100%" data-href="<%= "http://#{request.host}#{story_path(@story.id)}"%>" data-numposts="5"></div>
         </div>
         <div class="col-12 col-lg-4 mt-6 mt-lg-0">
           <div class="sidebar">

@@ -46,16 +46,6 @@
                   		<u>農場工作記錄</u>
                   	<% end %>
                   </li>
-                  <li class="nav-item my-1">
-                    <div class="nav-link">
-                      參與 <a href="" onclick="alert( '尚未開放' );"><u>10</u></a> 個活動
-                    </div>
-                  </li>
-                  <li class="nav-item my-1">
-                    <div class="nav-link">
-                      獲得 <a href=""><u>10</u></a> 位友善會員關注
-                    </div>
-                  </li>
                 </ul>
                 <div class="mt-4 text-row-2 text-muted">
                   <%= @farmer.farmer_profile.introduce%>
@@ -118,10 +108,10 @@
           </button>
           <div class="nav-modal">
             <a class="btn-left" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{10 + i}\"".html_safe if i != 0%>>
-              <i class="fas fa-2x fa-chevron-left"></i>
+              <i class="fas fa-2x fa-arrow-left"></i>
             </a>
             <a class="btn-right" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{10 + i + 2}\"".html_safe if @work_record_all.size != i+1 %>>
-              <i class="fas fa-2x fa-chevron-right"></i>
+              <i class="fas fa-2x fa-arrow-right"></i>
             </a>
           </div>
           <div class="modal-dialog modal-lg" role="document">

@@ -2,6 +2,7 @@ class AgrisController < ApplicationController
 	# before_action :is_admin, except: [:showgif, :showjpg]
   before_action :authenticate_user!, except: [:showgif, :showjpg]
 	skip_before_action :verify_authenticity_token
+  before_action :check_admin
 
   caches_action :showgif, :cache_path => Proc.new {
     cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
@@ -155,6 +156,9 @@ class AgrisController < ApplicationController
 
   end
 
+  def check_admin
+    redirect_to root_path if current_user.is_admin != true
+  end
 
   def movie_params
     params.require(:type_movie).permit(:description, :movie_url, :pic_url)
