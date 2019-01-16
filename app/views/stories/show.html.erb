@@ -19,10 +19,10 @@
           <h1 class="h4 text-black font-weight-bold"><%= @story.title%></h1>
           <div class="my-2">
               <div class="btn-group">
-                  <a class="btn px-2 btn-fb" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<%= "http://#{request.host}#{story_path(@story.id)}"%>">
+                  <a class="btn px-2 btn-fb" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<%= "https://#{request.host}#{story_path(@story.id)}"%>">
                       <i class="fab fa-lg fa-fw fa-facebook-f"></i>
                   </a>
-                  <a class="btn px-2 btn-line" target="_blank" href="http://line.naver.jp/R/msg/text/?<%= "http://#{request.host}#{story_path(@story.id)}"%>">
+                  <a class="btn px-2 btn-line" target="_blank" href="http://line.naver.jp/R/msg/text/?<%= "https://#{request.host}#{story_path(@story.id)}"%>">
                       <i class="fab fa-lg fa-fw fa-line"></i>
                   </a>
               </div>
@@ -30,7 +30,7 @@
           <div class="content text-dark mt-3 lead">
             <%= @story.content.html_safe%>
           </div>
-          <div class="fb-comments d-none d-lg-block" data-width="100%" data-href="<%= "http://#{request.host}#{story_path(@story.id)}"%>" data-numposts="5"></div>
+          <div class="fb-comments d-none d-lg-block" data-width="100%" data-href="<%= "https://#{request.host}#{story_path(@story.id)}"%>" data-numposts="5"></div>
         </div>
         <div class="col-12 col-lg-4 mt-6 mt-lg-0">
           <div class="sidebar">
