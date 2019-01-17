@@ -1,7 +1,7 @@
 module FarmersHelper
 	def render_tag(url)
 		if url.downcase.include?("jp") 
-			return image_tag url , class: "img-fluid d-block"
+			return image_tag url , class: "d-block w-100"
 		else
 			return "<video id=\"movie\" preload controls loop width=\"536\">
         <source src=\"#{url}\" type=\"video/mp4\" />

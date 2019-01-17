@@ -41,22 +41,45 @@
           </button>
           <div class="nav-modal">
             <a class="btn-left" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{ i != 0 ? ((params[:page].to_i * 10 ) + i) : (((params[:page].to_i - 1) * 10 ) + i + 6) }\"".html_safe %>>
-              <i class="fas fa-2x fa-chevron-left"></i>
+              <i class="fas fa-2x fa-arrow-left"></i>
             </a>
             <a class="btn-right" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{(params[:page].to_i * 10 ) + i + 2}\"".html_safe if @work_records.size != i+1 %>>
-              <i class="fas fa-2x fa-chevron-right"></i>
+              <i class="fas fa-2x fa-arrow-right"></i>
             </a>
           </div>
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" style="overflow: auto !important;">
               <div class="row no-gutters">
                 <div class="col-12 col-lg-7">
-                  <div class="slider-modal">
-                    <% wd.work_diary_images.each do |image|%>
-                      <% if image.enabled == true %>
-                        <div><%= render_tag(image.show_url) %></div>
-                      <% end %>
-                    <% end %>
+                  <div class="d-table h-100">
+                    <div class="d-table-cell align-middle">
+                      <div id="carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" class="carousel slide" data-ride="carousel">
+                        <% if wd.work_diary_images.size != 1 %>
+                          <ol class="carousel-indicators">
+                            <% wd.work_diary_images.each_with_index do |image, f|%>
+                              <li data-target="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" data-slide-to="<%= f %>" <%= "class=\"active\"".html_safe if f == 0 %>></li>
+                            <% end %>
+                          </ol>
+                        <% end %>
+                        <div class="carousel-inner">
+                          <% wd.work_diary_images.each_with_index do |image, f|%>
+                            <% if image.enabled == true %>
+                              <div class="carousel-item<%= " active" if f == 0 %>" >
+                                <%= render_tag(image.show_url) %>
+                              </div>
+                            <% end %>
+                          <% end %>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="col-12 col-lg-5">
@@ -69,7 +92,7 @@
                       <div class="col text-right">
                         <div class="btn-group">
                           <a class="text-danger  btn btn-sm btn-like" href="javascript:AddFarmer(<%= @farmer.id %>);">
-                            <i class="<%= @is_favo.include?(@farmer.id)? "fas" : "far" if @is_favo.present? %> fa-fw fa-lg fa-heart" id="heart_<%= @farmer.id %>"></i>
+                            <i class="<%= @is_favo.include?(@farmer.id)? "fas" : "far" %> fa-fw fa-lg fa-heart" id="heart_<%= @farmer.id %>"></i>
                           </a>
                           <div class="dropdown">
                             <a class="text-dark btn btn-sm" href="javascript:void();" data-toggle="dropdown">
