@@ -25,7 +25,7 @@ class MultiImageUploadsController < ApplicationController
           wd.save!
           wd.work_diary_images.create( :url => "", :cover_url => image.cover_url, :origin_url => image.origin_url, :show_url => image.show_url, :enabled => true )
         end
-        render json: {:thumb => image.file.show.url, :big => image.file.show.url, :original => image.file.show.url}
+        render json: {:thumb => image.file.thumb.url, :big => image.file.thumb.url, :original => image.file.show.url}
       end
 		end
 	end

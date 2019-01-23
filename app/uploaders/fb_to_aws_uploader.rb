@@ -19,6 +19,7 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   def store_dir
     "#{WebConf.upload_dir}/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
+  
 
   version :thumb do
     process :auto_orient, :if => :is_jpg_file?
@@ -26,7 +27,9 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
     def full_filename for_file
       png_name for_file, version_name #if is_mp4_file(file)?
     end
+    process :resize_to_fill_modf => [630, 630]
     process :resize_to_fill => [350, 350]
+    # process :resize_to_fill => [350, 350]
     process convert: 'png'
     process :set_content_type_png
   end
@@ -58,6 +61,46 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
     self.file.instance_variable_set(:@content_type, "image/png")
   end
 
+  # def get_h_w
+  #   manipulate! do |img|
+  #     @width = img[:width]
+  #     @height = img[:height]
+  #     img = yield(img) if block_given?
+  #     img
+  #   end
+  #   if @height.to_i > @width.to_i
+  #     w = @height + 1
+  #     resize_to_fill(350, 350)
+  #   end
+  # end
+
+  def resize_to_fill_modf(width, height, gravity = 'Center', combine_options: {})
+    manipulate! do |img|
+      cols, rows = img[:dimensions]
+      img.combine_options do |cmd|
+        if width != cols || height != rows
+          scale_x = width/cols.to_f
+          scale_y = height/rows.to_f
+          if scale_x >= scale_y
+            cols = (scale_x * (cols + 0.5)).round
+            rows = (scale_x * (rows + 0.5)).round
+            cmd.resize "#{cols}"
+          else
+            cols = (scale_y * (cols + 0.5)).round
+            rows = (scale_y * (rows + 0.5)).round
+            cmd.resize "x#{rows}"
+          end
+        end
+        cmd.gravity gravity
+        cmd.background "rgba(255,255,255,0.0)"
+        cmd.extent scale_x >= scale_y ? "#{350}x#{350}" : "#{width}x#{height}"
+        append_combine_options cmd, combine_options
+      end
+      img = yield(img) if block_given?
+      img
+    end
+  end
+
   def strip
     manipulate! do |img|
       img.strip
@@ -69,6 +112,16 @@ class FbToAwsUploader < CarrierWave::Uploader::Base
   def auto_orient
     manipulate! do |image|
       image.tap(&:auto_orient)
+    end
+  end
+
+  def append_combine_options(cmd, combine_options)
+    combine_options.each do |method, options|
+      if options.nil?
+        cmd.send(method)
+      else
+        cmd.send(method, options)
+      end
     end
   end
 

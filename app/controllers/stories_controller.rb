@@ -13,11 +13,19 @@ class StoriesController < ApplicationController
 	end
 
 	def list
+		@cats = StoryCat.all
 		@tag = params[:tag].present? ? StoryTag.find(params[:tag]).name : "全部"
-		if params[:tag].present?
-			story_ids = StoryTagShip.where(:story_tag_id => params[:tag]).map {|story| story.story_id }
-			@first_story = Story.where(:id => story_ids).order(id: :desc).first
-			@storys = Story.includes(:story_image, :story_tags).where(:id => story_ids).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
+		if params[:tag].present? or params[:cat].present?
+			if params[:tag].present?
+				story_ids = StoryTagShip.where(:story_tag_id => params[:tag]).map {|story| story.story_id }
+				@first_story = Story.where(:id => story_ids).order(id: :desc).first
+				@storys = Story.includes(:story_image, :story_tags).where(:id => story_ids).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
+			end
+			if params[:cat].present?
+				cat = params[:cat]
+				@first_story = Story.where(:story_cat_id => cat).order(id: :desc).first
+				@storys = Story.includes(:story_image, :story_tags).where(:story_cat_id => cat).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
+			end
 		else
 			@first_story = Story.all.order(id: :desc).first
 			@storys = Story.includes(:story_image, :story_tags).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)

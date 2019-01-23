@@ -1,159 +1,269 @@
-<% if @work_records.first != nil %>
-  <div class="row article">
-    <% @work_records.each_with_index do |wr, i| %>
-      <% if i == 0 %>
-        <div class="post">
-        <script>
-          $("#modal").append($("#page_modal").html());
-          $("#page_modal").html("");
-          FB.XFBML.parse();
-        </script>
+<body id="top">
+  <nav class="pushy pushy-left bg-white">
+    <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">友善農夫</h1>
+            <div class="h3">工作牆</div>
+          </div>
+        </div>
       </div>
-      <% end %>
-      <% if wr.work_diary_images.normal_state.size > 0 %>
-        <div class="col-6 col-lg-4 my-3 post" >
-          <%= render_is_mobile_link(browser.device.mobile?, params[:id], wr.id, (params[:page].to_i * 10 ) + i +1) %>
-            <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_diary_images.normal_state.size > 1%>
-            <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
-              <div class="mb-auto"></div>
-              <div class="text-center">
-                <div class="my-auto">
-                  <div class="align-self-center"><%= wr.comment%></div>
-                  <div class=""></div>
-                </div>
+      <div class="row justify-content-center">
+        <div class="col-12 mb-6">
+          <div class="border-top border-bottom border-gray py-3">
+            <div class="row">
+              <div class="col-12 col-lg-2 my-2 text-center">
+                <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 150px;">
               </div>
-              <div class="row no-gutters mt-auto">
-                <div class="col">
+              <div class="col-12 col-lg-10 my-2">
+                <div class="mb-2">
+                  <div class="text-center text-md-left">
+                    <span class="h5"><%= @farmer.farmer_profile.front_name%></span>
+                    <span class="ml-3">
+                      <%= link_to @farmer.farmer_profile.fb_url, class: "text-fb", target: "_blank" do %>
+                        <i class="fab fa-fw fa-lg fa-facebook"></i>
+                      <% end %>
+                      <a class="text-danger btn-like" href="javascript:AddFarmer(<%= @farmer.id %>);">
+                        <i class="<%= @is_favo.include?(@farmer.id)? "fas" : "far" %> fa-fw fa-lg fa-heart" id="heart_<%= @farmer.id %>"></i>
+                      </a>
+                    </span>
+                  </div>
                 </div>
-                <div class="col-8 text-right">
+                <ul class="nav nav-info">
+                  <li class="nav-item my-1">
+                    <%= link_to farmer_path(@farmer.id), class: "nav-link" do%>
+                      <u><%= @farmer.farmer_profile.farm_name%></u>
+                    <% end %>
+                  </li>
+                  <li class="nav-item my-1">
+                    <%= link_to work_record_farmer_path(@farmer.id), class: "nav-link" do %>
+                      <u>農場工作記錄</u>
+                    <% end %>
+                  </li>
+                </ul>
+                <div class="mt-4 text-row-2 text-muted">
+                  <%= @farmer.farmer_profile.introduce%>
                 </div>
               </div>
             </div>
-            <%= image_tag wr.work_diary_images.normal_state.first.cover_url, class: "img-fluid text-center"%>
-          </a>
-        </div>
-      <% end%>
-    <% end %>
-    <div id="page_modal" class="post">
-      <% @work_records.each_with_index do |wd, i| %>
-        <div class="modal fade" id="modal-detail_<%= (params[:page].to_i * 10 ) + i + 1 %>" tabindex="-1" role="dialog">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <div class="nav-modal">
-            <a class="btn-left" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{ i != 0 ? ((params[:page].to_i * 10 ) + i) : (((params[:page].to_i - 1) * 10 ) + i + 6) }\"".html_safe %>>
-              <i class="fas fa-2x fa-arrow-left"></i>
-            </a>
-            <a class="btn-right" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{(params[:page].to_i * 10 ) + i + 2}\"".html_safe if @work_records.size != i+1 %>>
-              <i class="fas fa-2x fa-arrow-right"></i>
-            </a>
           </div>
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="overflow: auto !important;">
-              <div class="row no-gutters">
-                <div class="col-12 col-lg-7">
-                  <div class="d-table h-100">
-                    <div class="d-table-cell align-middle">
-                      <div id="carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" class="carousel slide" data-ride="carousel">
-                        <% if wd.work_diary_images.size != 1 %>
-                          <ol class="carousel-indicators">
-                            <% wd.work_diary_images.each_with_index do |image, f|%>
-                              <li data-target="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" data-slide-to="<%= f %>" <%= "class=\"active\"".html_safe if f == 0 %>></li>
-                            <% end %>
-                          </ol>
-                        <% end %>
-                        <div class="carousel-inner">
-                          <% wd.work_diary_images.each_with_index do |image, f|%>
-                            <% if image.enabled == true %>
-                              <div class="carousel-item<%= " active" if f == 0 %>" >
-                                <%= render_tag(image.show_url) %>
-                              </div>
-                            <% end %>
-                          <% end %>
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" role="button" data-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" role="button" data-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Next</span>
-                        </a>
+        </div>
+      </div>
+      <% if @work_records.first != nil %>
+        <div class="row article">
+          <% @work_records.each_with_index do |wr, i| %>
+            <% if i == 0 %>
+              <div class="post">
+              <script>
+                $("#modal").append($("#page_modal").html());
+                $("#page_modal").html("");
+                FB.XFBML.parse();
+              </script>
+            </div>
+            <% end %>
+            <% if wr.work_diary_images.normal_state.size > 0 %>
+              <div class="col-6 col-lg-4 my-3 post" >
+                <%= render_is_mobile_link(browser.device.mobile?, params[:id], wr.id, (params[:page].to_i * 10 ) + i +1) %>
+                  <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_diary_images.normal_state.size > 1%>
+                  <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
+                    <div class="mb-auto"></div>
+                    <div class="text-center">
+                      <div class="my-auto">
+                        <div class="align-self-center"><%= wr.comment%></div>
+                        <div class=""></div>
+                      </div>
+                    </div>
+                    <div class="row no-gutters mt-auto">
+                      <div class="col">
+                      </div>
+                      <div class="col-8 text-right">
                       </div>
                     </div>
                   </div>
+                  <%= image_tag wr.work_diary_images.normal_state.first.cover_url, class: "img-fluid text-center"%>
+                </a>
+              </div>
+            <% end%>
+          <% end %>
+          <div id="page_modal" class="post">
+            <% @work_records.each_with_index do |wd, i| %>
+              <div class="modal fade" id="modal-detail_<%= (params[:page].to_i * 10 ) + i + 1 %>" tabindex="-1" role="dialog">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="nav-modal">
+                  <a class="btn-left" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{ i != 0 ? ((params[:page].to_i * 10 ) + i) : (((params[:page].to_i - 1) * 10 ) + i + 6) }\"".html_safe %>>
+                    <i class="fas fa-2x fa-arrow-left"></i>
+                  </a>
+                  <a class="btn-right" href="javascript:void();" <%= " data-dismiss=\"modal\" data-toggle=\"modal\" data-target=\"#modal-detail_#{(params[:page].to_i * 10 ) + i + 2}\"".html_safe if @work_records.size != i+1 %>>
+                    <i class="fas fa-2x fa-arrow-right"></i>
+                  </a>
                 </div>
-                <div class="col-12 col-lg-5">
-                  <div class="pt-4 px-4 pb-0">
-                    <div class="row align-items-center">
-                      <div class="media col">
-                        <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
-                        <div class="media-body align-self-center ml-3"><%= wd.user.farmer_profile.front_name%></div>
-                      </div>
-                      <div class="col text-right">
-                        <div class="btn-group">
-                          <a class="text-danger  btn btn-sm btn-like" href="javascript:AddFarmer(<%= @farmer.id %>);">
-                            <i class="<%= @is_favo.include?(@farmer.id)? "fas" : "far" %> fa-fw fa-lg fa-heart" id="heart_<%= @farmer.id %>"></i>
-                          </a>
-                          <div class="dropdown">
-                            <a class="text-dark btn btn-sm" href="javascript:void();" data-toggle="dropdown">
-                              <i class="fas fa-fw fa-lg fa-share"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
-                              <a class="text-fb" href="#">
-                                <i class="fab fa-fw fa-2x fa-facebook"></i>
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content" style="overflow: auto !important;">
+                    <div class="row no-gutters">
+                      <div class="col-12 col-lg-7">
+                        <div class="d-table h-100">
+                          <div class="d-table-cell align-middle">
+                            <div id="carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" class="carousel slide" data-ride="carousel">
+                              <% if wd.work_diary_images.size != 1 %>
+                                <ol class="carousel-indicators">
+                                  <% wd.work_diary_images.each_with_index do |image, f|%>
+                                    <li data-target="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" data-slide-to="<%= f %>" <%= "class=\"active\"".html_safe if f == 0 %>></li>
+                                  <% end %>
+                                </ol>
+                              <% end %>
+                              <div class="carousel-inner">
+                                <% wd.work_diary_images.each_with_index do |image, f|%>
+                                  <% if image.enabled == true %>
+                                    <div class="carousel-item<%= " active" if f == 0 %>" >
+                                      <%= render_tag(image.show_url) %>
+                                    </div>
+                                  <% end %>
+                                <% end %>
+                              </div>
+                              <a class="carousel-control-prev" href="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
                               </a>
-                              <a class="text-line" href="#">
-                                <i class="fab fa-fw fa-2x fa-line"></i>
-                              </a>
-                              <a class="text-dark" href="#">
-                                <i class="far fa-fw fa-2x fa-envelope"></i>
+                              <a class="carousel-control-next" href="#carouselModal-<%= (params[:page].to_i * 10 ) + i + 1 %>" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
                               </a>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="mt-3 py-3 font-small comment">
-                      <div class="">
-                        <%= wd.comment %>
-                      </div>
-                    </div>
-                    <div class="d-none d-md-block">
-                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
-                          <a class="text-primary btn-smile" href="javascript:send_mood(<%= wd.id %>, 1);" remote=true>
-                            <i id="like" class="far fa-lg fa-smile"></i>
-                          </a>
-                          <span class="badge badge-light badge-pill"><%= wd.smile.to_i %> 個喜歡</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
-                          <a class="text-primary btn-meh" href="javascript:send_mood(<%= wd.id %>, 2);">
-                            <i id="like" class="far fa-lg fa-meh"></i>
-                          </a>
-                          <span class="badge badge-light badge-pill"><%= wd.general.to_i %> 個普通</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
-                          <a class="text-primary btn-frown" href="javascript:send_mood(<%= wd.id %>, 3);">
-                            <i id="like" class="far fa-lg fa-frown"></i>
-                          </a>
-                          <span class="badge badge-light badge-pill"><%= wd.dislike.to_i %> 個不喜歡</span>
-                        </li>
-                      </ul>
-                      <div class="text-muted font-small mt-1">
-                        <%= wd.diary_time.strftime("%F %H:%M")%>
-                      </div>
-                      <div class="mt-1">
-                        <div class="fb-comments" data-width="100%" data-href="<%= "#{YAML.load_file("config/customization.yml")[:root_domain]}/farmers/#{params[:id]}/mobile_img/#{wd.id}"%>" data-numposts="1"></div>
+                      <div class="col-12 col-lg-5">
+                        <div class="pt-4 px-4 pb-0">
+                          <div class="row align-items-center">
+                            <div class="media col">
+                              <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
+                              <div class="media-body align-self-center ml-3">
+                                <%= link_to wd.user.farmer_profile.front_name, farmer_path(wd.user.id) %>
+                              </div>
+                            </div>
+                            <div class="col text-right">
+                              <div class="btn-group">
+                                <a class="text-danger  btn btn-sm btn-like" href="javascript:AddFarmer(<%= @farmer.id %>);">
+                                  <i class="<%= @is_favo.include?(@farmer.id)? "fas" : "far" %> fa-fw fa-lg fa-heart" id="heart_<%= @farmer.id %>"></i>
+                                </a>
+                                <div class="dropdown">
+                                  <a class="text-dark btn btn-sm" href="javascript:void();" data-toggle="dropdown">
+                                    <i class="fas fa-fw fa-lg fa-share"></i>
+                                  </a>
+                                  <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
+                                    <a class="text-fb" href="#">
+                                      <i class="fab fa-fw fa-2x fa-facebook"></i>
+                                    </a>
+                                    <a class="text-line" href="#">
+                                      <i class="fab fa-fw fa-2x fa-line"></i>
+                                    </a>
+                                    <a class="text-dark" href="#">
+                                      <i class="far fa-fw fa-2x fa-envelope"></i>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mt-3 py-3 font-small comment">
+                            <div class="">
+                              <%= wd.comment %>
+                            </div>
+                          </div>
+                          <div class="d-none d-md-block">
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                                <a class="text-primary btn-smile" href="javascript:send_mood(<%= wd.id %>, 1);" remote=true>
+                                  <i id="like" class="far fa-lg fa-smile"></i>
+                                </a>
+                                <span class="badge badge-light badge-pill"><%= wd.smile.to_i %> 個喜歡</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                                <a class="text-primary btn-meh" href="javascript:send_mood(<%= wd.id %>, 2);">
+                                  <i id="like" class="far fa-lg fa-meh"></i>
+                                </a>
+                                <span class="badge badge-light badge-pill"><%= wd.general.to_i %> 個普通</span>
+                              </li>
+                              <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-0">
+                                <a class="text-primary btn-frown" href="javascript:send_mood(<%= wd.id %>, 3);">
+                                  <i id="like" class="far fa-lg fa-frown"></i>
+                                </a>
+                                <span class="badge badge-light badge-pill"><%= wd.dislike.to_i %> 個不喜歡</span>
+                              </li>
+                            </ul>
+                            <div class="text-muted font-small mt-1">
+                              <%= wd.diary_time.strftime("%F %H:%M")%>
+                            </div>
+                            <div class="mt-1">
+                              <div class="fb-comments" data-width="100%" data-href="<%= "#{YAML.load_file("config/customization.yml")[:root_domain]}/farmers/#{params[:id]}/mobile_img/#{wd.id}"%>" data-numposts="1"></div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            <% end %>
           </div>
         </div>
       <% end %>
+      <div class="scroller-status text-center">
+        <div class="infinite-scroll-request loader-ellips"></div>
+        <div class="infinite-scroll-last alert alert-secondary">
+          <div class="lead font-weight-bold">
+            <i class="fas fa-spinner fa-pulse"></i> 載入中
+          </div>
+        </div>
+        <div class="infinite-scroll-error alert alert-secondary">
+          <div class="lead font-weight-bold">沒有頁面可以讀取了</div>
+        </div>
+      </div>
     </div>
   </div>
+</body>
+<% content_for :javascript do %>
+  <script>
+    function AddFarmer(id){
+      <% if user_signed_in? %>
+      $.post( "<%= YAML.load_file("config/customization.yml")[:campaign_domain] %>/favo_farmers", { farmer_id: id })
+        .done(function( data ) {
+          if ($("#heart_"+id).attr('data-prefix').indexOf("fas") == 0){
+            $("#heart_"+id).attr('data-prefix', "far");
+          }
+          else
+          {
+            $("#heart_"+id).attr('data-prefix', "fas");
+          }        
+        });
+      <% else %>
+      alert("請先登入");
+      window.location.replace("/users/sign_in");
+      <% end %>
+    }
+    $('.article').infiniteScroll({
+      path: '<%= params[:id]%>/page/{{#}}',
+      append: '.post',
+      status: ".scroller-status"
+    });
+    function send_mood(record_id, mood) {
+      <% if current_user.present? %>
+      $.get( "/work_records/mood", { work_diary_id: record_id, user_id: <%= current_user.id %>, mood: mood } )
+      .done(function( data ) {
+        data;
+      });
+      <%else%>
+      alert("請先登入");
+      window.location.replace("/users/sign_in");
+      <% end %>
+    }
+  </script>
 <% end %>

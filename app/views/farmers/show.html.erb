@@ -154,7 +154,9 @@
                     <div class="row align-items-center">
                       <div class="media col">
                         <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
-                        <div class="media-body align-self-center ml-3"><%= wd.user.farmer_profile.front_name%></div>
+                        <div class="media-body align-self-center ml-3">
+                          <%= link_to wd.user.farmer_profile.front_name, farmer_path(wd.user.id) %>
+                        </div>
                       </div>
                       <div class="col text-right">
                         <div class="btn-group">

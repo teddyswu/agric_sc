@@ -14,6 +14,25 @@
           </div>
         </div>
       </div>
+      <div class="row justify-content-center">
+        <div class="col-12 mb-6">
+          <div class="border-top border-bottom border-gray py-3">
+            <div class="row">
+              <div class="col-12 my-2">
+                <ul class="nav nav-info justify-content-center">
+                  <% @cats.each do |cat|%>
+                    <li class="nav-item my-1">
+                      <%= link_to list_stories_path(:cat => cat.id), :class => "nav-link" do %>
+                        <%= cat.name %>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row article">
         <% if params[:page].blank?%>
           <div class="col-12 my-5 post">
@@ -65,8 +84,7 @@
 <% content_for :javascript do %>
   <script>
     $('.article').infiniteScroll({
-      <% url = params[:tag].present? ? "#{request.url}?tag=#{params[:tag]}&page={{#}}" : "#{request.url}?page={{#}}"%>
-      path: '<%= url.html_safe %>',
+      path: '<%= "#{request.url}&page={{#}}" %>',
       append: '.post',
       status: ".scroller-status"
     });
