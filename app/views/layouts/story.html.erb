@@ -4,17 +4,16 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>友故事</title>
-  <meta name="keywords" content="">
-	<meta name="description" content="">
+  <%= render_page_title_tag %>
   <!--fb og-->
-  <meta property="og:title" content="">
+  <meta property="og:description" content="<%= page_description %>" />
+  <meta property="og:title" content="<%= page_title %>" />
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://www.ugooz.cc/">
-  <meta property="og:site_name" content=""/>
-  <meta property="og:description" content="">
-  <meta property="og:image" content="/assets/sk2/img/ui/logo.png" >
+  <meta property="og:image" content="<%= page_image %>"/>
+  <meta property="og:site_name" content="友故事"/>
   <meta property="fb:app_id" content="<%= YAML.load_file("config/authorization_key.yml")[:facebook][:app_key] %>" />
+  <%= render_page_image_link_tag %>
   <meta content="zh_TW" property="og:locale">
   <link rel="icon" href="/assets/sk2/img/ui/fvo.png">
   <link rel="image_src" href="/assets/sk2/img/ui/logo.png" >

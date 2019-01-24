@@ -30,12 +30,18 @@ class StoriesController < ApplicationController
 			@first_story = Story.all.order(id: :desc).first
 			@storys = Story.includes(:story_image, :story_tags).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
 		end
+		set_page_description("提供有機農業、茶、茶葉知識，和在地農村故事、地方景點懶人包。")
+    set_page_image("https://www.ugooz.cc/assets/sk2/img/ui/logo.png")
+    set_page_title "有機知識與地方故事"
 		render layout: "story"
 	end
 
 	def show
 		@story = Story.find(params[:id])
 		@recommend_story = Story.where.not(:id => params[:id] ).order(id: :desc).limit(3)
+		set_page_description("提供有機農業、茶、茶葉知識，和在地農村故事、地方景點懶人包。")
+    set_page_image @story.story_image.url_cover
+    set_page_title @story.title
 		render layout: "story"
 	end
 

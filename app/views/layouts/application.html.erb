@@ -7,10 +7,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>農業科技資訊系統</title>
-    <meta name="description" content="">
+    <%= render_page_title_tag %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:description" content="<%= page_description %>" />
+    <meta property="og:title" content="<%= page_title %>" />
     <meta property="fb:app_id" content="<%= YAML.load_file("config/authorization_key.yml")[:facebook][:app_key] %>" />
+    <%= render_page_image_link_tag %>
     <link rel="shortcut icon" href="/assets/sk2/img/ui/fvo.png" />
     <link rel="stylesheet" href="/assets/css/normalize.css">
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">

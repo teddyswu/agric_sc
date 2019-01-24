@@ -14,6 +14,8 @@ gem "paperclip", '4.3.0'
 gem 'rails-html-sanitizer', '>= 1.0.4'
 gem "dalli"
 
+gem "seo_helper"
+
 gem 'delayed_job_active_record'
 gem "daemons"
 
