@@ -84,7 +84,11 @@
 <% content_for :javascript do %>
   <script>
     $('.article').infiniteScroll({
-      path: '<%= "#{request.url}&page={{#}}" %>',
+      <% if request.url.include?("?")%>
+        path: '<%= "#{request.url}" %>&page={{#}}',
+      <% else %>
+        path: '<%= "#{request.url}" %>?page={{#}}',
+      <% end %>
       append: '.post',
       status: ".scroller-status"
     });
