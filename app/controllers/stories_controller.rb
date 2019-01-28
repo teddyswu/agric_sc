@@ -39,7 +39,7 @@ class StoriesController < ApplicationController
 	def show
 		@story = Story.find(params[:id])
 		@recommend_story = Story.where.not(:id => params[:id] ).order(id: :desc).limit(3)
-		set_page_description("提供有機農業、茶、茶葉知識，和在地農村故事、地方景點懶人包。")
+		set_page_description ActionView::Base.full_sanitizer.sanitize(@story.content)[0,120]
     set_page_image @story.story_image.url_cover
     set_page_title @story.title
 		render layout: "story"

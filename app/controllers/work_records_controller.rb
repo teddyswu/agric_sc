@@ -95,7 +95,8 @@ class WorkRecordsController < ApplicationController
       @before_records = WorkRecord.where(:record_type => 1, :owner_id => up.user_id, :created_at => beginning .. finish).order(work_time: :asc)
       @after_records = WorkRecord.where(:record_type => 2, :owner_id => up.user_id, :created_at => beginning .. finish).order(work_time: :asc)
     end
-
+    
+    set_page_title "列印工作紀錄"
     respond_to do |format|
     	format.html{ render layout: 'story' }
 	    format.pdf do
