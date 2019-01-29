@@ -59,6 +59,7 @@ class WorkRecordsController < ApplicationController
 
   def rate
     @campaign = Campaign.find(params[:id])
+    set_page_title "提案滿意度調查"
     render layout: 'story'
   end
 
@@ -73,6 +74,7 @@ class WorkRecordsController < ApplicationController
   def join_projects
     @project_domain = YAML.load_file("config/customization.yml")[:campaign_domain]
     @groups = current_user.campaign_groups
+    set_page_title "參與提案紀錄"
     render layout: 'story'
   end
 

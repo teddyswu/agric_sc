@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="container">
-      <div class="grid">
+      <div class="grid article">
         <div class="grid-sizer col-6 col-lg-3"></div>
           <div class="grid-item grid-item-2x col-12 col-lg-6 post">
             <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @big_head[0] } if @big_head[0].present? %>
@@ -66,14 +66,19 @@
       <!-- Single -->
       <script src="/assets/sk2/js/vendor/masonry.pkgd.min.js"></script>
       <script>
-          var $grid = $('.grid').masonry({
-              itemSelector: '.grid-item',
-              percentPosition: true,
-              columnWidth: '.grid-sizer'
-          });
-          $grid.imagesLoaded().progress( function() {
-              $grid.masonry();
-          });
+        var $grid = $('.grid').masonry({
+            itemSelector: '.grid-item',
+            percentPosition: true,
+            columnWidth: '.grid-sizer'
+        });
+        $grid.imagesLoaded().progress( function() {
+            $grid.masonry();
+        });
+        $('.article').infiniteScroll({
+          path: 'page/{{#}}',
+          append: '.post',
+          status: ".scroller-status"
+        });
       </script>
     <% end %>
 

@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   resources :user_groups
 
   resources :work_walls
+  get "work_walls/page/:page", :to => "work_walls#page", :as => "work_wall_page"
 
   resources :agris do
     get "comic",:on => :collection

@@ -1,0 +1,109 @@
+<body>
+  <nav class="pushy pushy-left bg-white">
+     <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">友善農夫</h1>
+            <div class="h3">工作牆</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="grid article">
+        <div class="grid-sizer col-6 col-lg-3 post"></div>
+        <div class="grid-item grid-item-2x col-12 col-lg-6 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @big_head[0] } if @big_head[0].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[0] } if @small_rectangle[0].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[1] } if @small_rectangle[1].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[2] } if @small_rectangle[2].present? %>
+        </div>
+        <div class="grid-item grid-item-2x col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @straight_bar[0] } if @straight_bar[0].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[3] } if @small_rectangle[3].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[4] } if @small_rectangle[4].present? %>
+        </div>
+        <div class="grid-item grid-item-2x col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @straight_bar[1] } if @straight_bar[1].present? %>
+        </div>
+        <div class="grid-item grid-item-2x col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @straight_bar[2] } if @straight_bar[2].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[5] } if @small_rectangle[5].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[6] } if @small_rectangle[6].present? %>
+        </div>
+        <div class="grid-item col-6 col-lg-3 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @small_rectangle[7] } if @small_rectangle[7].present? %>
+        </div>
+        <div class="grid-item col-12 col-lg-6 post">
+          <%= render :partial => "shared/work_wall_block", :locals => { :wwb => @bar[0] } if @bar[0].present? %>
+        </div>
+        <div class="post">
+          <script src="/assets/sk2/js/vendor/masonry.pkgd.min.js"></script>
+          <script>
+            var $grid = $('.grid').masonry({
+                itemSelector: '.grid-item',
+                percentPosition: true,
+                columnWidth: '.grid-sizer'
+            });
+            $grid.imagesLoaded().progress( function() {
+                $grid.masonry();
+            });
+          </script>
+        </div>
+      </div>
+      <div class="scroller-status text-center">
+        <div class="infinite-scroll-request loader-ellips"></div>
+        <div class="infinite-scroll-last alert alert-secondary">
+          <div class="lead font-weight-bold">
+            <i class="fas fa-spinner fa-pulse"></i> 載入中
+          </div>
+        </div>
+        <div class="infinite-scroll-error alert alert-secondary">
+          <div class="lead font-weight-bold">沒有頁面可以讀取了</div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <%= render "shared/footer" %>
+
+    <% content_for :javascript do %>
+      <!-- Single -->
+      <script src="/assets/sk2/js/vendor/masonry.pkgd.min.js"></script>
+      <script>
+        var $grid = $('.grid').masonry({
+            itemSelector: '.grid-item',
+            percentPosition: true,
+            columnWidth: '.grid-sizer'
+        });
+        $grid.imagesLoaded().progress( function() {
+            $grid.masonry();
+        });
+        $('.article').infiniteScroll({
+          path: 'page/{{#}}',
+          append: '.post',
+          status: ".scroller-status"
+        });
+      </script>
+    <% end %>
+
+</body>
