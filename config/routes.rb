@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   
   resources :farmers do 
     get "work_record", on: :member
+    post "favo_farmers", :on => :collection
   end
   get "farmers/:id/mobile_img/:record_id", :to => "farmers#mobile_img", :as => "farmer_mobile_img"
   get "farmers/:id/page/:page", :to => "farmers#page", :as => "farmer_page"

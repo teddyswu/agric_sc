@@ -30,6 +30,12 @@ class FarmersController < ApplicationController
 		render :layout => "story"
 	end
 
+	def favo_farmers
+		favo_farmer = FavoFarmer.where(:user_id => current_user.id, :farmer_id => params[:farmer_id])
+		favo_farmer.present? ? favo_farmer.destroy_all : favo_farmer.create
+		render plain: ""
+	end
+
 	def mobile_img
 		@farmer = User.joins(:farmer_profile).find_by_id_and_is_farmer_and_is_check_farmer(params[:id], true ,true)
 		@work_diary = WorkDiary.find(params[:record_id])
