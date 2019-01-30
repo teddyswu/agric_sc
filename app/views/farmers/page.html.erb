@@ -234,15 +234,9 @@
   <script>
     function AddFarmer(id){
       <% if user_signed_in? %>
-      $.post( "<%= YAML.load_file("config/customization.yml")[:campaign_domain] %>/favo_farmers", { farmer_id: id })
+      $.post( "/farmers/favo_farmers", { farmer_id: id })
         .done(function( data ) {
-          if ($("#heart_"+id).attr('data-prefix').indexOf("fas") == 0){
-            $("#heart_"+id).attr('data-prefix', "far");
-          }
-          else
-          {
-            $("#heart_"+id).attr('data-prefix', "fas");
-          }        
+          $("#heart_"+id).find('.fa-fw').toggleClass('far fas')        
         });
       <% else %>
       alert("請先登入");
