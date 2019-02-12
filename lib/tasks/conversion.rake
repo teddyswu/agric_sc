@@ -44,5 +44,18 @@ namespace :data_conversion do
 		    p work_image.id
 			end
 		end
+		task :all_diary_image => :environment do
+			work_images = WorkDiaryImage.where(:enabled => true)
+			work_images.each do |work_image|
+				fb_to_aw = Hash.new
+        fb_to_aw["remote_file_url"] = work_image.origin_url
+				aa = FbToAw.new(fb_to_aw)
+		    aa.save!
+		    aa.update_urls_success?
+		    work_image.cover_url = aa.cover_url
+		    work_image.save!
+		    p work_image.id
+			end
+		end
 	end
 end
