@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <%= params[:controller] == "root" ? title_tag("友故事│Ugooz") : render_page_title_tag %>
+  <%= params[:controller] == "root" ? title_tag("友故事 │ Ugooz") : render_page_title_tag %>
   <!--fb og-->
   <meta property="og:description" content="<%= page_description %>" />
-  <meta property="og:title" content="<%= page_title %>" />
+  <meta property="og:title" content="<%= params[:controller] == "root" ? "友故事 │ Ugooz" : page_title %>" />
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://www.ugooz.cc/">
   <meta property="og:image" content="<%= page_image %>"/>
