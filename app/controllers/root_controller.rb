@@ -14,7 +14,7 @@ class RootController < ApplicationController
 		@story_cat_one = StoryCat.find_by_name("有機懶人包").stories.order("id DESC").limit(3)
 		@story_cat_two = StoryCat.find_by_name("農村故事").stories.order("id DESC").limit(4)
 		@work_walls = WorkDiaryImage.where.not(:position => nil, :enabled => false).order("updated_at DESC").limit(12)
-		set_page_description("友故事網站提供有機農業、茶、茶葉知識，和在地農村故事與地方景點懶人包，還有有機小農的工作紀錄與農場日誌。加入友故事，可以閱讀故事，獲得知識傳遞；也可以參與提案鼓勵小農，為環境盡一份心力，進而建立起友善關係。")
+		set_page_description("友故事網站提供有機農業、茶、茶葉知識，和在地農村故事與地方景點，還有有機小農的工作紀錄與農場日誌。加入友故事，可以閱讀故事，獲得知識傳遞；也可以參與提案鼓勵小農，為環境盡一份心力。")
     set_page_image("https://www.ugooz.cc/assets/sk2/img/ui/logo.png")		
 		render layout: "story"
 	end

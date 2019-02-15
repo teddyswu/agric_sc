@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:description" content="<%= page_description %>" />
     <meta property="og:title" content="<%= page_title %>" />
+    <meta property="og:image" content="<%= page_image %>"/>
     <meta property="fb:app_id" content="<%= YAML.load_file("config/authorization_key.yml")[:facebook][:app_key] %>" />
     <%= render_page_image_link_tag %>
     <link rel="shortcut icon" href="/assets/sk2/img/ui/fvo.png" />
@@ -25,32 +26,6 @@
     <%= stylesheet_link_tag :application %>
     <%= javascript_include_tag :application%>
   </head>
-  <!-- Load Facebook SDK for JavaScript -->
-  <div id="fb-root"></div>
-  <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        xfbml            : true,
-        version          : 'v3.2'
-      });
-    };
-
-    (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = 'https://connect.facebook.net/zh_TW/sdk/xfbml.customerchat.js';
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
-
-  <!-- Your customer chat code -->
-  <div class="fb-customerchat"
-    attribution=setup_tool
-    page_id="1262537390546176"
-    theme_color="#67b868"
-    logged_in_greeting="嗨！有什麼需要幫助的嗎？"
-    logged_out_greeting="嗨！有什麼需要幫助的嗎？">
-  </div>
   <%= yield %>
   <script src="/assets/js/vendor/jquery-2.1.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>

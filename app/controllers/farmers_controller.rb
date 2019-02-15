@@ -40,7 +40,7 @@ class FarmersController < ApplicationController
 		@farmer = User.joins(:farmer_profile).find_by_id_and_is_farmer_and_is_check_farmer(params[:id], true ,true)
 		@work_diary = WorkDiary.find(params[:record_id])
 		@mood = WorkDiaryMood.find_by(:work_diary_id => params[:record_id], :user_id => current_user.id) if user_signed_in?
-		set_page_description @work_diary.comment
+		set_page_description "友善小農-#{@farmer.farmer_profile.front_name}的農場日誌紀錄。"
     set_page_image @work_diary.work_diary_images.first.cover_url
     set_page_title "#{@farmer.farmer_profile.front_name}: 「#{@work_diary.comment}」"
 		render layout: "story"
