@@ -1,0 +1,10 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+.divborder{
+	border-width:3px;
+	border-style:dashed;
+	border-color:#FFAC55;
+	padding:5px;
+}

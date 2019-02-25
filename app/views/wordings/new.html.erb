@@ -1,0 +1,21 @@
+<%= stylesheet_link_tag :wordings %>
+<%= form_for :user, :url => wordings_path, :method => :post, :remote => true do |f| %>
+	<button type="button" onclick="add_card();">卡片格式</button>
+	<button type="button" onclick="add_text();">文字訊息</button>
+	<button type="button" onclick="add_picture();">圖片訊息</button>
+	<button type="button" onclick="add_quick();">快速回覆</button>
+	<input type="hidden" id="group_num" value="1" disabled>
+	<input type="hidden" id="card_num" value="1" disabled>
+	<input type="hidden" id="text_num" value="1" disabled>
+	<input type="hidden" id="pic_num" value="1" disabled>
+	<input type="hidden" id="quick_num" value="1" disabled>
+	<div id="wording"></div>
+	<div id="show"></div>
+  <button type="submit" id="save">Submit</button>
+  <button type="button" onClick="tapCopy('show')">複製Json</button>
+<% end %>
+<% content_for(:javascript) do %>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<%= javascript_include_tag :wordings %>
+<% end %>
