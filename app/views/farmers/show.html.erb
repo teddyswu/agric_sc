@@ -227,6 +227,7 @@
   <%= render "shared/footer" %>
 </body>
 <% content_for :javascript do %>
+  <script src="/assets/sk2/js/vendor/jquery.mobile.custom.min.js"></script>
   <script>
     function AddFarmer(id){
       <% if user_signed_in? %>

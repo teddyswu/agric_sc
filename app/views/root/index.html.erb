@@ -7,9 +7,7 @@
 	<div id="main" class="push mt-10 mt-lg-12">
 		<div class="slider-headlines">
 			<% @story.each do |story|%>
-				<%= link_to story_path(story.id), :class => "card card-headlines" do %>
-        	<%= image_tag story.story_image.url_headline, class: "card-img d-none d-xl-block" %>
-     			<%= image_tag story.story_image.url_cover, class: "card-img d-xl-none" %>
+				<%= link_to story_path(story.id), :class => "card card-headlines", :style => "background-image: url(#{story.story_image.url_headline});" do %>
           <div class="card-img-overlay">
             <div>
               <div class="h1 mb-4 mb-lg-14 d-block text-white"><%= story.title%></div>
@@ -21,9 +19,7 @@
         <% end %>
       <% end %>
       <% @project.each do |project|%>
-      	<%= link_to "#{@project_domain}/campaigns/#{project.slug}", :class => "card card-headlines" do %>
-        	<%= image_tag project.campaign_image.landing_page, class: "card-img d-none d-xl-block" %>
-     			<%= image_tag project.campaign_image.campaign_path, class: "card-img d-xl-none" %>
+      	<%= link_to "#{@project_domain}/campaigns/#{project.slug}", :class => "card card-headlines", :style => "background-image: url(#{project.campaign_image.landing_page});" do %>
           <div class="card-img-overlay">
             <div>
               <div class="h1 mb-4 mb-lg-14 d-block text-white"><%= project.title%></div>
