@@ -13,12 +13,22 @@ class StoryUploader < CarrierWave::Uploader::Base
   # Choose what kind of storage to use for this uploader:
   # storage :file
   storage :fog
+  @@filename ||= "#{Time.now.strftime("%Y%m%d%H%M%S")}"
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
+  def filename
+    second=Time.now.strftime("%S").to_f*0.1
+    file_sec= second.round
+    @@filename = "#{Time.now.strftime("%Y%m%d%H%M%S")}"
+    super != nil ? "#{@@filename}.png" : super # 重新命名附檔名
+  end
+
   def store_dir
     "#{WebConf.upload_dir}/story/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
+
+  
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url
