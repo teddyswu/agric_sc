@@ -108,7 +108,7 @@ class StoriesController < ApplicationController
 
 
 	def story_params
-		params.require(:story).permit(:title, :content, :owner, :story_cat_id)
+		params.require(:story).permit(:title, :content, :owner, :story_cat_id, :easter_egg_url, :easter_egg_name)
   end
 
   def story_img_params

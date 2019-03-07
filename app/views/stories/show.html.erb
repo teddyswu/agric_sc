@@ -30,6 +30,22 @@
           <div class="content text-dark mt-3 lead">
             <%= @story.content.html_safe%>
           </div>
+          <% if @story.easter_egg_name.present? %>
+            <div class="border border-primary p-3">
+              <div class="row align-items-center">
+                <div class="col-4 col-md-2 text-center">
+                  <img class="img-fluid" src="/assets/sk2/img/uploads/egg.png" alt="" style="height: 80px;">
+                </div>
+                <div class="col-8 col-md-7">
+                  <div class="h5 text-primary">哇！看來你發現了這篇故事的隱藏彩蛋！</div>
+                  <p class="m-0"><%= @story.easter_egg_name%></p>
+                </div>
+                <div class="col-12 col-md-3 my-2">
+                  <a class="btn btn-primary btn-block" href="<%= @story.easter_egg_url %>">我要看彩蛋</a>
+                </div>
+              </div>
+            </div>
+          <% end %>
           <div class="fb-comments d-none d-lg-block" data-width="100%" data-href="<%= "https://#{request.host}#{story_path(@story.id)}"%>" data-numposts="5"></div>
         </div>
         <div class="col-12 col-lg-4 mt-6 mt-lg-0">
