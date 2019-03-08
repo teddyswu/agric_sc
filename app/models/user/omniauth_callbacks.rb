@@ -7,6 +7,7 @@ class User
         
         uid = response["uid"]
         data = response["info"]
+        extra = response["extra"]
         #p response['credentials']['token'] 
 
         # p "第三方回傳的資訊=============================="
@@ -35,11 +36,12 @@ class User
             user.authorizations << Authorization.new( :provider => provider, :uid => uid )
             up = UserProfile.new
             up.user_id = user.id
-            up.nickname = data["nickname"].present? ? data ["nickname"] : data["name"]
+            up.nickname = data["name"]
             up.nickname = "u#{Time.now.to_i}" if up.nickname.blank?
             # up.fb_uid = uid
-            up.gender = (data["gender"] == "male"? 1 : 0 )
-            up.birthday = data["birthday"]
+            up.gender = (extra["raw_info"]["gender"] == "male"? 1 : 0 )
+            c = extra["raw_info"]["birthday"].split('/')
+            up.birthday = "#{c[2]}-#{c[0]}-#{c[1]}"
             up.save
             return user
           else
