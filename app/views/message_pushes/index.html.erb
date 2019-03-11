@@ -37,6 +37,7 @@
                       <th scope="col">模組名稱</th>
                       <th scope="col">發送清單</th>
                       <th scope="col">發送時間</th>
+                      <th scope="col">目標</th>
                       <th scope="col">刪除</th>
                       <th scope="col">更多資訊</th>
                     </tr>
@@ -48,6 +49,7 @@
                         <td><%= message_push.module_name %></td>
                         <td><%= message_push.group.name %></td>
                         <td><%= message_push.run_at%></td>
+                        <td><%= render_purpose(message_push.purpose)%></td>
                         <td><%= link_to "[del]", message_push_path(message_push.id), :method => :delete %></td>
                         <td><%= link_to "[go]", message_push_path(message_push.id)%></td>
                       </tr>

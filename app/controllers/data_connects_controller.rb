@@ -847,6 +847,18 @@ class DataConnectsController < ApplicationController
           wording << JSON.parse(m.content)
         end
         render json: wording
+      when "user_analyze"
+        ua = UserAnalyze.new
+        ua.f_id = params[:f_id] if params[:f_id].present?
+        ua.origin = params[:origin] if params[:origin].present?
+        ua.send_to_module = params[:send_to_module] if params[:send_to_module].present?
+        ua.keyword = params[:keyword] if params[:keyword].present?
+        ua.gender = params[:gender] if params[:gender].present?
+        ua.age = params[:age] if params[:age].present?
+        ua.name = params[:name] if params[:name].present?
+        ua.save!
+
+        render text: "ok"
       end
 		end
 	end

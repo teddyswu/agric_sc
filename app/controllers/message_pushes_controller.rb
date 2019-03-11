@@ -32,6 +32,6 @@ class MessagePushesController < ApplicationController
 	end
 
 	def message_push_params
-		params.require(:message_push).permit(:module_name, :group_id, :run_at)
+		params.require(:message_push).permit(:module_name, :group_id, :purpose, :run_at)
   end
 end

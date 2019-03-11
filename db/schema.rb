@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190307024902) do
+ActiveRecord::Schema.define(version: 20190311064407) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -164,6 +164,7 @@ ActiveRecord::Schema.define(version: 20190307024902) do
     t.integer  "delivery_number", limit: 4
     t.integer  "read_number",     limit: 4
     t.integer  "total_number",    limit: 4
+    t.text     "purpose",         limit: 65535
     t.datetime "complete_time"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
@@ -250,6 +251,18 @@ ActiveRecord::Schema.define(version: 20190307024902) do
     t.text     "description", limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+  end
+
+  create_table "user_analyzes", force: :cascade do |t|
+    t.integer  "f_id",           limit: 4
+    t.text     "origin",         limit: 65535
+    t.text     "send_to_module", limit: 65535
+    t.text     "keyword",        limit: 65535
+    t.string   "gender",         limit: 255
+    t.string   "age",            limit: 255
+    t.string   "name",           limit: 255
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   create_table "user_behaviors", force: :cascade do |t|

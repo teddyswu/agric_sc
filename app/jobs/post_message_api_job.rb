@@ -4,7 +4,7 @@ class PostMessageApiJob < ActiveJob::Base
   def perform(*args)
     mp = MessagePush.find_by(:delayed_job_id => self.job_id)
     customization = YAML.load_file("config/customization.yml")
-    uri = URI.parse(customization[:survey])
+    uri = (mp.purpose == 1 ? URI.parse(customization[:farmer_message_post]) : URI.parse(customization[:survey]))
     user = customization[:user]
     password = customization[:password]
     group = mp.group.group_user_ships.map { |group| group.uid } 
