@@ -11,13 +11,19 @@
 	<button type="button" onclick="add_text();">文字訊息</button>
 	<button type="button" onclick="add_picture();">圖片訊息</button>
 	<button type="button" onclick="add_quick();">快速回覆</button>
+	<button type="button" onclick="add_button();">按鈕訊息</button>
+	<button type="button" onclick="add_list();">清單訊息</button>
+	<button type="button" onclick="add_media();">媒體訊息</button>
+	<button type="button" onclick="add_receipt();">收據訊息</button>
 	<input type="hidden" id="group_num" value="1" disabled>
 	<input type="hidden" id="card_num" value="1" disabled>
 	<input type="hidden" id="text_num" value="1" disabled>
 	<input type="hidden" id="pic_num" value="1" disabled>
 	<input type="hidden" id="quick_num" value="1" disabled>
+	<input type="hidden" id="button_num" value="1" disabled>
 	<div id="wording"></div>
-	<div id="show"></div>
+	<div id="show">
+	</div>
   <button type="submit" id="save">Submit</button>
   <button type="button" onClick="tapCopy('show')">複製Json</button>
 <% end %>
@@ -77,6 +83,19 @@
 		function add_quick(){
 			var sn = $("#quick_num").val();
 			$("#wording").append("<div id=\"quick_group" + sn + "\" class=\"divborder\"><b>快速回覆</b><button type=\"button\" onclick=\"remove_div('quick_group" + sn + "')\">刪除快回</button><br/><td>問題:<input type=\"text\" name=\"[quick_group" + sn + "][quick1]text\" value=\"今天熱嗎？\" /></td><td>名稱:<input type=\"text\" name=\"[quick_group" + sn + "][quick1]name\" value=\"\" /></td><br/>回覆:<button type=\"button\" onclick=\"add_quick_reply('quick_group" + sn + "', 'quick1');\">插入回覆</button><br /><div id=\"quick_group" + sn + "_reply\"><input type=\"hidden\" name=\"quick_group" + sn + "_reply_bt_sn\" value=\"1\" disabled=\"\"></div></div>");
+			$("#quick_num").val(parseInt(sn)+1);
+		}
+		function add_more_button(group){
+			var button_sn = $("input[name="+ group + "_bt_sn]").val();
+			if (parseInt(button_sn) < 4){
+				$("#" + group ).append("<div>按鈕連結:<input type=\"text\" name=\"[" + group + "][button" + button_sn + "]url\" value=\"https://www.messenger.com\" />按鈕標題:<input type=\"text\" name=\"[" + group + "][button" + button_sn + "]title\" value=\"網頁超連結按鈕 01\" /></div>");
+				$("input[name="+ group + "_bt_sn]").val(parseInt(button_sn)+1);
+			}
+		}
+		function add_button(){
+			var sn = $("#button_num").val();
+			$("#wording").append("<div id=\"button_group" + sn + "\" class=\"divborder\">按鈕訊息<button type=\"button\" onclick=\"add_more_button('button_group" + sn + "')\">插入按鈕</button><br/>標題:<input type=\"text\" name=\"[button_group" + sn + "]text\" value=\"這是 template 範例\" /><div>按鈕連結:<input type=\"text\" name=\"[button_group" + sn + "][button1]url\" value=\"https://www.messenger.com\" />按鈕標題:<input type=\"text\" name=\"[button_group" + sn + "][button1]title\" value=\"網頁超連結按鈕 01\" /></div><div id=\"button_group" + sn + "_sn\"><input type=\"hidden\" name=\"button_group" + sn + "_bt_sn\" value=\"2\" disabled=\"\"></div></div>")
+			$("#button_num").val(parseInt(sn)+1);
 		}
 		function remove_div(name){
 			$("#"+name).remove();

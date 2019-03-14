@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190311064407) do
+ActiveRecord::Schema.define(version: 20190312080303) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -137,6 +137,15 @@ ActiveRecord::Schema.define(version: 20190311064407) do
     t.datetime "updated_at",                  null: false
   end
 
+  create_table "greetings", force: :cascade do |t|
+    t.string   "f_id",         limit: 255
+    t.string   "name",         limit: 255
+    t.text     "origin",       limit: 65535
+    t.boolean  "is_start_use"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
   create_table "group_user_ships", force: :cascade do |t|
     t.integer  "group_id",   limit: 4
     t.string   "uid",        limit: 255
@@ -254,7 +263,7 @@ ActiveRecord::Schema.define(version: 20190311064407) do
   end
 
   create_table "user_analyzes", force: :cascade do |t|
-    t.integer  "f_id",           limit: 4
+    t.string   "f_id",           limit: 255
     t.text     "origin",         limit: 65535
     t.text     "send_to_module", limit: 65535
     t.text     "keyword",        limit: 65535

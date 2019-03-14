@@ -857,8 +857,36 @@ class DataConnectsController < ApplicationController
         ua.age = params[:age] if params[:age].present?
         ua.name = params[:name] if params[:name].present?
         ua.save!
-
         render text: "ok"
+      when "greeting"
+        gg = Greeting.find_or_initialize_by(:f_id => params[:f_id])
+        gg.name = params[:name]
+        gg.origin = params[:origin]
+        gg.is_start_use = (params[:is_start_use] == "1" ? true : false)
+        word_a = Array.new
+        word = Hash.new
+        say_hi = true if gg.new_record?
+        gg.save!
+        if (Time.now - gg.updated_at)/3600 > 12 or say_hi == true
+          name = params[:name]
+          case Time.now.strftime('%H').to_i
+          when 0..4
+            sta = "晚安！"
+          when 5..10
+            sta = "早安！"
+          when 11..15
+            sta = "午安！"
+          when 16..23
+            sta = "晚安！"
+          end
+          word["type"] = "text"
+          word["title"] = "#{name} #{sta}"
+          word["delay"] = "1"
+          gg.updated_at = Time.now
+        end
+        word_a << word
+        gg.save!
+        render json: word_a
       end
 		end
 	end
