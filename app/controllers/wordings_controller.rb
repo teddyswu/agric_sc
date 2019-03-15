@@ -63,6 +63,23 @@ class WordingsController < ApplicationController
 					end
 					@quick_t << quick
 				end
+			when /button/
+				@button_t = [] if i == 0 or par_name[i-1].include?("button") == false
+				v.each do |ke, va|
+					button = {}
+					button["NAME"] = va["Name"]
+					button["template_type"] = "button"
+					button["text"] = va["text"]
+					button["buttons"] = []
+					va.except("Name", "text").each_with_index do |(key, value), i|
+						qq = {}
+						qq["type"] = "web_url"
+						qq["url"] = va["button#{i+1}"]["url"]
+						qq["title"] = va["button#{i+1}"]["title"]
+						button["buttons"] << qq
+					end
+					@button_t << button
+				end
 			end
 
 			if par_name[i].include?("card")
@@ -76,6 +93,9 @@ class WordingsController < ApplicationController
 			end
 			if par_name[i].include?("quick")
 				@total << @quick_t if @quick_t != nil and par_name[i+1].to_s.include?("quick") == false
+			end
+			if par_name[i].include?("button")
+				@total << @button_t if @button_t != nil and par_name[i+1].to_s.include?("button") == false
 			end
 		end 
 	end
