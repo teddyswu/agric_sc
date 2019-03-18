@@ -14,15 +14,15 @@ class WordingsController < ApplicationController
 					card = {}
 					card["NAME"] = va["Name"]
 					card["title"] = va["title"]
-					card["subtitle"] = va["subtitle"] if card["subtitle"].present?
-					card["image_url"] = va["image_url"] if card["image_url"].present?
+					card["subtitle"] = va["subtitle"] if va["subtitle"].present?
+					card["image_url"] = va["image_url"] if va["image_url"].present?
 					card["buttons"] = []
 					va.except("Name", "title", "subtitle", "image_url").each_with_index do |(key, value), i|
 						bb = {}
 						bb["type"] = va["buttons#{i+1}"]["type"]
 						bb["title"] = va["buttons#{i+1}"]["title"]
-						bb["payload"] = va["buttons#{i+1}"]["payload"] if bb["payload"].present?
-						bb["url"] = va["buttons#{i+1}"]["url"] if bb["url"].present?
+						bb["payload"] = va["buttons#{i+1}"]["payload"] if va["buttons#{i+1}"]["payload"].present?
+						bb["url"] = va["buttons#{i+1}"]["url"] if va["buttons#{i+1}"]["url"].present?
 						card["buttons"] << bb
 					end
 					@card_t << card
