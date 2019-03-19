@@ -850,108 +850,116 @@ class DataConnectsController < ApplicationController
         aa = JSON.parse("[" + wording[0..-2] + "]")
         render json: aa
       when "user_analyze"
-        ua = UserAnalyze.new
-        ua.f_id = params[:f_id] if params[:f_id].present?
-        ua.origin = params[:origin] if params[:origin].present?
-        ua.send_to_module = params[:send_to_module] if params[:send_to_module].present?
-        ua.keyword = params[:keyword] if params[:keyword].present?
-        ua.gender = params[:gender] if params[:gender].present?
-        ua.age = params[:age] if params[:age].present?
-        ua.name = params[:name] if params[:name].present?
-        ua.save!
-        render text: "ok"
+        case params[:v]
+        when "0.01"
+          ua = UserAnalyze.new
+          ua.f_id = params[:f_id] if params[:f_id].present?
+          ua.origin = params[:origin] if params[:origin].present?
+          ua.send_to_module = params[:send_to_module] if params[:send_to_module].present?
+          ua.keyword = params[:keyword] if params[:keyword].present?
+          ua.gender = params[:gender] if params[:gender].present?
+          ua.age = params[:age] if params[:age].present?
+          ua.name = params[:name] if params[:name].present?
+          ua.save!
+          render text: "ok"
+        end
       when "greeting"
-        gg = Greeting.find_or_initialize_by(:f_id => params[:f_id])
-        gg.name = params[:name]
-        gg.origin = params[:origin]
-        gg.is_start_use = (params[:is_start_use] == "1" ? true : false)
-        word_a = Array.new
-        word = Hash.new
-        say_hi = true if gg.new_record?
-        gg.save!
-        if (Time.now - gg.updated_at)/3600 > 12 or say_hi == true
-          name = params[:name]
-          case Time.now.strftime('%H').to_i
-          when 0..4
-            sta = "晚安！"
-          when 5..10
-            sta = "早安！"
-          when 11..13
-            sta = "午安！"
-          when 14..17
-            sta = "下午好~"
-          when 18..23
-            sta = "晚安！"
+        case params[:v]
+        when "0.01"
+          gg = Greeting.find_or_initialize_by(:f_id => params[:f_id])
+          gg.name = params[:name]
+          gg.origin = params[:origin]
+          gg.is_start_use = (params[:is_start_use] == "1" ? true : false)
+          word_a = Array.new
+          word = Hash.new
+          say_hi = true if gg.new_record?
+          gg.save!
+          if (Time.now - gg.updated_at)/3600 > 12 or say_hi == true
+            name = params[:name]
+            case Time.now.strftime('%H').to_i
+            when 0..4
+              sta = "晚安！"
+            when 5..10
+              sta = "早安！"
+            when 11..13
+              sta = "午安！"
+            when 14..17
+              sta = "下午好~"
+            when 18..23
+              sta = "晚安！"
+            end
+            word["type"] = "text"
+            word["title"] = "Hi #{name} #{sta}"
+            word["delay"] = "1"
+            gg.updated_at = Time.now
           end
-          word["type"] = "text"
-          word["title"] = "Hi #{name} #{sta}"
-          word["delay"] = "1"
-          gg.updated_at = Time.now
+          word_a << word
+          gg.save!
+          render json: word_a
         end
-        word_a << word
-        gg.save!
-        render json: word_a
       when "farmer_group_list"
-        farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
-        farmer_group = Array.new
-        fg_text_h = Array.new
-        fg_text = Hash.new
-        fg_text[:NAME] = "TEAFU.MENU.B2C.06.01"
-        fg_text[:type] = "text"
-        fg_text[:text] = "請先幫我選擇產銷班！"
-        fg_text[:delay] = "1"
-        fg_text_h << fg_text
-        farmer_group << fg_text_h
-        fg_card_t = Array.new
-        farmer_groups.each_with_index do |fg, i|
-          i+=2
-          fg_card = Hash.new
-          fg_card[:NAME] = "TEAFU.MENU.B2C.06.0#{i}"
-          fg_card[:title] = fg
-          fg_card[:subtitle] = "用好茶邀請您，一同為台灣的好山好水盡一份力，讓更多的人願意加入守護土地與水源的行動。"
-          fg_card[:image_url] = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/project/campaign_image/file/5/campaign_path_0039.png"
-          fg_card[:buttons] = []
-          fg_card_b = Hash.new
-          fg_card_b[:type] = "postback"
-          fg_card_b[:title] = "查看成員"
-          fg_card_b[:payload] = "TF.06.0#{i}"
-          fg_card[:buttons] << fg_card_b
-          fg_card_t << fg_card
-        end
-
-        farmer_group << fg_card_t
-        farmer_groups.each_with_index do |fg, i|
-          i+=2
-          list_talk = Array.new
-          fg_list_talk = Hash.new
-          fg_list_talk[:Name] = "TEAFU.MENU.B2C.TF.06.0#{i}.01"
-          fg_list_talk[:type] = "text"
-          fg_list_talk[:title] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
-          fg_list_talk[:delay] = "1"
-          list_talk << fg_list_talk
-          farmer_group << list_talk
-          farmer_group_lists = FarmerProfile.where(:ps_group => fg)
-          farmer_group_lists.each do |f_list|
-            fl_card = Hash.new
-            fl_card[:NAME] = "TEAFU.MENU.B2C.TF.06.0#{i}.02"
-            fl_card[:title] = f_list.ps_group
-            fl_card[:subtitle] = f_list.name
-            fl_card[:image_url] = f_list.user_pic_url
-            fl_card[:buttons] = []
-            fl_card_b = Hash.new
-            fl_card_b[:type] = "web_url"
-            fl_card_b[:title] = "我想進一步認識"
-            fl_card_b[:url] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
-            fl_card_c = Hash.new
-            fl_card_c[:type] = "web_url"
-            fl_card_c[:title] = "查看生產紀錄"
-            fl_card_c[:url] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
-            fl_card[:buttons] << fl_card_b
-            fl_card[:buttons] << fl_card_c
-            farmer_group << fl_card
+        case params[:v]
+        when "0.01"
+          farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
+          farmer_group = Array.new
+          fg_text_h = Array.new
+          fg_text = Hash.new
+          fg_text[:NAME] = "TEAFU.MENU.B2C.06.01"
+          fg_text[:type] = "text"
+          fg_text[:text] = "請先幫我選擇產銷班！"
+          fg_text[:delay] = "1"
+          fg_text_h << fg_text
+          farmer_group << fg_text_h
+          fg_card_t = Array.new
+          farmer_groups.each_with_index do |fg, i|
+            i+=2
+            fg_card = Hash.new
+            fg_card[:NAME] = "TEAFU.MENU.B2C.06.0#{i}"
+            fg_card[:title] = fg
+            fg_card[:subtitle] = "用好茶邀請您，一同為台灣的好山好水盡一份力，讓更多的人願意加入守護土地與水源的行動。"
+            fg_card[:image_url] = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/project/campaign_image/file/5/campaign_path_0039.png"
+            fg_card[:buttons] = []
+            fg_card_b = Hash.new
+            fg_card_b[:type] = "postback"
+            fg_card_b[:title] = "查看成員"
+            fg_card_b[:payload] = "TF.06.0#{i}"
+            fg_card[:buttons] << fg_card_b
+            fg_card_t << fg_card
           end
+          farmer_group << fg_card_t
+          farmer_groups.each_with_index do |fg, i|
+            i+=2
+            list_talk = Array.new
+            fg_list_talk = Hash.new
+            fg_list_talk[:Name] = "TEAFU.MENU.B2C.TF.06.0#{i}.01"
+            fg_list_talk[:type] = "text"
+            fg_list_talk[:title] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
+            fg_list_talk[:delay] = "1"
+            list_talk << fg_list_talk
+            farmer_group << list_talk
+            farmer_group_lists = FarmerProfile.where(:ps_group => fg)
+            farmer_group_lists.each do |f_list|
+              fl_card = Hash.new
+              fl_card[:NAME] = "TEAFU.MENU.B2C.TF.06.0#{i}.02"
+              fl_card[:title] = f_list.ps_group
+              fl_card[:subtitle] = f_list.name
+              fl_card[:image_url] = f_list.user_pic_url
+              fl_card[:buttons] = []
+              fl_card_b = Hash.new
+              fl_card_b[:type] = "web_url"
+              fl_card_b[:title] = "我想進一步認識"
+              fl_card_b[:url] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
+              fl_card_c = Hash.new
+              fl_card_c[:type] = "web_url"
+              fl_card_c[:title] = "查看生產紀錄"
+              fl_card_c[:url] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
+              fl_card[:buttons] << fl_card_b
+              fl_card[:buttons] << fl_card_c
+              farmer_group << fl_card
+            end
+          end
+          render json: farmer_group
         end
-        render json: farmer_group
       end
 		end
 	end
