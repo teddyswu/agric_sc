@@ -850,8 +850,9 @@ class DataConnectsController < ApplicationController
         aa = JSON.parse("[" + wording[0..-2] + "]")
         render json: aa
       when "user_analyze"
-        case params[:v]
-        when "0.01"
+        customization = YAML.load_file("config/customization.yml")
+        case [params[:v],params[:d]]
+        when ["0.01",customization[:domain_arg]]
           ua = UserAnalyze.new
           ua.f_id = params[:f_id] if params[:f_id].present?
           ua.origin = params[:origin] if params[:origin].present?
@@ -864,8 +865,9 @@ class DataConnectsController < ApplicationController
           render text: "ok"
         end
       when "greeting"
-        case params[:v]
-        when "0.01"
+        customization = YAML.load_file("config/customization.yml")
+        case [params[:v],params[:d]]
+        when ["0.01",customization[:domain_arg]]
           gg = Greeting.find_or_initialize_by(:f_id => params[:f_id])
           gg.name = params[:name]
           gg.origin = params[:origin]
@@ -898,8 +900,9 @@ class DataConnectsController < ApplicationController
           render json: word_a
         end
       when "farmer_group_list"
-        case params[:v]
-        when "0.01"
+        customization = YAML.load_file("config/customization.yml")
+        case [params[:v],params[:d]]
+        when ["0.01",customization[:domain_arg]]
           farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
           farmer_group = Array.new
           fg_text_h = Array.new
