@@ -31,6 +31,10 @@ Rails.application.routes.draw do
 
   resources :message_pushes
 
+  resources :parameter_sets
+
+  resources :personal_interplays
+
   resources :reply_words
 
   resources :user_groups

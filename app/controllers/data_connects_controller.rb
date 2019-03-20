@@ -963,6 +963,57 @@ class DataConnectsController < ApplicationController
           end
           render json: farmer_group
         end
+      when "jump"
+        customization = YAML.load_file("config/customization.yml")
+        case [params[:v],params[:d]]
+        when ["0.01",customization[:domain_arg]]
+          arg = params[:arg]
+          f_id = params[:f_id]
+          aa = Authorization.find_by_uid(f_id)
+          bb = UserSubscription.find_by_scoped_id(f_id)
+          ww = ParameterSet.find_by_arg(arg)
+          if aa.present?
+            w = ww.user
+          elsif bb.present?
+            w = ww.subscribe_guest
+          else
+            w = ww.guest
+          end  
+          render json: w       
+        end
+      when "start_up"
+        customization = YAML.load_file("config/customization.yml")
+        case [params[:v],params[:d]]
+        when ["0.01",customization[:domain_arg]]
+          u = UserAnalyze.find_by(:f_id => params[:f_id])
+          inter_to = Array.new
+          inter_ta = Hash.new
+          if u.present?
+            cate = PersonalInterplay.size
+            if cate == 1
+              inter_ta[:NAME] = "TEAFU.MENU.B2C.04.01"
+              inter_ta[:type] = "text"
+              inter_ta[:text] = "歡迎來到友故事！想要隨時隨地來杯好茶嗎，我們有許多茶的故事及有趣的測驗，還提供個人專屬的茶諮詢服務喔~"
+              inter_ta[:delay] = "1"
+            else
+
+            end
+          else
+            cate = PersonalOnterplay.size
+            if cate == 1
+              inter_ta[:NAME] = "TEAFU.MENU.B2C.04.01"
+              inter_ta[:type] = "text"
+              inter_ta[:text] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
+              inter_ta[:delay] = "1"
+            else
+              inter_ta[:NAME] = "TEAFU.MENU.B2C.04.01"
+              inter_ta[:text] = "很高興再見到你！我們新增了許多茶、可可 和咖啡的故事和活動喔~你想先看哪一個呢?"
+              inter_ta[:quick_replies] = []
+              qr = Hash.new
+            end
+          end
+          inter_to << inter_ta
+        end
       end
 		end
 	end

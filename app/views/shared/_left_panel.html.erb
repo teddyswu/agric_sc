@@ -23,7 +23,16 @@
           <%= link_to " <i class='menu-icon fa fa-comment'></i>訊息推送 ".html_safe, message_pushes_path  %>
         </li>
         <li <%= "class='active'".html_safe if request.url.include?("group") %>>
-          <%= link_to " <i class='menu-icon fa fa-comment'></i>用戶群組 ".html_safe, user_groups_path  %>
+          <%= link_to " <i class='menu-icon fa fa-object-ungroup'></i>用戶群組 ".html_safe, user_groups_path  %>
+        </li>
+        <li <%= "class='active'".html_safe if request.url.include?("set") %>>
+          <%= link_to " <i class='menu-icon fa fa-cogs'></i>參數設定 ".html_safe, parameter_sets_path  %>
+        </li>
+        <li <%= "class='active'".html_safe if request.url.include?("interplay") %>>
+          <%= link_to " <i class='menu-icon fa fa-american-sign-language-interpreting'></i>啟動互動 ".html_safe, personal_interplays_path  %>
+        </li>
+        <li>
+          <%= link_to " <i class='menu-icon fa fa-briefcase'></i>JSON產生器 ".html_safe, new_wording_path, :target => "_blank"  %>
         </li>
         <!-- <li <%#= "class='active'".html_safe if request.url.include?("movie") %>>
           <%#= link_to " <i class='menu-icon fa fa-film'></i>影片 ".html_safe,  movie_agris_path %>
