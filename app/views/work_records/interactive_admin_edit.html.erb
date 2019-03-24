@@ -1,0 +1,155 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">農友簡報</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <%= form_for @farmer_inter, :url => interactive_admin_update_work_record_path(@farmer_inter), :method => :patch do |f| %>
+              <div class="card-header"><strong>編輯</strong></div>
+              <div class="card-body card-block">
+                <div class="form-group">
+                  <%= f.label("報告標題", :class => 'form-control-label') %><%= f.text_field(:title, :class => "form-control", placeholder: "輸入報告標題")%>
+                </div>
+                <div class="form-group">
+                  <%= f.label("報告標籤", :class => 'form-control-label') %>
+                  <% @farmer_inter_tags.each do |tag| %>
+                    <li>
+                      <%= check_box_tag 'tag_ids[]', tag.id, @farmer_inter_tag_ship.include?(tag.id) %><%= tag.name%>
+                    </li>
+                  <%end%>
+                </div>
+                <div class="form-group">
+                  <%= f.label("發布日期", :class => 'form-control-label') %><%= f.date_field(:release_time, :class => "form-control")%>
+                </div>
+                <div class="form-group">
+                  <%= f.label("報告內容", :class => 'form-control-label') %><%= f.text_area(:content, :class => "form-control", placeholder: "輸入報告內容")%>
+                </div>
+                <script>
+						      CKEDITOR.replace( 'farmer_interactive_content' );
+						      CKEDITOR.config.height = 400;
+						    </script>
+                <%= render "upload", :f => f %>
+                <div class="form-group">
+                  <%= f.label("狀態", :class => 'form-control-label') %>
+                  <%= f.select :enabled, options_for_select([["關閉", "0"], ["開啟", "1"]], (@farmer_inter.enabled ? 1 : 0)), class: 'form-control-control' %>
+                </div>
+                <div class="form-group">
+                  <%= f.hidden_field(:owner_id, :value => current_user.id)%>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-sm">
+                  <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                  <i class="fa fa-ban"></i> Reset
+                </button>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  $(function () {
+    var $videoUrl   = $('#video-url');
+    var $videoBtn   = $('.video-btn');
+    var $videoModal = $('.modal-video');
+
+    $videoUrl.on('input', function () {
+      var enabled = !$(this).val();
+      $videoBtn.toggleClass('disabled', enabled);
+      $videoBtn.attr('disabled', enabled);
+    });
+
+    $videoBtn.on('click', function () {
+      insertMedia($videoUrl.val());
+      $videoModal.modal('hide');
+    });
+
+    $videoModal.on('hidden.bs.modal', function () {
+
+      $videoUrl.val('');
+
+    });
+
+    $('#insert_all_original').on('click', function () {
+      insertAllOriginalImage();
+    })
+  });
+  function insertMedia (mediaUrl) {
+
+    var video = buildYouTube(mediaUrl);
+    if (!video) { return false; }
+    var element_video = CKEDITOR.dom.element.createFromHtml(video)
+    CKEDITOR.instances.story_content.insertElement(element_video);
+  }
+
+  function buildYouTube (mediaUrl) {
+
+    var youTubeRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    var youTubeMatch = mediaUrl.match(youTubeRegExp);
+    var matched = (youTubeMatch && youTubeMatch[1].length === 11);
+
+    if (!matched) {
+      var iframe = $(mediaUrl)[0];
+      return iframe || null;
+    }
+
+    var youtubeId = youTubeMatch[1];
+
+    var video = "<div class='embed-responsive embed-responsive-4by3'><iframe src='" + "https://www.youtube.com/embed/" + youtubeId + "' class='embed-responsive-item'></div>"
+
+    return video;
+  }
+
+  function insertAllOriginalImage () {
+    originalImages().each(function () {
+      var aa = $(this).data('img') + "|" + $(this).data('img').replace('big_', '');
+      originalInsertImageToFck(aa);
+    });
+  }
+
+
+  function originalImages () {
+    return $('#pic-upload > .row.my-2 > .col-6.col-md-3 > a');
+  }
+
+  function originalInsertImageToFck (FileSrc) {
+    if (FileSrc.length > 0) {
+      var original_img = BuildOriginalImg(FileSrc);
+      CKEDITOR.instances.farmer_interactive_content.insertHtml(original_img);
+    }
+  }
+
+  function BuildOriginalImg (FileSrc) {
+    var file_src   = FileSrc.split("|");
+    var big_src    = file_src[0];
+    var origin_src = file_src[1];
+
+    return '<a href ="' + origin_src + '" target="_blank" ><img src="' + big_src + '" class="img-fluid" /></a>';
+  }
+</script>

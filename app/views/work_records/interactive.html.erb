@@ -1,0 +1,73 @@
+<body>
+  <nav class="pushy pushy-left bg-white">
+    <%= render "shared/mobile" %>
+  </nav>
+  <div class="site-overlay"></div>
+  <%= render "shared/header" %>
+  <div id="main" class="push py-14 mt-10 mt-lg-12">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="text-center text-success mb-10">
+            <h1 class="font-weight-bold">友善農夫</h1>
+            <div class="h3">列印工作紀錄</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid border-bottom mb-6 pt-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="nav-responsive">
+              <ul class="nav nav-tabs nav-justified border-bottom-0">
+                <li class="nav-item">
+                  <%= link_to "列印工作紀錄", outputs_work_records_path(:name => params[:name]), :class => "nav-link"%>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "參與提案紀錄", join_projects_work_records_path, :class => "nav-link"%>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "互動解讀", interactive_work_records_path, :class => "nav-link active"%>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid border-bottom mb-6 pt-3">
+      <div class="container">
+        <div class="row article">
+          <% @farmer_inters.each do |fi| %>
+            <div class="col-12 post">
+              <div class="my-5">
+                <div class="text-muted font-small">
+                  <i class="far fa-clock"></i> <%= fi.release_time.strftime("%Y/%m/%d")%>
+                </div>
+                <div class="my-2">
+                  <%= link_to fi.title, interactive_show_path(fi.id), :class => "h4 text-primary font-weight-bold"%>
+                </div>
+                <div class="font-small mb-1">
+                  <i class="fas fa-tag"></i>
+                  <% fi.farmer_interactive_tags.each do |tag|%>
+                    <a class="badge badge-secondary" href=""><%= tag.name%></a>
+                  <% end %>
+                </div>
+                <div class="text-muted font-small">
+                  作者：<%= fi.user.user_profile.nickname%>
+                </div>
+                <div class="my-2">
+                  <%= link_to strip_tags(fi.content)[0..120], interactive_show_path(fi.id), :class => "text-dark text-row-3"%>
+                </div>
+                <%= link_to "Read More", interactive_show_path(fi.id), :class => "btn btn-outline-primary"%>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <%= will_paginate @farmer_inters %>
+      </div>
+    </div>
+  </div>
+  <%= render "shared/footer" %>
+</body>

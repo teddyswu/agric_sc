@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190320080337) do
+ActiveRecord::Schema.define(version: 20190324144104) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -65,6 +65,29 @@ ActiveRecord::Schema.define(version: 20190320080337) do
     t.text     "title",         limit: 65535, null: false
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+  end
+
+  create_table "farmer_interactive_tag_ships", force: :cascade do |t|
+    t.integer  "farmer_interactive_id",     limit: 4
+    t.integer  "farmer_interactive_tag_id", limit: 4
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  create_table "farmer_interactive_tags", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "farmer_interactives", force: :cascade do |t|
+    t.string   "title",        limit: 255
+    t.text     "content",      limit: 65535
+    t.integer  "owner_id",     limit: 4
+    t.date     "release_time"
+    t.boolean  "enabled"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "farmer_profiles", force: :cascade do |t|

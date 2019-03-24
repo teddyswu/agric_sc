@@ -65,7 +65,17 @@ Rails.application.routes.draw do
     get "record_img", :on => :member
     get "rate", :on => :member
     get "join_projects", :on => :collection
+    get "interactive_admin_index", :on => :collection
+    post "interactive_admin_create", :on => :collection
+    get "interactive_admin_edit", :on => :member
+    get "interactive_admin_new", :on => :collection
+    patch "interactive_admin_update", :on => :member
+    delete "interactive_admin_delete", :on => :member
+    get "interactive_admin_edit", :on => :member
+    get "interactive_show", :on => :member
+    get "interactive", :on => :collection
   end
+  get "work_records/interactive_show/:id", :to => "work_records#interactive_show", :as => "interactive_show"
   resources :work_projects
   resources :work_diaries do
     get "record_img", :on => :member
@@ -80,5 +90,7 @@ Rails.application.routes.draw do
   resources :work_record_replies
   resources :data_connects do
     match "story", :on => :collection, via: [:get, :post]
+    match ":v/story", :to => "data_connects#story", :constraints => {:v => /[A-Za-z0-9\.]+?/}, :on => :collection, via: [:get, :post]
   end
+
 end

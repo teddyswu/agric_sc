@@ -47,6 +47,9 @@
         <li <%= "class='active'".html_safe if request.url.include?("stories") %>>
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>網頁內容 ".html_safe, stories_path  %>
         </li>
+        <li <%= "class='active'".html_safe if request.url.include?("interactive") %>>
+          <%= link_to " <i class='menu-icon fa fa-font '></i>回饋報告 ".html_safe, interactive_admin_index_work_records_path  %>
+        </li>
         <h3 class="menu-title">友善農友</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("record") %>>
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>工作紀錄 ".html_safe, work_records_path  %>

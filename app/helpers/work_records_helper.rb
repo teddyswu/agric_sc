@@ -57,6 +57,10 @@ module WorkRecordsHelper
     end
   end
 
+  def render_open_or_close(enabled)
+    return enabled == true ? "開啟" : "關閉"
+  end
+
   def campaign_tag(campaign)
     if 100*(campaign.amount_raised.to_f / campaign.goal) > 100
       "<span class='badge badge-danger'>達成</span>".html_safe

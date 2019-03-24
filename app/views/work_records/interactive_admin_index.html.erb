@@ -1,0 +1,63 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">回饋報告</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">Table List</strong> <%= link_to "新增", interactive_admin_new_work_records_path%>
+              </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">標題</th>
+                        <th scope="col">發佈日期</th>
+                        <th scope="col">編輯</th>
+                        <th scope="col">關閉</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @farmer_inters.each do |fi|%>
+                        <tr>
+                          <th scope="row"><%= fi.id %></th>
+                          <td><%= fi.title %></td>
+                          <td><%= fi.release_time %></td>
+                          <td><%= link_to "[edit]", interactive_admin_edit_work_record_path(fi.id)%></td>
+                          <td><%= link_to render_open_or_close(fi.enabled), interactive_admin_delete_work_record_path(fi.id), :method => :delete %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                  <%= will_paginate @farmer_inters %>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
