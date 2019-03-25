@@ -72,7 +72,7 @@ class WorkRecordsController < ApplicationController
   end
 
   def interactive
-    @farmer_inters = FarmerInteractive.where(:enabled => true).where("release_time < '#{Time.now.to_date}'").order(created_at: :desc).paginate(:page => params[:page], per_page: 10)
+    @farmer_inters = FarmerInteractive.where(:enabled => true).where("release_time <= '#{Time.now.to_date}'").order(created_at: :desc).paginate(:page => params[:page], per_page: 10)
     render layout: 'story'
   end
 
@@ -126,7 +126,7 @@ class WorkRecordsController < ApplicationController
   end
 
   def interactive_show
-    inter = FarmerInteractive.where(:enabled => true, :id => params[:id]).where("release_time < '#{Time.now.to_date}'")
+    inter = FarmerInteractive.where(:enabled => true, :id => params[:id]).where("release_time <= '#{Time.now.to_date}'")
     if inter.present?
       @farmer_inter = FarmerInteractive.find(params[:id])
       render layout: 'story'
