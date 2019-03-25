@@ -51,120 +51,18 @@
       <div class="text-center mb-10">
         <div class="h1 font-weight-bold">工作牆</div>
       </div>
-      <% if user_signed_in? %>
-        <div class="row no-gutters">
+      <div class="row no-gutters">
+        <% @work_walls.each do |ww|%>
           <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/515">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1351/thumb_52856394_2217095008376943_1576796134901284864_n.png">
+            <%= link_to farmer_mobile_img_path(ww.work_diary.owner_id,ww.work_diary_id), :class => "card card-wall" do %>
+              <img class="card-img" src="<%= ww.cover_url%>">
               <div class="card-img-overlay">
-                十幾年前剛到坪林時隨手種下的咖啡樹苗，並沒細心的照顧它，不知不覺中它自顧自地長大，季節到了總會結實累累，紅豔豔的咖啡豆引來路過的遊客讚嘆。看來坪林也很適合種咖啡喔。
+                <%= ww.work_diary.comment%>
               </div>
-            </a>
+            <% end %>
           </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/517">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1356/thumb_8D20B11A-B245-4FF8-AA04-7C9671298276.png">
-              <div class="card-img-overlay">
-                這兩種粉紅色的花，你認不認得出來哪一朵是桃花，哪一朵是粉紅色的梅花？
-              </div>
-            </a>          
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-              <a class="card card-wall" href="/farmers/4/mobile_img/518">
-                <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1359/thumb_IMG_0430.png">
-                <div class="card-img-overlay">
-                  multi_upload
-                </div>
-              </a>          
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/524">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1375/thumb_003C408F-DB23-4092-9548-846ABF1FC974.png">
-              <div class="card-img-overlay">
-                2013年3月12日與坪林有機茶產銷班班員參觀翡翠水庫時局長送了一棵烏來杜鵑，帶回坪林種植，每年二三月總會開出優雅的花朵讓人欣賞。
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/526">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1380/thumb_3CAF4740-7D13-442F-9E1B-6AD793E82304.png">
-              <div class="card-img-overlay">  
-                台灣中南部城市空汙嚴重，晴天都是霧茫茫的，根本看不到藍天白雲。生活在坪林就幸福多了，藍藍的天、千變萬化的白雲任你欣賞。
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/524">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1372/thumb_CC175CAA-145F-4B25-9B84-165A410C5505.png">
-              <div class="card-img-overlay">
-                2013年3月12日與坪林有機茶產銷班班員參觀翡翠水庫時局長送了一棵烏來杜鵑，帶回坪林種植，每年二三月總會開出優雅的花朵讓人欣賞。
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/14/mobile_img/512">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1343/thumb_04.png">
-              <div class="card-img-overlay">
-                來坐！泡茶給您喝
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/517">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1357/thumb_5F8AA34D-7D7A-4067-B771-A62A7C27EA75.png">
-              <div class="card-img-overlay">
-                這兩種粉紅色的花，你認不認得出來哪一朵是桃花，哪一朵是粉紅色的梅花？
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/481">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/622/thumb_76CDC6B2-4D32-44F3-988A-45050B36AFB4.png">
-              <div class="card-img-overlay">
-                參加107年有機與友善耕作農業田間栽培管理及肥培講習
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/481">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/950/thumb_10A2729A-33D4-4E57-BA67-90AD3E728829.png">
-              <div class="card-img-overlay">
-                日出
-              </div>
-            </a>
-          </div>
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/22/mobile_img/526">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1379/thumb_237252ED-3983-4013-A668-B50D15407D81.png">
-              <div class="card-img-overlay">
-                台灣中南部城市空汙嚴重，晴天都是霧茫茫的，根本看不到藍天白雲。生活在坪林就幸福多了，藍藍的天、千變萬化的白雲任你欣賞。
-              </div>
-            </a>
-          </div>
-          
-          <div class="col-6 col-md-4 col-lg-2">
-            <a class="card card-wall" href="/farmers/2/mobile_img/507">
-              <img class="card-img" src="https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/fb_to_aw/file/1337/thumb_52445451_383661732417347_7961241063077707776_n.png">
-              <div class="card-img-overlay">
-                小小玉米種子有著大大的能量，埋在培養土中，才幾天就長成綠綠的苗。下星期將它們移植到田裏，到六月初，大夥兒可以來坪林歡喜採收鮮甜飽滿的糯玉米。
-              </div>
-            </a>
-          </div>
-        </div>
-      <% else %>
-        <div class="row no-gutters">
-          <% @work_walls.each do |ww|%>
-            <div class="col-6 col-md-4 col-lg-2">
-              <%= link_to farmer_mobile_img_path(ww.work_diary.owner_id,ww.work_diary_id), :class => "card card-wall" do %>
-                <img class="card-img" src="<%= ww.cover_url%>">
-                <div class="card-img-overlay">
-                  <%= ww.work_diary.comment%>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
       <div class="text-center mt-6">
         <%= link_to "更多", work_walls_path, :class => "btn btn-outline-primary px-10"%>
       </div>
