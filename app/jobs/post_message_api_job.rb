@@ -8,7 +8,7 @@ class PostMessageApiJob < ActiveJob::Base
     user = customization[:user]
     password = customization[:password]
     group = mp.group.group_user_ships.map { |group| group.uid } 
-    post_data = {'recepient_ids'=> group, 'user' => user, 'password' => password, 'name' => mp.module_name }.to_json
+    post_data = {'recipient_ids'=> group, 'user' => user, 'password' => password, 'name' => mp.module_name }.to_json
     https = Net::HTTP.new(uri.host,uri.port)
     https.use_ssl = true
     req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
@@ -20,11 +20,11 @@ class PostMessageApiJob < ActiveJob::Base
       file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
     end
     mp.complete_time = Time.now
-    res_body = JSON res.body[1..-2].gsub('\\', '')
+    res_body = JSON res.body#[1..-2].gsub('\\', '')
     a = 0
     res_body["Results"].each_with_index do |rr, i|
       b = i + 1
-      a+=1 if rr["#{b}"]["message_id"].present?
+      a+=1 if rr["#{b}"][0]["message_id"].present?
     end
     mp.delivery_number = a
     mp.total_number = res_body["Count"].to_i
