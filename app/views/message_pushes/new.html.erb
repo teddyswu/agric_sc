@@ -29,7 +29,7 @@
               <div class="card-body card-block">
                 <%= form_for @message_pushes, :url => message_pushes_path(@message_pushes), :method => :post do |f| %>
                   <div class="form-group">
-                    <%= f.label("模組名稱", :class => 'form-control-label') %><%= f.text_field(:module_name, :class => "form-control", placeholder: "輸入模組名稱")%>
+                    <%= f.label("模組進入點", :class => 'form-control-label') %><%= f.text_field(:module_name, :class => "form-control", placeholder: "輸入模組名稱")%>
                   </div>
                   <div class="form-group">
                     <%= f.label("傳送名單", :class => 'form-control-label') %>
