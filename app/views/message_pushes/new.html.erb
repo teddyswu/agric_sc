@@ -37,7 +37,7 @@
                   </div>
                   <div class="form-group">
                     <%= f.label("目標Bot", :class => 'form-control-label') %>
-                    <%= f.select :purpose, "<option value='1'>B2B</option><option value='2'>B2C</option>".html_safe %>
+                    <%= f.select :purpose, "<option value='1'>正式B2B</option><option value='2'>正式B2C</option><option value='3'>測試B2B</option><option value='3'>測試B2C</option>".html_safe %>
                   </div>
                   <div class="form-group">
                     <%= f.label("傳送時間", :class => 'form-control-label') %><%= f.datetime_local_field(:run_at, :class => "form-control", placeholder: "輸入傳送名單")%>
