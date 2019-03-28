@@ -30,7 +30,20 @@
                 <strong class="card-title">Table List</strong>
               </div>
                 <div class="card-body">
-                  <div style="width: 300px;"><canvas id="pieChart"></canvas></div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="col-lg-6">
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-lg-6">
+                    </div>
+                    <div class="col-lg-6">
+                      共 <span style="padding-left: 1px;padding-right: 1px;color: #0084ff;"><%= @users.size %></span> 名用戶
+                    </div>
+                  </div>
                   <table class="table">
                     <thead class="thead-dark">
                       <tr>
@@ -39,6 +52,7 @@
                         <th scope="col">性別</th>
                         <th scope="col">初次使用時間</th>
                         <th scope="col">最後使用時間</th>
+                        <th scope="col">粉絲專頁</th>
                         <th scope="col">使用平台</th>
                       </tr>
                     </thead>
@@ -50,12 +64,13 @@
                           <td>男</td>
                           <td><%= user.created_at %></td>
                           <td><%= user.updated_at %></td>
+                          <td></td>
                           <td>Facebook</td>
                         </tr>
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @users %>共 <span style="padding-left: 1px;padding-right: 1px;color: #0084ff;"><%= @users.size %></span> 名用戶
+                  <%= will_paginate @users %>
                 </div>
             </div>
           </div>
