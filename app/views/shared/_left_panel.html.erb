@@ -25,6 +25,9 @@
         <li <%= "class='active'".html_safe if request.url.include?("group") %>>
           <%= link_to " <i class='menu-icon fa fa-object-ungroup'></i>用戶群組 ".html_safe, user_groups_path  %>
         </li>
+        <li <%= "class='active'".html_safe if request.url.include?("user_list") %>>
+          <%= link_to " <i class='menu-icon fa fa-users'></i>用戶列表 ".html_safe, user_list_agris_path %>
+        </li>
         <li <%= "class='active'".html_safe if request.url.include?("set") %>>
           <%= link_to " <i class='menu-icon fa fa-cogs'></i>參數設定 ".html_safe, parameter_sets_path  %>
         </li>

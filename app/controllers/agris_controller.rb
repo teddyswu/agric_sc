@@ -15,6 +15,10 @@ class AgrisController < ApplicationController
 
   def index
 	end
+
+  def user_list
+    @users = UserSubscription.all.paginate(:page => params[:page], per_page: 10)
+  end
 	def comic
 		@type = FileList.new
     @type_comic = TypeComic.new
