@@ -1015,6 +1015,55 @@ class DataConnectsController < ApplicationController
           inter_to << inter_ta
         end
       end
-		end
+		else
+      case [params[:v],params[:m]]
+      when ["v0.01","return_data"]
+        case params[:arg]
+        when ""
+          case params[:ref]
+          when ""
+            gg = Greeting.find_or_initialize_by(:uid => params[:uid])
+            gg.name = params[:n]
+            gg.start = (params[:start] == "1" ? true : false)
+            word_a = Array.new
+            word = Hash.new
+            say_hi = true if gg.new_record?
+            gg.save!
+            if (Time.now - gg.updated_at)/3600 > 12 or say_hi == true
+              name = params[:n]
+              case Time.now.strftime('%H').to_i
+              when 0..4
+                sta = "晚安！"
+              when 5..10
+                sta = "早安！"
+              when 11..13
+                sta = "午安！"
+              when 14..17
+                sta = "下午好~"
+              when 18..23
+                sta = "晚安！"
+              end
+              word["type"] = "text"
+              word["title"] = "Hi #{name} #{sta}"
+              word["delay"] = "1"
+              gg.updated_at = Time.now
+            end
+            word_a << word
+            gg.save!
+            render json: word_a
+          end
+        end
+      when ["v0.01","collect_data"]
+        ua = UserAnalyze.new
+        ua.f_id = params[:uid] if params[:uid].present?
+        ua.origin = params[:pl] if params[:pl].present?
+        ua.keyword = params[:ref] if params[:ref].present?
+        ua.gender = params[:g] if params[:g].present?
+        ua.name = params[:n] if params[:n].present?
+        ua.save!
+        
+        render text: "ok"
+      end
+    end
 	end
 end

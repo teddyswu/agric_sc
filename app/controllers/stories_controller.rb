@@ -18,16 +18,16 @@ class StoriesController < ApplicationController
 		if params[:tag].present? or params[:cat].present?
 			if params[:tag].present?
 				story_ids = StoryTagShip.where(:story_tag_id => params[:tag]).map {|story| story.story_id }
-				@first_story = Story.where(:id => story_ids).order(id: :desc).first
-				@storys = Story.includes(:story_image, :story_tags).where(:id => story_ids).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
+				@first_story = Story.where(:id => story_ids, :enabled => true).order(id: :desc).first
+				@storys = Story.includes(:story_image, :story_tags).where(:id => story_ids, :enabled => true).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
 			end
 			if params[:cat].present?
 				cat = params[:cat]
-				@first_story = Story.where(:story_cat_id => cat).order(id: :desc).first
-				@storys = Story.includes(:story_image, :story_tags).where(:story_cat_id => cat).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
+				@first_story = Story.where(:story_cat_id => cat, :enabled => true).order(id: :desc).first
+				@storys = Story.includes(:story_image, :story_tags).where(:story_cat_id => cat, :enabled => true).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
 			end
 		else
-			@first_story = Story.all.order(id: :desc).first
+			@first_story = Story.where(:enabled => true).order(id: :desc).first
 			@storys = Story.includes(:story_image, :story_tags).where.not(:id => @first_story.id).order(id: :desc).paginate(:page => params[:page], per_page: 9)
 		end
 		set_page_description("提供有機農業、茶、茶葉知識，和在地農村故事、地方景點懶人包。")
@@ -47,9 +47,10 @@ class StoriesController < ApplicationController
 
 	def destroy
 	  @story = Story.find(params[:id])
-	  @story.destroy
+	  @story.enabled = (@story.enabled == true ? false : true)
+    @story.save!
 
-	  redirect_to :action => :new
+	  redirect_to :action => :index
 	end
 
 	def edit

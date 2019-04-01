@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190324144104) do
+ActiveRecord::Schema.define(version: 20190401100635) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -161,12 +161,12 @@ ActiveRecord::Schema.define(version: 20190324144104) do
   end
 
   create_table "greetings", force: :cascade do |t|
-    t.string   "f_id",         limit: 255
-    t.string   "name",         limit: 255
-    t.text     "origin",       limit: 65535
-    t.boolean  "is_start_use"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.string   "uid",        limit: 255
+    t.string   "name",       limit: 255
+    t.text     "ref",        limit: 65535
+    t.boolean  "start"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "group_user_ships", force: :cascade do |t|
@@ -236,6 +236,7 @@ ActiveRecord::Schema.define(version: 20190324144104) do
     t.integer  "story_cat_id",    limit: 4
     t.string   "easter_egg_name", limit: 255
     t.text     "easter_egg_url",  limit: 65535
+    t.boolean  "enabled"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end
@@ -380,6 +381,7 @@ ActiveRecord::Schema.define(version: 20190324144104) do
   create_table "wordings", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.text     "content",    limit: 65535
+    t.boolean  "enabled"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end

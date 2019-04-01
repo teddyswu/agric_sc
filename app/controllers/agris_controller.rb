@@ -94,7 +94,8 @@ class AgrisController < ApplicationController
 
   def wording_delete
     @wording = Wording.find(params[:id])
-    @wording.destroy
+    @wording.enabled = (@wording.enabled == true ? false : true)
+    @wording.save!
 
     redirect_to :action => :wording_list
   end
