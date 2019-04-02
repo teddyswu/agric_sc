@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   resources :user_groups
 
   resources :wordings
+  resources :wording_cats
 
   resources :work_walls
   get "work_walls/page/:page", :to => "work_walls#page", :as => "work_wall_page"

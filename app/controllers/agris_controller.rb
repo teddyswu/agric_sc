@@ -77,12 +77,13 @@ class AgrisController < ApplicationController
 
   def wording_new
     @wording = Wording.new
+    @cat = WordingCat.all
   end
 
   
   def wording_create
-    
     @wording = Wording.new(word_params)
+    @wording.enabled = true
     @wording.save!
 
     redirect_to :action => :wording_list
@@ -90,6 +91,7 @@ class AgrisController < ApplicationController
 
   def wording_edit
     @wording = Wording.find(params[:id])
+    @cat = WordingCat.all
   end
 
   def wording_delete
@@ -108,7 +110,7 @@ class AgrisController < ApplicationController
   end
 
   def word_params
-    params.require(:wording).permit(:name, :content)
+    params.require(:wording).permit(:name, :content, :wording_cat_id)
   end
 
   def gif

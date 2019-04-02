@@ -1022,35 +1022,107 @@ class DataConnectsController < ApplicationController
         when ""
           case params[:ref]
           when ""
-            gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-            gg.name = params[:n]
-            gg.start = (params[:start] == "1" ? true : false)
-            word_a = Array.new
-            word = Hash.new
-            say_hi = true if gg.new_record?
-            gg.save!
-            if (Time.now - gg.updated_at)/3600 > 12 or say_hi == true
-              name = params[:n]
-              case Time.now.strftime('%H').to_i
-              when 0..4
-                sta = "晚安！"
-              when 5..10
-                sta = "早安！"
-              when 11..13
-                sta = "午安！"
-              when 14..17
-                sta = "下午好~"
-              when 18..23
-                sta = "晚安！"
+            case params[:start]
+            when "" #個人化問候語
+              gg = Greeting.find_or_initialize_by(:uid => params[:uid])
+              gg.name = params[:n]
+              gg.start = (params[:start] == "1" ? true : false)
+              word_a = Array.new
+              word = Hash.new
+              say_hi = true if gg.new_record?
+              gg.save!
+              if (Time.now - gg.updated_at)/3600 > 12 or say_hi == true
+                name = params[:n]
+                case Time.now.strftime('%H').to_i
+                when 0..4
+                  sta = "晚安！"
+                when 5..10
+                  sta = "早安！"
+                when 11..13
+                  sta = "午安！"
+                when 14..17
+                  sta = "下午好~"
+                when 18..23
+                  sta = "晚安！"
+                end
+                word["type"] = "text"
+                word["title"] = "Hi #{name} #{sta}"
+                word["delay"] = "1"
+                gg.updated_at = Time.now
               end
-              word["type"] = "text"
-              word["title"] = "Hi #{name} #{sta}"
-              word["delay"] = "1"
-              gg.updated_at = Time.now
+              word_a << word
+              gg.save!
+              render json: word_a
+            when "1" #B2C 個人化啟動互動
+              u = UserAnalyze.find_by(:f_id => params[:uid])
+              inter_t = Array.new
+              inter_to = Array.new
+              inter_ta = Hash.new
+              inter_tb = Hash.new
+              if u.present?
+                cate = PersonalInterplay.all.size
+                if cate == 1
+                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+                  inter_ta[:type] = "text"
+                  inter_ta[:text] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
+                  inter_ta[:delay] = "1"
+                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+                  inter_tb[:type] = "text"
+                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+                  inter_tb[:delay] = "1"
+                  next_inter = JSON.parse(PersonalInterplay.first.start_model)
+                else
+                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+                  inter_ta[:text] = "很高興再見到你！我們新增了許多茶、可可 和咖啡的故事和活動喔~你想先看哪一個呢?"
+                  inter_ta[:quick_replies] = []
+                  PersonalInterplay.all.each do |pi|
+                    qr = Hash.new
+                    qr[:content_type] = "text"
+                    qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
+                    qr[:title] = pi.title
+                    inter_ta[:quick_replies] << qr
+                  end
+                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+                  inter_tb[:type] = "text"
+                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+                  inter_tb[:delay] = "1"
+                end
+              else
+                cate = PersonalInterplay.all.size
+                if cate == 1
+                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+                  inter_ta[:type] = "text"
+                  inter_ta[:text] = "歡迎來到友故事！想要隨時隨地來杯好茶嗎，我們有許多茶的故事及有趣的測驗，還提供個人專屬的茶諮詢服務喔~"
+                  inter_ta[:delay] = "1"
+                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+                  inter_tb[:type] = "text"
+                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+                  inter_tb[:delay] = "1"
+                  next_inter = JSON.parse(PersonalInterplay.first.start_model)
+                else
+                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+                  inter_ta[:type] = "text"
+                  inter_ta[:text] = "歡迎來到友故事！我們擁有茶、可可、咖啡相關的知識及服務喔~你想先了解哪一個呢?"
+                  inter_ta[:delay] = "1"
+                  PersonalInterplay.all.each do |pi|
+                    qr = Hash.new
+                    qr[:content_type] = "text"
+                    qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
+                    qr[:title] = pi.title
+                    inter_ta[:quick_replies] << qr
+                  end
+                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+                  inter_tb[:type] = "text"
+                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+                  inter_tb[:delay] = "1"
+                end
+              end
+              inter_to << inter_ta
+              inter_to << inter_tb
+              inter_t << inter_to
+              inter_t << next_inter
+              render json: inter_t
             end
-            word_a << word
-            gg.save!
-            render json: word_a
           end
         end
       when ["v0.01","collect_data"]
@@ -1061,8 +1133,14 @@ class DataConnectsController < ApplicationController
         ua.gender = params[:g] if params[:g].present?
         ua.name = params[:n] if params[:n].present?
         ua.save!
-        
         render text: "ok"
+      when ["v0.01","stactic_all"]
+        js = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
+        wording = Array.new
+        js.each do |j|
+          wording << JSON.parse(j.content)
+        end
+        render json: wording
       end
     end
 	end

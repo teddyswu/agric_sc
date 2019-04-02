@@ -53,6 +53,10 @@
                   <%= f.text_area(:content, :class => "form-control", placeholder: "輸入內容", rows: 20)%>
                 </div>
               </div>
+              <div class="form-group">
+                <%= f.label("類別", :class => 'form-control-label') %>
+                <%= f.select :wording_cat_id, options_for_select(@cat.collect{ |c| [c.name, c.id]}, :selected => @wording.wording_cat_id), :class => "form-control"%>
+              </div>
               <div class="card-footer">
                 <button type="button" class="btn btn-warning btn-sm" id="validate_json">
                   <i class="fa fa-dot-circle-o"></i> 驗證

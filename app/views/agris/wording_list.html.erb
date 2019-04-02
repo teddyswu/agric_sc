@@ -38,6 +38,14 @@
             </div>
             <div class="card">
               <div class="card-header">
+                <strong>類別管理</strong>
+              </div>
+              <div class="card-body">
+                <%= link_to "[管理]", wording_cats_path, :class => "btn btn-outline-primary", :role => "button"%>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
                 <strong class="card-title">Table List</strong> <%= link_to "新增", wording_new_path%>
               </div>
                 <div class="card-body">
@@ -46,6 +54,7 @@
                       <tr>
                         <th scope="col">名稱</th>
                         <th scope="col">編輯</th>
+                        <th scope="col">類別</th>
                         <th scope="col">狀態</th>
                       </tr>
                     </thead>
@@ -54,6 +63,7 @@
                         <tr>
                           <th scope="row"><%= wording_list.name %></th>
                           <td><%= link_to wording_list.name, wording_edit_path(wording_list.id) %></td>
+                          <th><%= wording_list.wording_cat.name if wording_list.wording_cat.present? %>
                           <td><%= link_to render_enabled(wording_list.enabled), wording_delete_path(wording_list.id), :method => :delete %></td>
                         </tr>
                       <% end %>
