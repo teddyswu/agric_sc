@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190402040408) do
+ActiveRecord::Schema.define(version: 20190403073952) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -204,10 +204,11 @@ ActiveRecord::Schema.define(version: 20190402040408) do
   end
 
   create_table "parameter_sets", force: :cascade do |t|
-    t.string   "arg",             limit: 255
+    t.string   "ref",             limit: 255
     t.text     "guest",           limit: 65535
     t.text     "subscribe_guest", limit: 65535
     t.text     "user",            limit: 65535
+    t.boolean  "enabled"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end

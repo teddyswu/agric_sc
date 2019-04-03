@@ -28,7 +28,8 @@ class ParameterSetsController < ApplicationController
 
   def destroy
   	mp = ParameterSet.find(params[:id])
-  	mp.destroy
+  	mp.enabled = (mp.enabled == true ? false : true)
+    mp.save!
   	redirect_to :action => :index
   end
 
