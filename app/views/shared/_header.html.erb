@@ -42,8 +42,7 @@
         </div>   
       <% else %><!-- 未登入 -->
         <div class="dropdown">
-          <%= link_to "https://www.ugooz.cc:3001/", :class => "btn btn-sm btn-fb px-2" do %>
-          <%#= link_to new_user_session_path, :class => "btn btn-sm btn-fb px-2" do %>
+          <%= link_to new_user_session_path, :class => "btn btn-sm btn-fb px-2" do %>
             <i class="fab fa-facebook-f"></i> <span class="d-none d-lg-inline-block">登入</span>  
           <% end %>
         </div>
