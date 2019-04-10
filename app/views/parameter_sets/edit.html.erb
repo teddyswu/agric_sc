@@ -30,7 +30,7 @@
                 <%= form_for @parameters, :url => parameter_set_path(@parameters), :method => :PATCH do |f| %>
                   <div class="form-group">
                     <%= f.label("參數名稱", :class => 'form-control-label') %><%= f.text_field(:ref, :class => "form-control", placeholder: "輸入參數名稱")%>
-                    <small class="form-text text-muted">參數規則：</small>
+                    <small class="form-text text-muted">參數規則：多參數請用-分開。</small>
                   </div>
                   <div class="form-group">
                     <%= f.label(:guest, "訪客JSON", :class => 'form-control-label') %>

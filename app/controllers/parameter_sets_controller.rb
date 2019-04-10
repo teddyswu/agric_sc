@@ -16,7 +16,8 @@ class ParameterSetsController < ApplicationController
 
   def create
   	@parameters = ParameterSet.new(parameter_set_params)
-  	@parameters.save!
+    @parameters.enabled = true
+    @parameters.save!
   	redirect_to :action => :index
   end
 
@@ -34,6 +35,6 @@ class ParameterSetsController < ApplicationController
   end
 
   def parameter_set_params
-		params.require(:parameter_set).permit(:arg, :guest, :subscribe_guest, :user)
+		params.require(:parameter_set).permit(:ref, :guest, :subscribe_guest, :user)
   end
 end

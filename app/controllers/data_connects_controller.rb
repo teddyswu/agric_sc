@@ -1243,6 +1243,23 @@ class DataConnectsController < ApplicationController
           total << text_a
           total << proposal_1 if proposal_1.present?
           render json: total
+        when /-/
+          ids = ParameterSet.all.map { |f| f.id }
+          params[:arg].split("-").each do |a|
+            ww = ParameterSet.where("id in (?) and ref like ?", ids, "%#{a}%")
+            ids = ww.map { |w| w.id }
+          end
+          aa = Authorization.find_by_uid(uid)
+          bb = UserSubscription.find_by_scoped_id(uid)
+          set = ParameterSet.find_by_id_and_enabled(ids, true)
+          if aa.present?
+            w = set.user
+          elsif bb.present?
+            w = set.subscribe_guest
+          else
+            w = set.guest
+          end
+          render json: w
         end
       when ["v0.01","collect_data"]
         ua = UserAnalyze.new
