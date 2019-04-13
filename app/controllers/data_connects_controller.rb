@@ -1031,7 +1031,7 @@ class DataConnectsController < ApplicationController
               word = Hash.new
               say_hi = true if gg.new_record?
               gg.save!
-              if (Time.now - gg.updated_at)/3600 > 12 or say_hi == true
+              # if (Time.now - gg.updated_at) > 30 or say_hi == true
                 name = params[:n]
                 case Time.now.strftime('%H').to_i
                 when 0..4
@@ -1049,7 +1049,7 @@ class DataConnectsController < ApplicationController
                 word["title"] = "Hi #{name} #{sta}"
                 word["delay"] = "1"
                 gg.updated_at = Time.now
-              end
+              # end
               word_a << word
               gg.save!
               render json: word_a
