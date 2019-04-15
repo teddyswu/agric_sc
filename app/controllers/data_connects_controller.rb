@@ -1046,7 +1046,7 @@ class DataConnectsController < ApplicationController
                   sta = "晚安！"
                 end
                 word["type"] = "text"
-                word["title"] = "Hi #{name} #{sta}"
+                word["text"] = "Hi #{name} #{sta}"
                 word["delay"] = "1"
                 gg.updated_at = Time.now
               # end
