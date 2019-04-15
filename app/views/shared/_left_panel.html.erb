@@ -29,7 +29,10 @@
           <%= link_to " <i class='menu-icon fa fa-users'></i>用戶列表 ".html_safe, user_list_agris_path %>
         </li>
         <li <%= "class='active'".html_safe if request.url.include?("set") %>>
-          <%= link_to " <i class='menu-icon fa fa-cogs'></i>參數設定 ".html_safe, parameter_sets_path  %>
+          <%= link_to " <i class='menu-icon fa fa-cogs'></i>個人化參數設定 ".html_safe, parameter_sets_path  %>
+        </li>
+        <li <%= "class='active'".html_safe if request.url.include?("set") %>>
+          <%= link_to " <i class='menu-icon fa fa-user-circle-o'></i>會員參數設定 ".html_safe, ""  %>
         </li>
         <li <%= "class='active'".html_safe if request.url.include?("interplay") %>>
           <%= link_to " <i class='menu-icon fa fa-american-sign-language-interpreting'></i>啟動互動 ".html_safe, personal_interplays_path  %>

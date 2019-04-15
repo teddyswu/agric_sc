@@ -25,23 +25,27 @@
       <div class="animated fadeIn">
         <div class="row">
           <div class="col-lg-12">
-            <div class="card">
+            <!-- <div class="card">
               <div class="card-header">
                 <strong>快搜類別</strong>
               </div>
-              <div class="card-body">
-                <%= link_to "TEAFU.STORY.MESSAGE", wording_list_path(:type => "TEAFU.STORY.MESSAGE"), :class => "btn btn-outline-primary", :role => "button"%>
-                <%= link_to "TEAFU.STORY.LEVEL", wording_list_path(:type => "TEAFU.STORY.LEVEL"), :class => "btn btn-outline-secondary", :role => "button"%>
-                <%= link_to "TEAFU.MENU.B2B", wording_list_path(:type => "TEAFU.MENU.B2B"), :class => "btn btn-outline-success", :role => "button"%>
-                <%= link_to "TEAFU.MENU.B2C", wording_list_path(:type => "TEAFU.MENU.B2C"), :class => "btn btn-outline-danger", :role => "button"%>
-              </div>
-            </div>
+              <div class="card-body"> -->
+                <%#= link_to "TEAFU.STORY.MESSAGE", wording_list_path(:type => "TEAFU.STORY.MESSAGE"), :class => "btn btn-outline-primary", :role => "button"%>
+                <%#= link_to "TEAFU.STORY.LEVEL", wording_list_path(:type => "TEAFU.STORY.LEVEL"), :class => "btn btn-outline-secondary", :role => "button"%>
+                <%#= link_to "TEAFU.MENU.B2B", wording_list_path(:type => "TEAFU.MENU.B2B"), :class => "btn btn-outline-success", :role => "button"%>
+                <%#= link_to "TEAFU.MENU.B2C", wording_list_path(:type => "TEAFU.MENU.B2C"), :class => "btn btn-outline-danger", :role => "button"%>
+              <!-- </div>
+            </div> -->
             <div class="card">
               <div class="card-header">
                 <strong>類別管理</strong>
               </div>
               <div class="card-body">
                 <%= link_to "[管理]", wording_cats_path, :class => "btn btn-outline-primary", :role => "button"%>
+                <%= link_to "顯示全部", wording_list_path, :class => "btn btn-outline-success", :role => "button"%>
+                <% @wording_cats.each do |cat| %>
+                  <%= link_to cat.name , wording_list_path(:s => cat.id), :class => "btn btn-outline-danger", :role => "button"%>
+                <% end %>
               </div>
             </div>
             <div class="card">
