@@ -1027,6 +1027,7 @@ class DataConnectsController < ApplicationController
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
               gg.name = params[:n]
               gg.start = (params[:start] == "1" ? true : false)
+              word_t = Array.new
               word_a = Array.new
               word = Hash.new
               say_hi = true if gg.new_record?
@@ -1052,7 +1053,8 @@ class DataConnectsController < ApplicationController
               # end
               word_a << word
               gg.save!
-              render json: word_a
+              word_t << word_a
+              render json: word_t
             when "1" #B2C 個人化啟動互動
               u = UserAnalyze.find_by(:f_id => params[:uid])
               inter_t = Array.new
