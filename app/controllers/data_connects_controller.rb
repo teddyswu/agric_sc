@@ -1019,11 +1019,11 @@ class DataConnectsController < ApplicationController
       case [params[:v],params[:m]]
       when ["v0.01","return_data"]
         case params[:arg]
-        when ""
+        when "", "\"\""
           case params[:ref]
-          when ""
+          when "", "\"\""
             case params[:start]
-            when "" #個人化問候語
+            when "", "\"\"" #個人化問候語
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
               gg.name = params[:n]
               gg.start = (params[:start] == "1" ? true : false)
@@ -1270,6 +1270,8 @@ class DataConnectsController < ApplicationController
         ua.keyword = params[:ref] if params[:ref].present?
         ua.gender = params[:g] if params[:g].present?
         ua.name = params[:n] if params[:n].present?
+        ua.watermarks = params[:watermarks] if params[:watermarks].present?
+        ua.status = params[:status] if params[:status].present?
         ua.save!
         render text: "ok"
       when ["v0.01","stactic_all"]
