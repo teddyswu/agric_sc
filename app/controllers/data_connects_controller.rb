@@ -1025,7 +1025,9 @@ class DataConnectsController < ApplicationController
             case params[:start]
             when "", "\"\"" #個人化問候語
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-              gg.name = params[:n]
+              n = UserAnalyze.where(:f_id => params[:uid])
+              name = (n.present? ? n.last.name : "匿名訪客")
+              gg.name = name
               gg.start = (params[:start] == "1" ? true : false)
               word_t = Array.new
               word_a = Array.new
@@ -1033,7 +1035,6 @@ class DataConnectsController < ApplicationController
               say_hi = true if gg.new_record?
               gg.save!
               # if (Time.now - gg.updated_at) > 30 or say_hi == true
-                name = params[:n]
                 case Time.now.strftime('%H').to_i
                 when 0..4
                   sta = "晚安！"
