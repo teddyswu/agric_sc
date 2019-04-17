@@ -36,7 +36,6 @@
                       <th scope="col">#</th>
                       <th scope="col">快速回復名稱</th>
                       <th scope="col">編輯</th>
-                      <th scope="col">刪除</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -45,7 +44,6 @@
                         <th><%= per.id %></th>
                         <th><%= per.qr_name %></th>
                         <th><%= link_to "編輯", edit_personal_interplay_path(per.id) %></th>
-                        <th><%= link_to "刪除", personal_interplay_path(per.id),data: {:confirm => '是否確定要刪除?'}, :method => :delete %></th>
                       </tr>
                     <% end %>
                   </tbody>
