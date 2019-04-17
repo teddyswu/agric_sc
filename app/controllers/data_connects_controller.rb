@@ -1167,17 +1167,19 @@ class DataConnectsController < ApplicationController
             if auth.user.orders.size > 0 
               text_3_a = Array.new
               result["join"] = true
-              text_3["name"] = "TEAFU.MENU.B2C.05.01"
+              text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
               text_3["type"] = "text"
               text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
               text_3["delay"] = 1
               text_3_a << text_3
-              auth.user.orders.order(:paid).limit(10).each do |order|
+              auth.user.orders.order(:paid).limit(10).each_with_index do |order, i|
+                i+=1
                 if order.goody.campaign.end_date > Date.today
                   remain_day = (order.goody.campaign.end_date - Date.today).to_i
                   amount_raised = order.goody.campaign.amount_raised
                   percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
                   text_2_c = Hash.new
+                  text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
                   text_2_c["title"] = order.goody.campaign.title
                   text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
                   text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
@@ -1204,7 +1206,7 @@ class DataConnectsController < ApplicationController
               end
             else
               result["join"] = false
-              text_1["name"] = "TEAFU.MENU.B2C.05.02"
+              text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
               text_1["type"] = "text"
               text_1["text"] = "咦！目前您尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知您第一手消息！"
               text_1["delay"] = 1
@@ -1213,13 +1215,15 @@ class DataConnectsController < ApplicationController
               proposal_1 = Array.new
               text_t = Array.new
               text_2 = Hash.new
-              campaigns = Campaign.where(:status => 3).limit(10)       
-              campaigns.each do |campaign|
+              campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+              campaigns.each_with_index do |campaign, i|
+                i+=1
                 remain_day = (campaign.end_date - Date.today).to_i
                 amount_raised = campaign.amount_raised
                 percentage = 100*(amount_raised.to_f / campaign.goal)
                 description = campaign.description.first(40)
                 text_c = Hash.new
+                text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
                 text_c["title"] = campaign.title
                 text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
                 text_c["image_url"] = campaign.campaign_image.campaign_path
@@ -1241,12 +1245,12 @@ class DataConnectsController < ApplicationController
           else
             result["register"] = false
             result["join"] = false
-            text_1["name"] = "TEAFU.MENU.B2C.03.01"
+            text_1["name"] = "ugooz.b2c.menulist.mb1.01.01"
             text_1["type"] = "text"
             text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
             text_1["delay"] = 1
             text_2 = Hash.new
-            text_2["name"] = "TEAFU.MENU.B2C.03.02"
+            text_2["name"] = "ugooz.b2c.menulist.mb1.01.02"
             text_2["type"] = "text"
             text_2["text"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
             text_2["delay"] = 1
@@ -1300,7 +1304,7 @@ class DataConnectsController < ApplicationController
         farmer_group = Array.new
         fg_text_h = Array.new
         fg_text = Hash.new
-        fg_text["NAME"] = "TEAFU.MENU.B2C.10.01"
+        fg_text["NAME"] = "ugooz.b2c.menulist.ab1.01.01"
         fg_text["type"] = "text"
         fg_text["text"] = "請先幫我選擇產銷班！"
         fg_text["delay"] = "1"
@@ -1308,9 +1312,9 @@ class DataConnectsController < ApplicationController
         farmer_group << fg_text_h
         fg_card_t = Array.new
         farmer_groups.each_with_index do |fg, i|
-          i+=2
+          i+=1
           fg_card = Hash.new
-          fg_card["NAME"] = "TEAFU.MENU.B2C.10.0#{i}"
+          fg_card["NAME"] = "ugooz.b2c.menulist.ab1.01.02.0#{i}"
           fg_card["title"] = fg
           fg_card["subtitle"] = "用好茶邀請您，一同為台灣的好山好水盡一份力，讓更多的人願意加入守護土地與水源的行動。"
           fg_card["image_url"] = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/project/campaign_image/file/5/campaign_path_0039.png"
@@ -1318,17 +1322,17 @@ class DataConnectsController < ApplicationController
           fg_card_b = Hash.new
           fg_card_b["type"] = "postback"
           fg_card_b["title"] = "查看成員"
-          fg_card_b["payload"] = "TF.10.0#{i}"
+          fg_card_b["payload"] = "B2.0#{i}"
           fg_card["buttons"] << fg_card_b
           fg_card_t << fg_card
         end
         farmer_group << fg_card_t
         fgl_t = Array.new
         farmer_groups.each_with_index do |fg, i|
-          i+=2
+          i+=1
           list_talk = Array.new
           fg_list_talk = Hash.new
-          fg_list_talk["Name"] = "TEAFU.MENU.B2C.TF.10.0#{i}.01"
+          fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.B2.0#{i}.01"
           fg_list_talk["type"] = "text"
           fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
           fg_list_talk["delay"] = "1"
@@ -1339,7 +1343,7 @@ class DataConnectsController < ApplicationController
           farmer_group_lists.each_with_index do |f_list, x|
             x+=1
             fl_card = Hash.new
-            fl_card["NAME"] = "TEAFU.MENU.B2C.TF.10.0#{i}.02.0#{x}"
+            fl_card["NAME"] = "ugooz.b2c.menulist.ab1.B2.0#{i}.02.0#{x}"
             fl_card["title"] = f_list.ps_group
             fl_card["subtitle"] = f_list.name
             fl_card["image_url"] = f_list.user_pic_url
