@@ -1063,68 +1063,81 @@ class DataConnectsController < ApplicationController
               inter_ta = Hash.new
               inter_tb = Hash.new
               if u.present?
-                cate = PersonalInterplay.all.size
-                if cate == 1
-                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-                  inter_ta[:type] = "text"
-                  inter_ta[:text] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
-                  inter_ta[:delay] = "1"
-                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-                  inter_tb[:type] = "text"
-                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-                  inter_tb[:delay] = "1"
-                  next_inter = JSON.parse(PersonalInterplay.first.start_model)
-                else
-                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-                  inter_ta[:text] = "很高興再見到你！我們新增了許多茶、可可 和咖啡的故事和活動喔~你想先看哪一個呢?"
-                  inter_ta[:quick_replies] = []
-                  PersonalInterplay.all.each do |pi|
-                    qr = Hash.new
-                    qr[:content_type] = "text"
-                    qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
-                    qr[:title] = pi.title
-                    inter_ta[:quick_replies] << qr
-                  end
-                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-                  inter_tb[:type] = "text"
-                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-                  inter_tb[:delay] = "1"
-                end
+                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                inter_ta["type"] = "text"
+                inter_ta["text"] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
+                inter_ta["delay"] = "1"
+                next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
               else
-                cate = PersonalInterplay.all.size
-                if cate == 1
-                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-                  inter_ta[:type] = "text"
-                  inter_ta[:text] = "歡迎來到友故事！想要隨時隨地來杯好茶嗎，我們有許多茶的故事及有趣的測驗，還提供個人專屬的茶諮詢服務喔~"
-                  inter_ta[:delay] = "1"
-                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-                  inter_tb[:type] = "text"
-                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-                  inter_tb[:delay] = "1"
-                  next_inter = JSON.parse(PersonalInterplay.first.start_model)
-                else
-                  inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-                  inter_ta[:type] = "text"
-                  inter_ta[:text] = "歡迎來到友故事！我們擁有茶、可可、咖啡相關的知識及服務喔~你想先了解哪一個呢?"
-                  inter_ta[:delay] = "1"
-                  PersonalInterplay.all.each do |pi|
-                    qr = Hash.new
-                    qr[:content_type] = "text"
-                    qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
-                    qr[:title] = pi.title
-                    inter_ta[:quick_replies] << qr
-                  end
-                  inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-                  inter_tb[:type] = "text"
-                  inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-                  inter_tb[:delay] = "1"
-                end
+                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                inter_ta["type"] = "text"
+                inter_ta["text"] = "歡迎來到友故事！想要隨時隨地來杯好茶嗎，我們有許多茶的故事及有趣的測驗，還提供個人專屬的茶諮詢服務喔~"
+                inter_ta["delay"] = "1"
+                next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
               end
+
+
+              #   cate = PersonalInterplay.all.size
+              #   if cate == 1
+              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+              #     inter_ta[:type] = "text"
+              #     inter_ta[:text] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
+              #     inter_ta[:delay] = "1"
+              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+              #     inter_tb[:type] = "text"
+              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+              #     inter_tb[:delay] = "1"
+              #     next_inter = JSON.parse(PersonalInterplay.first.start_model)
+              #   else
+              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+              #     inter_ta[:text] = "很高興再見到你！我們新增了許多茶、可可 和咖啡的故事和活動喔~你想先看哪一個呢?"
+              #     inter_ta[:quick_replies] = []
+              #     PersonalInterplay.all.each do |pi|
+              #       qr = Hash.new
+              #       qr[:content_type] = "text"
+              #       qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
+              #       qr[:title] = pi.title
+              #       inter_ta[:quick_replies] << qr
+              #     end
+              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+              #     inter_tb[:type] = "text"
+              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+              #     inter_tb[:delay] = "1"
+              #   end
+              # else
+              #   cate = PersonalInterplay.all.size
+              #   if cate == 1
+              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+              #     inter_ta[:type] = "text"
+              #     inter_ta[:text] = "歡迎來到友故事！想要隨時隨地來杯好茶嗎，我們有許多茶的故事及有趣的測驗，還提供個人專屬的茶諮詢服務喔~"
+              #     inter_ta[:delay] = "1"
+              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+              #     inter_tb[:type] = "text"
+              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+              #     inter_tb[:delay] = "1"
+              #     next_inter = JSON.parse(PersonalInterplay.first.start_model)
+              #   else
+              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
+              #     inter_ta[:type] = "text"
+              #     inter_ta[:text] = "歡迎來到友故事！我們擁有茶、可可、咖啡相關的知識及服務喔~你想先了解哪一個呢?"
+              #     inter_ta[:delay] = "1"
+              #     PersonalInterplay.all.each do |pi|
+              #       qr = Hash.new
+              #       qr[:content_type] = "text"
+              #       qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
+              #       qr[:title] = pi.title
+              #       inter_ta[:quick_replies] << qr
+              #     end
+              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
+              #     inter_tb[:type] = "text"
+              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
+              #     inter_tb[:delay] = "1"
+              #   end
+              # end
               inter_to << inter_ta
-              inter_to << inter_tb
               inter_t << inter_to
-              inter_t << next_inter
-              render json: inter_t
+              # inter_t << next_inter
+              render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
             end
           else
             ref = params[:ref]
