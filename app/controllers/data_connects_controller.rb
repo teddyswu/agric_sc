@@ -1266,12 +1266,11 @@ class DataConnectsController < ApplicationController
       when ["v0.01","collect_data"]
         ua = UserAnalyze.new
         ua.f_id = params[:uid] if params[:uid].present?
-        ua.origin = params[:pl] if params[:pl].present?
-        ua.keyword = params[:ref] if params[:ref].present?
-        ua.gender = params[:g] if params[:g].present?
-        ua.name = params[:n] if params[:n].present?
-        ua.watermarks = params[:watermarks] if params[:watermarks].present?
-        ua.status = params[:status] if params[:status].present?
+        ua.origin = params[:pl] if params[:pl].present? and params[:pl] != "\"\""
+        ua.keyword = params[:ref] if params[:ref].present? and params[:ref] != "\"\""
+        ua.name = params[:n] if params[:n].present? and params[:n] != "\"\""
+        ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
+        ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
         render text: "ok"
       when ["v0.01","stactic_all"]
