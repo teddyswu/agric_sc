@@ -7,10 +7,12 @@ class ParameterSetsController < ApplicationController
   end
 
   def new
+    @wordings = Wording.where(:enabled => true)
   	@parameters = ParameterSet.new
   end
 
   def edit
+    @wordings = Wording.where(:enabled => true)
   	@parameters = ParameterSet.find(params[:id])
   end
 
@@ -35,6 +37,6 @@ class ParameterSetsController < ApplicationController
   end
 
   def parameter_set_params
-		params.require(:parameter_set).permit(:ref, :guest, :subscribe_guest, :user)
+		params.require(:parameter_set).permit(:cat, :wording_id, :ref, :guest, :subscribe_guest, :user)
   end
 end

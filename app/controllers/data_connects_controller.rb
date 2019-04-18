@@ -1145,13 +1145,18 @@ class DataConnectsController < ApplicationController
             aa = Authorization.find_by_uid(uid)
             bb = UserSubscription.find_by_scoped_id(uid)
             ww = ParameterSet.find_by_ref_and_enabled(ref, true)
-            if aa.present?
-              w = ww.user
-            elsif bb.present?
-              w = ww.subscribe_guest
-            else
-              w = ww.guest
-            end  
+            if ww.cat == 1 or ww.cat == nil
+              if aa.present?
+                w = ww.user
+              elsif bb.present?
+                w = ww.subscribe_guest
+              else
+                w = ww.guest
+              end
+            elsif ww.cat == 2
+              word = Wording.find(ww.wording_id.to_i)
+              w = word.content
+            end
             render json: w
           end
         when "my_proposal"
