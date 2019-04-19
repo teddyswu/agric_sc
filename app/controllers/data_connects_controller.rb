@@ -1343,7 +1343,7 @@ class DataConnectsController < ApplicationController
           fg_list_talk["delay"] = "1"
           list_talk << fg_list_talk
           farmer_group << list_talk
-          farmer_group_lists = FarmerProfile.where(:ps_group => fg)
+          farmer_group_lists = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").where(:ps_group => fg)
           fgl = Array.new
           farmer_group_lists.each_with_index do |f_list, x|
             x+=1
