@@ -1295,7 +1295,7 @@ class DataConnectsController < ApplicationController
         ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
-        render text: "ok"
+        render json: JSON.parse("{\"result\": \"OK\"}")
       when ["v0.01","stactic_all"]
         js = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
         wording = ""
