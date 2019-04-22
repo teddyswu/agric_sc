@@ -1327,7 +1327,7 @@ class DataConnectsController < ApplicationController
           fg_card_b = Hash.new
           fg_card_b["type"] = "postback"
           fg_card_b["title"] = "查看成員"
-          fg_card_b["payload"] = "B2.0#{i}"
+          fg_card_b["payload"] = "B_2.0#{i}"
           fg_card["buttons"] << fg_card_b
           fg_card_t << fg_card
         end
@@ -1337,7 +1337,7 @@ class DataConnectsController < ApplicationController
           i+=1
           list_talk = Array.new
           fg_list_talk = Hash.new
-          fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.B2.0#{i}.01"
+          fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.B_2.0#{i}.01"
           fg_list_talk["type"] = "text"
           fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
           fg_list_talk["delay"] = "1"
@@ -1348,7 +1348,7 @@ class DataConnectsController < ApplicationController
           farmer_group_lists.each_with_index do |f_list, x|
             x+=1
             fl_card = Hash.new
-            fl_card["NAME"] = "ugooz.b2c.menulist.ab1.B2.0#{i}.02.0#{x}"
+            fl_card["NAME"] = "ugooz.b2c.menulist.ab1.B_2.0#{i}.02.0#{x}"
             fl_card["title"] = f_list.ps_group
             fl_card["subtitle"] = f_list.name
             fl_card["image_url"] = f_list.user_pic_url
