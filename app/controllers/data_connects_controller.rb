@@ -1262,6 +1262,7 @@ class DataConnectsController < ApplicationController
           is_binding = Authorization.find_by(:uid => params[:uid])
           if is_binding.present?
             user = is_binding.user_id
+            track = Track.find_or_create_by(:user_id => user, :campaign_id => campaign.id)
             fb_track = FbTrack.find_or_create_by(:scoped_id => params[:uid], :campaign_id => campaign.id)
             total = Array.new
             text = Array.new
