@@ -40,8 +40,10 @@ class User
             up.nickname = "u#{Time.now.to_i}" if up.nickname.blank?
             # up.fb_uid = uid
             up.gender = (extra["raw_info"]["gender"] == "male"? 1 : 0 )
-            # c = extra["raw_info"]["birthday"].split('/')
-            # up.birthday = "#{c[2]}-#{c[0]}-#{c[1]}"
+            if extra["raw_info"]["birthday"].present?
+              c = extra["raw_info"]["birthday"].split('/')
+              up.birthday = "#{c[2]}-#{c[0]}-#{c[1]}"
+            end
             up.save
             return user
           else

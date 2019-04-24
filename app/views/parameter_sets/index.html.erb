@@ -34,6 +34,7 @@
                   <thead class="thead-dark">
                     <tr>
                       <th scope="col">#</th>
+                      <th scope="col">自訂名稱</th>
                       <th scope="col">參數名稱</th>
                       <th scope="col">編輯</th>
                       <th scope="col">狀態</th>
@@ -43,6 +44,7 @@
                     <% @parameters.each do |par| %>
                       <tr>
                         <th><%= par.id %></th>
+                        <th><%= par.name %></th>
                         <th><%= par.ref %></th>
                         <th><%= link_to "編輯", edit_parameter_set_path(par.id) %></th>
                         <th><%= link_to render_enabled(par.enabled), parameter_set_path(par.id), :method => :delete %></th>

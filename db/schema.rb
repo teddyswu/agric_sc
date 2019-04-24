@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190418080941) do
+ActiveRecord::Schema.define(version: 20190424093307) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -124,10 +124,11 @@ ActiveRecord::Schema.define(version: 20190418080941) do
   end
 
   create_table "fb_bindings", force: :cascade do |t|
-    t.text     "binding_ip", limit: 65535
-    t.text     "scoped_id",  limit: 65535
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.text     "binding_ip",  limit: 65535
+    t.text     "scoped_id",   limit: 65535
+    t.string   "module_name", limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "fb_to_aws", force: :cascade do |t|
@@ -203,7 +204,17 @@ ActiveRecord::Schema.define(version: 20190418080941) do
     t.integer  "group_id",        limit: 4
   end
 
+  create_table "parameter_jsons", force: :cascade do |t|
+    t.string   "name",               limit: 255
+    t.text     "json",               limit: 65535
+    t.integer  "parameter_set_id",   limit: 4
+    t.string   "parameter_set_type", limit: 255
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
   create_table "parameter_sets", force: :cascade do |t|
+    t.string   "name",            limit: 255
     t.string   "ref",             limit: 255
     t.text     "guest",           limit: 65535
     t.text     "subscribe_guest", limit: 65535
@@ -354,6 +365,7 @@ ActiveRecord::Schema.define(version: 20190418080941) do
     t.string   "full_name",  limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.integer  "cat",        limit: 4
   end
 
   create_table "users", force: :cascade do |t|

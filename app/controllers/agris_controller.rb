@@ -113,12 +113,40 @@ class AgrisController < ApplicationController
   def wording_update
     @wording = Wording.find(params[:id])
     @wording.update(word_params)
+    cpp = ParameterSet.find_by_wording_id(@wording.id)
+    if cpp.present?
+      cpd = ParameterJson.where(:parameter_set_id => cpp.id)
+      cpd.destroy_all
+      analysis_json(@wording.content, cpp.id, "guest")
+      analysis_json(@wording.content, cpp.id, "subscribe_guest")
+      analysis_json(@wording.content, cpp.id, "user")
+    end
 
     redirect_to :action => :wording_list
   end
 
   def word_params
     params.require(:wording).permit(:name, :content, :wording_cat_id)
+  end
+
+  def analysis_json(content, id, type)
+    ana = JSON.parse(content)
+    aa = Array.new
+    name = ""
+    ana.each do |jj|
+      name = jj[0]["NAME"] if name == ""
+      aa << jj
+      if jj[0]["quick_replies"].present? or jj[0]["buttons"].present?
+        pj = ParameterJson.new
+        pj.name = name
+        pj.json = aa
+        pj.parameter_set_id = id
+        pj.parameter_set_type = type
+        pj.save!
+        name = ""
+        aa = []
+      end
+    end
   end
 
   def gif

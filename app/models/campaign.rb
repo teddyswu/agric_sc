@@ -7,6 +7,7 @@ class Campaign < CrowdDbConnecter
   has_many :supporters, through: :goodies#, :class_name => "Supporter"
   has_many :orders, through: :goodies#, :class_name => "Order"
   has_one :campaign_image
+  has_many :tracks
   belongs_to :user
 
 

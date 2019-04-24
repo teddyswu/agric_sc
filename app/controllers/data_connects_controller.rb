@@ -749,10 +749,6 @@ class DataConnectsController < ApplicationController
             text_t = Array.new
             text_2 = Hash.new
             campaigns = Campaign.where(:status => 3).limit(10)       
-            # text_2["NAME"] = "TEAFU.MENU.B2C.02.01"
-            # text_2["type"] = "text"
-            # text_2["text"] = "Hi [[FULLNAME]]！來看這些提案故事，一定會有您喜歡的。"
-            # text_2["delay"] = 1
             campaigns.each do |campaign|
               remain_day = (campaign.end_date - Date.today).to_i
               amount_raised = campaign.amount_raised
@@ -1067,7 +1063,7 @@ class DataConnectsController < ApplicationController
                 inter_ta["type"] = "text"
                 inter_ta["text"] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
                 inter_ta["delay"] = "1"
-                next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
+                next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
               else
                 inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                 inter_ta["type"] = "text"
@@ -1075,68 +1071,8 @@ class DataConnectsController < ApplicationController
                 inter_ta["delay"] = "1"
                 next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
               end
-
-
-              #   cate = PersonalInterplay.all.size
-              #   if cate == 1
-              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-              #     inter_ta[:type] = "text"
-              #     inter_ta[:text] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
-              #     inter_ta[:delay] = "1"
-              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-              #     inter_tb[:type] = "text"
-              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-              #     inter_tb[:delay] = "1"
-              #     next_inter = JSON.parse(PersonalInterplay.first.start_model)
-              #   else
-              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-              #     inter_ta[:text] = "很高興再見到你！我們新增了許多茶、可可 和咖啡的故事和活動喔~你想先看哪一個呢?"
-              #     inter_ta[:quick_replies] = []
-              #     PersonalInterplay.all.each do |pi|
-              #       qr = Hash.new
-              #       qr[:content_type] = "text"
-              #       qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
-              #       qr[:title] = pi.title
-              #       inter_ta[:quick_replies] << qr
-              #     end
-              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-              #     inter_tb[:type] = "text"
-              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-              #     inter_tb[:delay] = "1"
-              #   end
-              # else
-              #   cate = PersonalInterplay.all.size
-              #   if cate == 1
-              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-              #     inter_ta[:type] = "text"
-              #     inter_ta[:text] = "歡迎來到友故事！想要隨時隨地來杯好茶嗎，我們有許多茶的故事及有趣的測驗，還提供個人專屬的茶諮詢服務喔~"
-              #     inter_ta[:delay] = "1"
-              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-              #     inter_tb[:type] = "text"
-              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-              #     inter_tb[:delay] = "1"
-              #     next_inter = JSON.parse(PersonalInterplay.first.start_model)
-              #   else
-              #     inter_ta[:NAME] = "TEAFU.MENU.B2C.09.01"
-              #     inter_ta[:type] = "text"
-              #     inter_ta[:text] = "歡迎來到友故事！我們擁有茶、可可、咖啡相關的知識及服務喔~你想先了解哪一個呢?"
-              #     inter_ta[:delay] = "1"
-              #     PersonalInterplay.all.each do |pi|
-              #       qr = Hash.new
-              #       qr[:content_type] = "text"
-              #       qr[:payload] = "TEAFU.MENU.B2C.TF.09.0#{i}"
-              #       qr[:title] = pi.title
-              #       inter_ta[:quick_replies] << qr
-              #     end
-              #     inter_tb[:NAME] = "TEAFU.MENU.B2C.09.02"
-              #     inter_tb[:type] = "text"
-              #     inter_tb[:text] = "你想要先玩玩測驗、看看故事，還是來支目前最火紅的影片呢?"
-              #     inter_tb[:delay] = "1"
-              #   end
-              # end
               inter_to << inter_ta
               inter_t << inter_to
-              # inter_t << next_inter
               render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
             end
           else
@@ -1145,19 +1081,14 @@ class DataConnectsController < ApplicationController
             aa = Authorization.find_by_uid(uid)
             bb = UserSubscription.find_by_scoped_id(uid)
             ww = ParameterSet.find_by_ref_and_enabled(ref, true)
-            if ww.cat == 1 or ww.cat == nil
-              if aa.present?
-                w = ww.user
-              elsif bb.present?
-                w = ww.subscribe_guest
-              else
-                w = ww.guest
-              end
-            elsif ww.cat == 2
-              word = Wording.find(ww.wording_id.to_i)
-              w = word.content
+            if aa.present?
+              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "user")
+            elsif bb.present?
+              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "subscribe_guest")
+            else
+              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
             end
-            render json: w
+            render json: JSON.parse(ps.json.gsub("=>", ":"))
           end
         when "my_proposal"
           total = Array.new
@@ -1295,6 +1226,76 @@ class DataConnectsController < ApplicationController
         ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
+        case params[:pl]
+        when /SY_/,/TT_/,/QZ_/,/CI/,/TC_/,/AR_/
+          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","user")
+          total = JSON.parse(word.first.json.gsub("=>", ":"))
+          customization = YAML.load_file("config/customization.yml")
+          uri = URI.parse(customization[:user_message_post])
+          user = customization[:user]
+          password = customization[:password]
+          post_data = {'recipient_id'=> scoped_id, 'user' => user, 'password' => password, 'elements' => total }.to_json
+          https = Net::HTTP.new(uri.host,uri.port)
+          https.use_ssl = true
+          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+          req.body = post_data
+          res = https.request(req)
+          File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+            file.syswrite(%(#{Time.now.iso8601}: #{scoped_id} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+          end
+        when /SUBS_story/
+          us = UserSubscription.new
+          us.scoped_id = params[:uid]
+          us.full_name = params[:n]
+          us.cat = 1 #內容訂閱
+        when /SUBS_test/
+          us = UserSubscription.new
+          us.scoped_id = params[:uid]
+          us.full_name = params[:n]
+          us.cat = 2 #測驗訂閱
+        when /FLW_proj_/
+          slug = params[:pl].gsub("FLW_proj_","")
+          campaign = Campaign.find_by_slug(slug)
+          is_binding = Authorization.find_by(:uid => params[:uid])
+          if is_binding.present?
+            user = is_binding.user_id
+            fb_track = FbTrack.find_or_create_by(:scoped_id => params[:uid], :campaign_id => campaign.id)
+            total = Array.new
+            text = Array.new
+            text_1 = Hash.new
+            # text_1["name"] = "TEAFU.MENU.B2C.06.01"
+            text_1["type"] = "text"
+            text_1["text"] = "您已完成追蹤，若有這項提案最新消息茶福會通知您唷。"
+            text_1["delay"] = 1
+            text << text_1
+            text_2 = Hash.new
+            # text_2["name"] = "TEAFU.MENU.B2C.06.02"
+            text_2["type"] = "text"
+            text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
+            text_2["delay"] = 1
+            text << text_2
+            total << text
+          end
+          customization = YAML.load_file("config/customization.yml")
+          uri = URI.parse(customization[:user_message_post])
+          user = customization[:user]
+          password = customization[:password]
+          post_data = {'recepient_id'=> params[:scoped_id], 'user' => user, 'password' => password, 'elements' => total }.to_json
+          https = Net::HTTP.new(uri.host,uri.port)
+          https.use_ssl = true
+          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+          req.body = post_data
+          res = https.request(req)
+          File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+            file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+          end
+          render partial: "shared/fb"
+        end
         render json: JSON.parse("{\"result\": \"OK\"}")
       when ["v0.01","stactic_all"]
         js = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)

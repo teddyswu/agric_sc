@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   has_many :authorizations
   has_many :campaigns
   has_many :campaign_groups
+  has_many :tracks
 
 
   extend OmniauthCallbacks
