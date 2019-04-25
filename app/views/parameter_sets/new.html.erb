@@ -30,7 +30,6 @@
                 <%= form_for @parameters, :url => parameter_sets_path(@parameters), :method => :post do |f| %>
                   <div class="form-group">
                     <%= f.label("自訂名稱", :class => 'form-control-label') %><%= f.text_field(:name, :class => "form-control", placeholder: "輸入參數名稱")%>
-                    <small class="form-text text-muted">參數規則：對話模組_使用者來源，二者參數中間用 _ 隔開。(參數可用字母、數字，符號僅限 "-" )</small>
                   </div>
                   <div class="form-group">
                     <%= f.label("參數名稱", :class => 'form-control-label') %><%= f.text_field(:ref, :class => "form-control", placeholder: "輸入參數名稱")%>

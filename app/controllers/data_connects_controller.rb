@@ -1021,7 +1021,7 @@ class DataConnectsController < ApplicationController
             case params[:start]
             when "", "\"\"" #個人化問候語
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-              n = UserAnalyze.where(:f_id => params[:uid])
+              n = UserAnalyze.where(:f_id => params[:uid]).where.not(:name => nil)
               name = (n.present? ? n.last.name : "匿名訪客")
               gg.name = name
               gg.start = (params[:start] == "1" ? true : false)
@@ -1063,7 +1063,7 @@ class DataConnectsController < ApplicationController
                 inter_ta["type"] = "text"
                 inter_ta["text"] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
                 inter_ta["delay"] = "1"
-                next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
+                next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
               else
                 inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                 inter_ta["type"] = "text"
@@ -1165,9 +1165,9 @@ class DataConnectsController < ApplicationController
                 text_c["image_url"] = campaign.campaign_image.campaign_path
                 buttons = Array.new #[]
                 t1 = Hash.new
-                t1["type"] = "web_url"
+                t1["type"] = "postback"
                 t1["title"] = "追蹤♥"
-                t1["url"] = "#{@root_domain}/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
+                t1["payload"] = "FLW_proj_#{campaign.slug}"
                 buttons << t1
                 t2 = Hash.new
                 t2["type"] = "web_url"
@@ -1227,7 +1227,7 @@ class DataConnectsController < ApplicationController
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
         case params[:pl]
-        when /SY_/,/TT_/,/QZ_/,/CI/,/TC_/,/AR_/
+        when /SY_/,/TT_/,/QZ_/,/TC_/,/AR_/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","user")
           total = JSON.parse(word.first.json.gsub("=>", ":"))
           customization = YAML.load_file("config/customization.yml")
