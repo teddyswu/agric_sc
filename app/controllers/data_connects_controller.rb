@@ -1257,7 +1257,7 @@ class DataConnectsController < ApplicationController
           us.full_name = params[:n]
           us.cat = 2 #測驗訂閱
         when /FLW_proj_/
-          slug = params[:pl].gsub("FLW_proj_","")
+          slug = params[:ref].gsub("FLW_proj_","")
           campaign = Campaign.find_by_slug(slug)
           is_binding = Authorization.find_by(:uid => params[:uid])
           if is_binding.present?
