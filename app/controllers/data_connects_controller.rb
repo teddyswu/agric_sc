@@ -1226,7 +1226,7 @@ class DataConnectsController < ApplicationController
         ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
-        case params[:pl]
+        case params[:ref]
         when /SY_/,/TT_/,/QZ_/,/TC_/,/AR_/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","user")
           total = JSON.parse(word.first.json.gsub("=>", ":"))
