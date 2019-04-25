@@ -1284,7 +1284,7 @@ class DataConnectsController < ApplicationController
           uri = URI.parse(customization[:user_message_post])
           user = customization[:user]
           password = customization[:password]
-          post_data = {'recepient_id'=> params[:scoped_id], 'user' => user, 'password' => password, 'elements' => total }.to_json
+          post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
           https = Net::HTTP.new(uri.host,uri.port)
           https.use_ssl = true
           req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
@@ -1292,10 +1292,11 @@ class DataConnectsController < ApplicationController
           res = https.request(req)
           File.open("#{Rails.root}/log/mm.log", "a+") do |file|
             file.syswrite(%(#{Time.now.iso8601}: #{params[:scoped_id]} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
           end
-          render partial: "shared/fb"
         end
         render json: JSON.parse("{\"result\": \"OK\"}")
       when ["v0.01","stactic_all"]
@@ -1329,7 +1330,7 @@ class DataConnectsController < ApplicationController
           fg_card_b = Hash.new
           fg_card_b["type"] = "postback"
           fg_card_b["title"] = "查看成員"
-          fg_card_b["payload"] = "B_2.0#{i}"
+          fg_card_b["payload"] = "BB.0#{i}"
           fg_card["buttons"] << fg_card_b
           fg_card_t << fg_card
         end
@@ -1339,7 +1340,7 @@ class DataConnectsController < ApplicationController
           i+=1
           list_talk = Array.new
           fg_list_talk = Hash.new
-          fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.B_2.0#{i}.01"
+          fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.01"
           fg_list_talk["type"] = "text"
           fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
           fg_list_talk["delay"] = "1"
@@ -1350,7 +1351,7 @@ class DataConnectsController < ApplicationController
           farmer_group_lists.each_with_index do |f_list, x|
             x+=1
             fl_card = Hash.new
-            fl_card["NAME"] = "ugooz.b2c.menulist.ab1.B_2.0#{i}.02.0#{x}"
+            fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
             fl_card["title"] = f_list.ps_group
             fl_card["subtitle"] = f_list.name
             fl_card["image_url"] = f_list.user_pic_url

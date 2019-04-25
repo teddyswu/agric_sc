@@ -1,5 +1,5 @@
 class Track < CrowdDbConnecter
-	self.table_name = "teacks"
+	self.table_name = "tracks"
   self.primary_key = "id"
 
   belongs_to :user
