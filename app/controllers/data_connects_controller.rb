@@ -850,10 +850,10 @@ class DataConnectsController < ApplicationController
         case [params[:v],params[:d]]
         when ["0.01",customization[:domain_arg]]
           ua = UserAnalyze.new
-          ua.f_id = params[:f_id] if params[:f_id].present?
-          ua.origin = params[:origin] if params[:origin].present?
-          ua.send_to_module = params[:send_to_module] if params[:send_to_module].present?
-          ua.keyword = params[:keyword] if params[:keyword].present?
+          ua.uid = params[:f_id] if params[:f_id].present?
+          ua.pl = params[:origin] if params[:origin].present?
+          # ua.send_to_module = params[:send_to_module] if params[:send_to_module].present?
+          ua.ref = params[:keyword] if params[:keyword].present?
           ua.gender = params[:gender] if params[:gender].present?
           ua.age = params[:age] if params[:age].present?
           ua.name = params[:name] if params[:name].present?
@@ -981,7 +981,7 @@ class DataConnectsController < ApplicationController
         customization = YAML.load_file("config/customization.yml")
         case [params[:v],params[:d]]
         when ["0.01",customization[:domain_arg]]
-          u = UserAnalyze.find_by(:f_id => params[:f_id])
+          u = UserAnalyze.find_by(:uid => params[:f_id])
           inter_to = Array.new
           inter_ta = Hash.new
           if u.present?
@@ -1021,7 +1021,7 @@ class DataConnectsController < ApplicationController
             case params[:start]
             when "", "\"\"" #個人化問候語
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-              n = UserAnalyze.where(:f_id => params[:uid]).where.not(:name => nil)
+              n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
               name = (n.present? ? n.last.name : "匿名訪客")
               gg.name = name
               gg.start = (params[:start] == "1" ? true : false)
@@ -1053,11 +1053,16 @@ class DataConnectsController < ApplicationController
               word_t << word_a
               render json: word_t
             when "1" #B2C 個人化啟動互動
-              u = UserAnalyze.find_by(:f_id => params[:uid])
+              u = UserAnalyze.find_by(:uid => params[:uid])
               inter_t = Array.new
               inter_to = Array.new
               inter_ta = Hash.new
               inter_tb = Hash.new
+              a = UserAnalyze.where(:uid => params[:uid]).size
+              File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+                file.syswrite(%(#{Time.now.iso8601}: #{a} \n---------------------------------------------\n\n))
+                file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
+              end
               if u.present?
                 inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                 inter_ta["type"] = "text"
@@ -1219,14 +1224,14 @@ class DataConnectsController < ApplicationController
         end
       when ["v0.01","collect_data"]
         ua = UserAnalyze.new
-        ua.f_id = params[:uid] if params[:uid].present?
-        ua.origin = params[:pl] if params[:pl].present? and params[:pl] != "\"\""
-        ua.keyword = params[:ref] if params[:ref].present? and params[:ref] != "\"\""
+        ua.uid = params[:uid] if params[:uid].present?
+        ua.pl = params[:pl] if params[:pl].present? and params[:pl] != "\"\""
+        ua.ref = params[:ref] if params[:ref].present? and params[:ref] != "\"\""
         ua.name = params[:n] if params[:n].present? and params[:n] != "\"\""
         ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
-        case params[:ref]
+        case params[:pl]
         when /SY_/,/TT_/,/QZ_/,/TC_/,/AR_/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","user")
           total = JSON.parse(word.first.json.gsub("=>", ":"))

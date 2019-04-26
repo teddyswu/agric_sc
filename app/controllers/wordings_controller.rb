@@ -48,7 +48,7 @@ class WordingsController < ApplicationController
 					@pic_t << pic
 				end
 			when /quick/
-				@quick_t = [] if i == 0 or par_name[i-1].include?("quick") == false
+				@quick_t = [] #if i == 0 or par_name[i-1].include?("quick") == false
 				v.each do |ke, va|
 					quick = {}
 					quick["NAME"] = va["name"]
@@ -64,7 +64,7 @@ class WordingsController < ApplicationController
 					@quick_t << quick
 				end
 			when /button/
-				@button_t = [] if i == 0 or par_name[i-1].include?("button") == false
+				@button_t = [] #if i == 0 or par_name[i-1].include?("button") == false
 				v.each do |ke, va|
 					button = {}
 					button["NAME"] = va["Name"]
@@ -92,10 +92,10 @@ class WordingsController < ApplicationController
 				@total << @pic_t if @pic_t != nil and par_name[i+1].to_s.include?("pic") == false
 			end
 			if par_name[i].include?("quick")
-				@total << @quick_t if @quick_t != nil and par_name[i+1].to_s.include?("quick") == false
+				@total << @quick_t #if @quick_t != nil and par_name[i+1].to_s.include?("quick") == false
 			end
 			if par_name[i].include?("button")
-				@total << @button_t if @button_t != nil and par_name[i+1].to_s.include?("button") == false
+				@total << @button_t #if @button_t != nil and par_name[i+1].to_s.include?("button") == false
 			end
 		end 
 	end
