@@ -1058,7 +1058,7 @@ class DataConnectsController < ApplicationController
               inter_to = Array.new
               inter_ta = Hash.new
               inter_tb = Hash.new
-              if u != 1
+              if u > 10
                 inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                 inter_ta["type"] = "text"
                 inter_ta["text"] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"

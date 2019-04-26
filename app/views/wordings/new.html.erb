@@ -89,14 +89,22 @@
 		function add_more_button(group){
 			var button_sn = $("input[name="+ group + "_bt_sn]").val();
 			if (parseInt(button_sn) < 4){
-				$("#" + group ).append("<div>按鈕連結:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]url\" value=\"https://www.messenger.com\" />按鈕標題:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]title\" value=\"網頁超連結按鈕 01\" /></div>");
+				$("#" + group ).append("<div>按鈕連結:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]url\" value=\"https://www.messenger.com\" />按鈕類型:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]type\" value=\"web_url\" />按鈕標題:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]title\" value=\"網頁超連結按鈕 01\" /></div>");
+				$("input[name="+ group + "_bt_sn]").val(parseInt(button_sn)+1);
+			}
+		}
+		function add_more_bp(group){
+			var button_sn = $("input[name="+ group + "_bt_sn]").val();
+			if (parseInt(button_sn) < 4){
+				$("#" + group ).append("<div>payload連結:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]payload\" value=\"https://www.messenger.com\" />按鈕類型:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]type\" value=\"postback\" />按鈕標題:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]title\" value=\"網頁超連結按鈕 01\" /></div>");
 				$("input[name="+ group + "_bt_sn]").val(parseInt(button_sn)+1);
 			}
 		}
 		function add_button(){
 			var sn = $("#button_num").val();
-			$("#wording").append("<div id=\"button_group" + sn + "\" class=\"divborder\">按鈕訊息<button type=\"button\" onclick=\"add_more_button('button_group" + sn + "')\">插入按鈕</button><br/>名稱<input type=\"text\" name=\"[button_group" + sn + "][btn1]Name\" value=\"NAME\">標題:<input type=\"text\" name=\"[button_group" + sn + "][btn1]text\" value=\"這是 template 範例\" /><div>按鈕連結:<input type=\"text\" name=\"[button_group" + sn + "][btn1][button1]url\" value=\"https://www.messenger.com\" />按鈕標題:<input type=\"text\" name=\"[button_group" + sn + "][btn1][button1]title\" value=\"網頁超連結按鈕 01\" /></div><div id=\"button_group" + sn + "_sn\"><input type=\"hidden\" name=\"button_group" + sn + "_bt_sn\" value=\"2\" disabled=\"\"></div></div>")
+			$("#wording").append("<div id=\"button_group" + sn + "\" class=\"divborder\">按鈕訊息<button type=\"button\" onclick=\"add_more_button('button_group" + sn + "')\">插入按鈕</button><button type=\"button\" onclick=\"add_more_bp('button_group" + sn + "')\">插入payload</button><br/>名稱<input type=\"text\" name=\"[button_group" + sn + "][btn1]Name\" value=\"NAME\">標題:<input type=\"text\" name=\"[button_group" + sn + "][btn1]text\" value=\"這是 template 範例\" /><div>按鈕連結:<input type=\"text\" name=\"[button_group" + sn + "][btn1][button1]url\" value=\"https://www.messenger.com\" />按鈕類型:<input type=\"text\" name=\"[button_group" + sn + "][btn1][button1]type\" value=\"web_url\" />按鈕標題:<input type=\"text\" name=\"[button_group" + sn + "][btn1][button1]title\" value=\"網頁超連結按鈕 01\" /></div><div id=\"button_group" + sn + "_sn\"><input type=\"hidden\" name=\"button_group" + sn + "_bt_sn\" value=\"2\" disabled=\"\"></div></div>")
 			$("#button_num").val(parseInt(sn)+1);
+
 		}
 		function remove_div(name){
 			$("#"+name).remove();

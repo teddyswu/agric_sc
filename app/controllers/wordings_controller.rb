@@ -73,8 +73,9 @@ class WordingsController < ApplicationController
 					button["buttons"] = []
 					va.except("Name", "text").each_with_index do |(key, value), i|
 						qq = {}
-						qq["type"] = "web_url"
-						qq["url"] = va["button#{i+1}"]["url"]
+						qq["type"] = va["button#{i+1}"]["type"]
+						qq["url"] = va["button#{i+1}"]["url"] if va["button#{i+1}"]["url"].present?
+						qq["payload"] = va["button#{i+1}"]["payload"] if va["button#{i+1}"]["payload"].present?
 						qq["title"] = va["button#{i+1}"]["title"]
 						button["buttons"] << qq
 					end
