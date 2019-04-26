@@ -1053,17 +1053,12 @@ class DataConnectsController < ApplicationController
               word_t << word_a
               render json: word_t
             when "1" #B2C 個人化啟動互動
-              u = UserAnalyze.find_by(:uid => params[:uid])
+              u = UserAnalyze.where(:uid => params[:uid]).size
               inter_t = Array.new
               inter_to = Array.new
               inter_ta = Hash.new
               inter_tb = Hash.new
-              a = UserAnalyze.where(:uid => params[:uid]).size
-              File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-                file.syswrite(%(#{Time.now.iso8601}: #{a} \n---------------------------------------------\n\n))
-                file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
-              end
-              if u.present?
+              if u == 1
                 inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                 inter_ta["type"] = "text"
                 inter_ta["text"] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
@@ -1262,7 +1257,7 @@ class DataConnectsController < ApplicationController
           us.full_name = params[:n]
           us.cat = 2 #測驗訂閱
         when /FLW_proj_/
-          slug = params[:ref].gsub("FLW_proj_","")
+          slug = params[:pl].gsub("FLW_proj_","")
           campaign = Campaign.find_by_slug(slug)
           is_binding = Authorization.find_by(:uid => params[:uid])
           if is_binding.present?
