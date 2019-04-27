@@ -1234,7 +1234,7 @@ class DataConnectsController < ApplicationController
           uri = URI.parse(customization[:user_message_post])
           user = customization[:user]
           password = customization[:password]
-          post_data = {'recipient_id'=> scoped_id, 'user' => user, 'password' => password, 'elements' => total }.to_json
+          post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
           https = Net::HTTP.new(uri.host,uri.port)
           https.use_ssl = true
           req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
@@ -1258,7 +1258,7 @@ class DataConnectsController < ApplicationController
           uri = URI.parse(customization[:user_message_post])
           user = customization[:user]
           password = customization[:password]
-          post_data = {'recipient_id'=> scoped_id, 'user' => user, 'password' => password, 'elements' => total }.to_json
+          post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
           https = Net::HTTP.new(uri.host,uri.port)
           https.use_ssl = true
           req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
@@ -1282,7 +1282,7 @@ class DataConnectsController < ApplicationController
           uri = URI.parse(customization[:user_message_post])
           user = customization[:user]
           password = customization[:password]
-          post_data = {'recipient_id'=> scoped_id, 'user' => user, 'password' => password, 'elements' => total }.to_json
+          post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
           https = Net::HTTP.new(uri.host,uri.port)
           https.use_ssl = true
           req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
