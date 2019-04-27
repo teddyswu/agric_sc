@@ -1228,7 +1228,7 @@ class DataConnectsController < ApplicationController
         ua.save!
         case params[:pl]
         when /SY_/,/TT_/,/QZ_/,/TC_/,/AR_/
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","user")
+          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
           total = JSON.parse(word.first.json.gsub("=>", ":"))
           customization = YAML.load_file("config/customization.yml")
           uri = URI.parse(customization[:user_message_post])
@@ -1252,7 +1252,7 @@ class DataConnectsController < ApplicationController
           us.full_name = params[:n]
           us.cat = 1 #內容訂閱
           us.save!
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","subscribe_guest")
+          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","subscribe_guest")
           total = JSON.parse(word.first.json.gsub("=>", ":"))
           customization = YAML.load_file("config/customization.yml")
           uri = URI.parse(customization[:user_message_post])
@@ -1276,7 +1276,7 @@ class DataConnectsController < ApplicationController
           us.full_name = params[:n]
           us.cat = 2 #測驗訂閱
           us.save!
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","subscribe_guest")
+          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","subscribe_guest")
           total = JSON.parse(word.first.json.gsub("=>", ":"))
           customization = YAML.load_file("config/customization.yml")
           uri = URI.parse(customization[:user_message_post])
