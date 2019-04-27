@@ -1241,7 +1241,7 @@ class DataConnectsController < ApplicationController
           req.body = post_data
           res = https.request(req)
           File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-            file.syswrite(%(#{Time.now.iso8601}: #{scoped_id} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
@@ -1265,7 +1265,7 @@ class DataConnectsController < ApplicationController
           req.body = post_data
           res = https.request(req)
           File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-            file.syswrite(%(#{Time.now.iso8601}: #{scoped_id} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
@@ -1289,7 +1289,7 @@ class DataConnectsController < ApplicationController
           req.body = post_data
           res = https.request(req)
           File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-            file.syswrite(%(#{Time.now.iso8601}: #{scoped_id} \n---------------------------------------------\n\n))
+            file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
             file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
