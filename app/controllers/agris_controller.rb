@@ -113,14 +113,14 @@ class AgrisController < ApplicationController
   def wording_update
     @wording = Wording.find(params[:id])
     @wording.update(word_params)
-    cpp = ParameterSet.find_by_wording_id(@wording.id)
-    if cpp.present?
-      cpd = ParameterJson.where(:parameter_set_id => cpp.id)
-      cpd.destroy_all
-      analysis_json(@wording.content, cpp.id, "guest")
-      analysis_json(@wording.content, cpp.id, "subscribe_guest")
-      analysis_json(@wording.content, cpp.id, "user")
-    end
+    # cpp = ParameterSet.find_by_wording_id(@wording.id)
+    # if cpp.present?
+    #   cpd = ParameterJson.where(:parameter_set_id => cpp.id)
+    #   cpd.destroy_all
+    #   analysis_json(@wording.content, cpp.id, "guest")
+    #   analysis_json(@wording.content, cpp.id, "subscribe_guest")
+    #   analysis_json(@wording.content, cpp.id, "user")
+    # end
 
     redirect_to :action => :wording_list
   end

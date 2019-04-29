@@ -37,8 +37,7 @@
                   </div>
                   <div class="form-group">
                     <%= f.label(:cat, "類別", :class => 'form-control-label') %>
-                    <%= f.radio_button :cat , 1, onClick: "$(\"#customize\").show();$(\"#wording\").hide();", :checked => true %>自定義 
-                    <%= f.radio_button :cat , 2, onClick: "$(\"#customize\").hide();$(\"#wording\").show();" %>文案
+                    <%= f.radio_button :cat , 1, onClick: "$(\"#customize\").show();$(\"#wording\").hide();", :checked => true %>自定義
                   </div>
                   <div id="customize" style="display: block;">
                     <div class="form-group">
@@ -52,12 +51,6 @@
                     <div class="form-group">
                       <%= f.label(:user, "會員JSON", :class => 'form-control-label') %>
                       <%= f.text_area :user, :class => "md-textarea form-control", :rows => 5 %>
-                    </div>
-                  </div>
-                  <div id="wording" style="display: none;">
-                    <div class="form-group">
-                      請選擇文案名稱：
-                      <%= f.select :wording_id, options_from_collection_for_select(@wordings, "id", "name")%>
                     </div>
                   </div>
                   <div class="card-footer">
