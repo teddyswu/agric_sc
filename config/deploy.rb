@@ -24,6 +24,7 @@ set :domain, current_config[:ip]
 # RVM設定
 # 參考 -> http://ruby-china.org/topics/6424
 # 參考 -> http://rvm.io/integration/capistrano#environment
+# set :rvm_ruby_string, '2.3.7'
 set :rvm_ruby_string, '2.1.2'
 set :rvm_type, :user
 
