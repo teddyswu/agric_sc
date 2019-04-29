@@ -1229,71 +1229,80 @@ class DataConnectsController < ApplicationController
         case params[:pl]
         when /SY_/,/TT_/,/QZ_/,/TC_/,/AR_/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
-          total = JSON.parse(word.first.json.gsub("=>", ":"))
-          customization = YAML.load_file("config/customization.yml")
-          uri = URI.parse(customization[:user_message_post])
-          user = customization[:user]
-          password = customization[:password]
-          post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
-          https = Net::HTTP.new(uri.host,uri.port)
-          https.use_ssl = true
-          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
-          req.body = post_data
-          res = https.request(req)
-          File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-            file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+          cw = ParameterSet.find(word.first.parameter_set_id)
+          if cw.enabled == true
+            total = JSON.parse(word.first.json.gsub("=>", ":"))
+            customization = YAML.load_file("config/customization.yml")
+            uri = URI.parse(customization[:user_message_post])
+            user = customization[:user]
+            password = customization[:password]
+            post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
+            https = Net::HTTP.new(uri.host,uri.port)
+            https.use_ssl = true
+            req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+            req.body = post_data
+            res = https.request(req)
+            File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+              file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+            end
           end
         when /SUBS_story/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          total = JSON.parse(word.first.json.gsub("=>", ":"))
-          customization = YAML.load_file("config/customization.yml")
-          uri = URI.parse(customization[:user_message_post])
-          user = customization[:user]
-          password = customization[:password]
-          post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
-          https = Net::HTTP.new(uri.host,uri.port)
-          https.use_ssl = true
-          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
-          req.body = post_data
-          res = https.request(req)
-          File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-            file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+          cw = ParameterSet.find(word.first.parameter_set_id)
+          if cw.enabled == true
+            total = JSON.parse(word.first.json.gsub("=>", ":"))
+            customization = YAML.load_file("config/customization.yml")
+            uri = URI.parse(customization[:user_message_post])
+            user = customization[:user]
+            password = customization[:password]
+            post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
+            https = Net::HTTP.new(uri.host,uri.port)
+            https.use_ssl = true
+            req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+            req.body = post_data
+            res = https.request(req)
+            File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+              file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+            end
+            us = UserSubscription.new
+            us.scoped_id = params[:uid]
+            us.full_name = params[:n]
+            us.cat = 1 #內容訂閱
+            us.save!
           end
-          us = UserSubscription.new
-          us.scoped_id = params[:uid]
-          us.full_name = params[:n]
-          us.cat = 1 #內容訂閱
-          us.save!
         when /SUBS_test/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          total = JSON.parse(word.first.json.gsub("=>", ":"))
-          customization = YAML.load_file("config/customization.yml")
-          uri = URI.parse(customization[:user_message_post])
-          user = customization[:user]
-          password = customization[:password]
-          post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
-          https = Net::HTTP.new(uri.host,uri.port)
-          https.use_ssl = true
-          req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
-          req.body = post_data
-          res = https.request(req)
-          File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-            file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
-            file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+          cw = ParameterSet.find(word.first.parameter_set_id)
+          if cw.enabled == true
+            total = JSON.parse(word.first.json.gsub("=>", ":"))
+            customization = YAML.load_file("config/customization.yml")
+            uri = URI.parse(customization[:user_message_post])
+            user = customization[:user]
+            password = customization[:password]
+            post_data = {'recipient_id'=> params[:uid], 'user' => user, 'password' => password, 'elements' => total }.to_json
+            https = Net::HTTP.new(uri.host,uri.port)
+            https.use_ssl = true
+            req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+            req.body = post_data
+            res = https.request(req)
+            File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+              file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
+              file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+            end
+            us = UserSubscription.new
+            us.scoped_id = params[:uid]
+            us.full_name = params[:n]
+            us.cat = 2 #測驗訂閱
+            us.save!
           end
-          us = UserSubscription.new
-          us.scoped_id = params[:uid]
-          us.full_name = params[:n]
-          us.cat = 2 #測驗訂閱
-          us.save!
         when /FLW_proj_/
           slug = params[:pl].gsub("FLW_proj_","")
           campaign = Campaign.find_by_slug(slug)
