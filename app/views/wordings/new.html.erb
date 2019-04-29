@@ -89,14 +89,14 @@
 		function add_more_button(group){
 			var button_sn = $("input[name="+ group + "_bt_sn]").val();
 			if (parseInt(button_sn) < 4){
-				$("#" + group ).append("<div>按鈕連結:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]url\" value=\"\" /><input type=\"hidden\" name=\"[" + group + "][btn1][button" + button_sn + "]type\" value=\"web_url\" />按鈕標題:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]title\" value=\"\" /></div>");
+				$("#" + group ).append("<div>url:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]url\" value=\"\" /><input type=\"hidden\" name=\"[" + group + "][btn1][button" + button_sn + "]type\" value=\"web_url\" />標題:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]title\" value=\"\" /></div>");
 				$("input[name="+ group + "_bt_sn]").val(parseInt(button_sn)+1);
 			}
 		}
 		function add_more_bp(group){
 			var button_sn = $("input[name="+ group + "_bt_sn]").val();
 			if (parseInt(button_sn) < 4){
-				$("#" + group ).append("<div>payload:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]payload\" value=\"\" /><input type=\"hidden\" name=\"[" + group + "][btn1][button" + button_sn + "]type\" value=\"postback\" />按鈕標題:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]title\" value=\"\" /></div>");
+				$("#" + group ).append("<div>payload:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]payload\" value=\"\" /><input type=\"hidden\" name=\"[" + group + "][btn1][button" + button_sn + "]type\" value=\"postback\" />標題:<input type=\"text\" name=\"[" + group + "][btn1][button" + button_sn + "]title\" value=\"\" /></div>");
 				$("input[name="+ group + "_bt_sn]").val(parseInt(button_sn)+1);
 			}
 		}
