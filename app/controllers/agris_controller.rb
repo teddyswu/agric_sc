@@ -2,7 +2,7 @@ class AgrisController < ApplicationController
 	# before_action :is_admin, except: [:showgif, :showjpg]
   before_action :authenticate_user!, except: [:showgif, :showjpg, :showpng]
 	skip_before_action :verify_authenticity_token
-  before_action :check_admin, except: [:showgif, :showjpg]
+  before_action :check_admin, except: [:showgif, :showjpg, :showpng]
 
   caches_action :showgif, :cache_path => Proc.new {
     cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
