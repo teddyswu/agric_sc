@@ -1,6 +1,6 @@
 class AgrisController < ApplicationController
 	# before_action :is_admin, except: [:showgif, :showjpg]
-  before_action :authenticate_user!, except: [:showgif, :showjpg]
+  before_action :authenticate_user!, except: [:showgif, :showjpg, :showpng]
 	skip_before_action :verify_authenticity_token
   before_action :check_admin, except: [:showgif, :showjpg]
 
