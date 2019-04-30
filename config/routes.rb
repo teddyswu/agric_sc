@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :data_connects do
+    match "story", :on => :collection, via: [:get, :post]
+    match ":v/story", :to => "data_connects#story", :constraints => {:v => /[A-Za-z0-9\.]+?/}, :on => :collection, via: [:get, :post]
+  end
   mount Ckeditor::Engine => '/ckeditor'
   devise_for :users, :controllers => { :omniauth_callbacks => "user/omniauth_callbacks", sessions: 'users/sessions'}
   resources :users do
@@ -91,9 +95,4 @@ Rails.application.routes.draw do
     get "farmer", :on => :collection
   end
   resources :work_record_replies
-  resources :data_connects do
-    match "story", :on => :collection, via: [:get, :post]
-    match ":v/story", :to => "data_connects#story", :constraints => {:v => /[A-Za-z0-9\.]+?/}, :on => :collection, via: [:get, :post]
-  end
-
 end
