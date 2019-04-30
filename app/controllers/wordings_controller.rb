@@ -37,6 +37,16 @@ class WordingsController < ApplicationController
 					text["delay"] = va["delay"]
 					@text_t << text
 				end
+			when /delay/
+				@delay_t = [] if i == 0 or par_name[i-1].include?("delay") == false
+				v.each do |ke, va|
+					delay = {}
+					delay["NAME"] = va["Name"]
+					delay["type"] = va["type"]
+					delay["text"] = va["text"]
+					delay["delay"] = va["delay"]
+					@delay_t << delay
+				end
 			when /pic/
 				@pic_t = [] if i == 0 or par_name[i-1].include?("pic") == false
 				v.each do |ke, va|
@@ -88,6 +98,9 @@ class WordingsController < ApplicationController
 			end
 			if par_name[i].include?("text")
 				@total << @text_t if @text_t != nil and par_name[i+1].to_s.include?("text") == false
+			end
+			if par_name[i].include?("delay")
+				@total << @delay_t if @delay_t != nil and par_name[i+1].to_s.include?("delay") == false
 			end
 			if par_name[i].include?("pic")
 				@total << @pic_t if @pic_t != nil and par_name[i+1].to_s.include?("pic") == false

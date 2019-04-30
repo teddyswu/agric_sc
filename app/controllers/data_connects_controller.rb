@@ -1227,7 +1227,7 @@ class DataConnectsController < ApplicationController
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
         case params[:pl]
-        when /SY_/,/TT_/,/QZ_/,/TC_/,/AR_/
+        when /SY_/,/TT_/,/GE_/,/ST_/,/AR_/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
           cw = ParameterSet.find(word.first.parameter_set_id)
           if cw.enabled == true

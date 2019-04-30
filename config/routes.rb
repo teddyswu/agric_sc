@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get "agris/movie_del/:id", :to => "agris#movie_del", :as => "movie_del"
   get "showgif/:id", :to => "agris#showgif", :as =>"show_gif"
   get "showjpg/:id", :to => "agris#showjpg", :as =>"show_jpg"
+  get "showpng/:id", :to => "agris#showpng", :as =>"show_png"
   
   get "agris/wording_list", :to => "agris#wording_list", :as => "wording_list"
   get "agris/wording_new", :to => "agris#wording_new", :as => "wording_new"

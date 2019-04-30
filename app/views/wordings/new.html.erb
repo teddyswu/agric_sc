@@ -12,6 +12,7 @@
 	<button type="button" onclick="add_picture();">圖片訊息</button>
 	<button type="button" onclick="add_quick();">快速回覆</button>
 	<button type="button" onclick="add_button();">按鈕訊息</button>
+	<button type="button" onclick="add_delay();">時間延遲</button>
 	<button type="button" onclick="add_list();">清單訊息</button>
 	<button type="button" onclick="add_media();">媒體訊息</button>
 	<button type="button" onclick="add_receipt();">收據訊息</button>
@@ -21,6 +22,7 @@
 	<input type="hidden" id="pic_num" value="1" disabled>
 	<input type="hidden" id="quick_num" value="1" disabled>
 	<input type="hidden" id="button_num" value="1" disabled>
+	<input type="hidden" id="delay_num" value="1" disabled>
 	<input type="hidden" id="list_num" value="1" disabled>
 	<div id="wording">
 	</div>
@@ -85,6 +87,11 @@
 			var sn = $("#quick_num").val();
 			$("#wording").append("<div id=\"quick_group" + sn + "\" class=\"divborder\"><b>快速回覆</b><button type=\"button\" onclick=\"remove_div('quick_group" + sn + "')\">刪除快回</button><br/><td>NAME:<input type=\"text\" name=\"[quick_group" + sn + "][quick1]name\" value=\"\" /></td><td>問題:<input type=\"text\" name=\"[quick_group" + sn + "][quick1]text\" value=\"\" /></td><br/>回覆:<button type=\"button\" onclick=\"add_quick_reply('quick_group" + sn + "', 'quick1');\">插入回覆</button><br /><div id=\"quick_group" + sn + "_reply\"><input type=\"hidden\" name=\"quick_group" + sn + "_reply_bt_sn\" value=\"1\" disabled=\"\"></div></div>");
 			$("#quick_num").val(parseInt(sn)+1);
+		}
+		function add_delay(){
+			var sn = $("#delay_num").val();
+			$("#wording").append("<div id=\"delay_group" + sn + "\" class=\"divborder\"><b>時間延遲</b><button type=\"button\" onclick=\"remove_div('delay_group" + sn + "')\">刪除延遲</button><br>NAME:<input type=\"text\" name=\"[delay_group" + sn + "][text1]Name\" value=\"\"><input type=\"hidden\" name=\"[delay_group" + sn + "][text1]type\" value=\"text\"><input type=\"hidden\" name=\"[delay_group" + sn + "][text1]text\" value=\"\">延遲:<input type=\"text\" name=\"[delay_group" + sn + "][text1]delay\" value=\"\"></div>");
+			$("#delay_num").val(parseInt(sn)+1);
 		}
 		function add_more_button(group){
 			var button_sn = $("input[name="+ group + "_bt_sn]").val();

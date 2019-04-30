@@ -12,6 +12,10 @@ class AgrisController < ApplicationController
     cache_path = "#{WebConf.host}-#{request.path}_showjpg_cache"
   }, :expires_in => 24.hour
 
+  caches_action :showpng, :cache_path => Proc.new {
+    cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
+  }, :expires_in => 24.hour
+
 
   def index
 	end
@@ -170,6 +174,14 @@ class AgrisController < ApplicationController
     domain = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/gif/"
     filename = params[:id]
     path = domain + filename + ".jpg"
+    data = open(path)
+    send_data data.read, type: data.content_type, disposition: 'inline'
+  end
+
+  def showpng
+    domain = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/agric_sc/gif/"
+    filename = params[:id]
+    path = domain + filename + ".png"
     data = open(path)
     send_data data.read, type: data.content_type, disposition: 'inline'
   end

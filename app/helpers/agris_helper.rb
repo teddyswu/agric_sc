@@ -2,9 +2,11 @@ module AgrisHelper
 	def render_path(val)
 		case val
 		when /gif/
-			"http://" + request.host + show_gif_path(val)
+			"https://" + request.host + show_gif_path(val)
 		when /jpg/
-			"http://" + request.host + show_jpg_path(val)
+			"https://" + request.host + show_jpg_path(val)
+		when /png/
+			"https://" + request.host + show_png_path(val)
 		end
 	end
 
