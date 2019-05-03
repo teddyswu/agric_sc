@@ -24,6 +24,8 @@ gem "browser"
 gem 'will_paginate', '~> 3.1.0'
 gem 'rails-jquery-tokeninput'
 
+gem 'newrelic_rpm' # 效能監控
+
 gem 'prawn'
 gem 'prawn-table'
 # 圖片上傳相關

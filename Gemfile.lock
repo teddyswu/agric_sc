@@ -304,6 +304,7 @@ GEM
     net-ssh (4.2.0)
     net-ssh-gateway (2.0.0)
       net-ssh (>= 4.0.0)
+    newrelic_rpm (6.3.0.355)
     nokogiri (1.6.7.1)
       mini_portile2 (~> 2.0.0.rc2)
     oauth (0.5.3)
@@ -455,6 +456,7 @@ DEPENDENCIES
   magic_encoding
   mini_magick (= 3.6.0)
   mysql2 (= 0.3.18)
+  newrelic_rpm
   nokogiri (= 1.6.7.1)
   omniauth-facebook (= 4.0.0)
   omniauth-oauth
