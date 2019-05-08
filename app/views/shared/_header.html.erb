@@ -13,11 +13,10 @@
             <%= link_to "工作牆", work_walls_path, class: "nav-link p-3" %>
           </li>
           <li class="nav-item">
-            <%= link_to "友善提案", "#{YAML.load_file("config/customization.yml")[:campaign_domain]}", class: "nav-link p-3" %>
-          </li>
-          
-          <li class="nav-item">
             <%= link_to "農村故事", list_stories_path, class: "nav-link p-3" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "友善提案", "#{YAML.load_file("config/customization.yml")[:campaign_domain]}", class: "nav-link p-3" %>
           </li>
         </ul>
       </div>

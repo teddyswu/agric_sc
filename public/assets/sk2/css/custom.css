@@ -37,6 +37,8 @@ a.text-line:hover {
 @media (max-width: 991.98px) {
   .navbar-brand img {
     max-width: 150px; } }
+.navbar-brand .logo {
+  max-height: 50px; }
 
 #header {
   border-bottom: 1px solid #85af4b; }

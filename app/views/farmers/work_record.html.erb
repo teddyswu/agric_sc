@@ -96,7 +96,7 @@
           }
       },
       eventColor: '#4a99d6',
-      <% cache ["#{WebConf.host}" + @work_records.last.updated_at.to_s] do %>
+      <% cache ["#{WebConf.host}" + @work_records.last.to_s] do %>
         events: [
           <% @work_records.each do |record| %>
             {

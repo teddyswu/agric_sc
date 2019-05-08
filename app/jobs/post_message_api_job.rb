@@ -30,13 +30,13 @@ class PostMessageApiJob < ActiveJob::Base
       file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
     end
     mp.complete_time = Time.now
-    res_body = JSON res.body#[1..-2].gsub('\\', '')
-    # a = 0
-    # res_body["Results"].each_with_index do |rr, i|
-    #   b = i + 1
-    #   a+=1 if rr["#{b}"][0]["message_id"].present?
-    # end
-    # mp.delivery_number = a
+    res_body = JSON res.body[1..-2].gsub('\\', '')
+    a = 0
+    res_body["Results"].each_with_index do |rr, i|
+      b = i + 1
+      a+=1 if rr["#{b}"][0]["message_id"].present?
+    end
+    mp.delivery_number = a
     mp.total_number = res_body["Count"].to_i
     mp.save!
   end

@@ -15,6 +15,7 @@ class UsersController < ApplicationController
 	end
 
 	def fb_binding
+		set_page_title "友故事  |  FB 快速登入"
 		binding_ip = request.remote_ip
 		fb = FbBinding.create(:binding_ip => binding_ip, :scoped_id => params[:scoped_id], :module_name => params[:s])
 	end

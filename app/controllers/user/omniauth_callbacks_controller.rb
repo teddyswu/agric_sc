@@ -56,7 +56,7 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def first_start(scoped_id, module_name)
     @root_domain = YAML.load_file("config/customization.yml")[:root_domain]
-    @project_domain = YAML.load_file("config/customization.yml")[:root_domain]
+    @project_domain = YAML.load_file("config/customization.yml")[:campaign_domain]
     if module_name != nil
       word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","user")
       total = JSON.parse(word.first.json.gsub("=>", ":"))

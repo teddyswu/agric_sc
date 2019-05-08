@@ -4,64 +4,30 @@
       <div class="col-6 col-sm-3 col-md mb-2">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <strong>關於我們</strong>
+            <strong>關於</strong>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/static/about-us"%>">關於我們</a>
+            <a class="nav-link" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/about"%>">關於友故事</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">如何加入</a>
           </li>
         </ul>
       </div>
       <div class="col-6 col-sm-3 col-md mb-2">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <strong>服務條款</strong>
+            <strong>協助</strong>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/static/terms-of-service"%>">服務條款</a>
+            <a class="nav-link" href="#">常見問題</a>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/terms"%>">服務條款</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/privacy"%>">隱私權政策</a>
           </li>
         </ul>
-      </div>
-      <div class="col-6 col-sm-3 col-md mb-2">
-          <ul class="nav flex-column">
-              <li class="nav-item">
-                  <strong>常見問答</strong>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#">關於我們</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#">關於我們</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#">關於我們</a>
-              </li>
-          </ul>
-      </div>
-      <div class="col-6 col-sm-3 col-md mb-2">
-          <ul class="nav flex-column">
-              <li class="nav-item">
-                  <strong>隱私權政策</strong>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#">服務條款</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#">服務條款</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#">服務條款</a>
-              </li>
-          </ul>
-      </div>
-      <div class="col-6 col-sm-3 col-md mb-2">
-          <ul class="nav flex-column">
-              <li class="nav-item">
-                  <strong>加入友善耕作圈</strong>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/live">服務條款</a>
-              </li>
-          </ul>
       </div>
       <div class="col-6 col-sm-3 col-md mb-2">
           <ul class="nav flex-column">
@@ -80,32 +46,20 @@
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="#">
-                      <i class="fab fa-fw fa-2x fa-line"></i>
+                      <i class="fab fa-fw fa-2x fa-youtube"></i>
                   </a>
               </li>
           </ul>
       </div>
     </div>
     <div class="pt-3 text-gray-6">
-        <div class="row align-items-center">
-            <div class="col-12 col-lg-3 text-center text-lg-left">
-                <img src="/assets/sk2/img/ui/logo.png" srcset="/assets/sk2/img/ui/logo.png" class="logo img-fluid" alt="">
-            </div>
-            <div class="col-12 col-lg-6 text-center text-lg-left">
-                <small>
-                    Copyright © SOGI Net Co., Ltd. All rights reserved.
-                </small>
-            </div>
-            <div class="col-12 col-lg-3 text-center text-lg-right">
-                <a class="text-gray-6" href="">
-                    <small>隱私權政策</small>
-                </a>
-                <span class="mx-3">|</span>
-                <a class="text-gray-6" href="">
-                    <small>服務條款</small>
-                </a>
-            </div>
+      <div class="row align-items-center">
+        <div class="col-12 col-lg-6 text-center text-lg-left">
+          <small>
+            Copyright © SOGI Net Co., Ltd. All rights reserved.
+          </small>
         </div>
+      </div>
     </div>
   </div>
 </footer>

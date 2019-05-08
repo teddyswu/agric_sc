@@ -2,17 +2,19 @@
 	<div id="main" class="push py-14 mt-10 mt-lg-12">
     <div class="container">
 			<div class="card">
-			  <h5 class="card-header">帳號綁定</h5>
+			  <h5 class="card-header">
+			  	<a class="navbar-brand" href="http://story.i-sogi.com">
+            <img src="/assets/sk2/img/ui/logo.png" srcset="/assets/sk2/img/ui/logo.png" class="logo" alt="" style="max-height: 50px;">
+          </a>
+			  </h5>
 			  <div class="card-body">
-			    <h5 class="card-title">臉書帳號與網站個人資訊</h5>
-			    <p class="card-text">點擊以下按鈕，即可將臉書帳號對應到個人資訊。開啟個人化服務</p>
+			    <h5 class="card-title">臉書帳號快速登入</h5>
+			    <p class="card-text">完成登入即可對應會員資訊，立即開啟個人化服務。</p>
 			    <%= link_to user_omniauth_authorize_path(:facebook), class: "btn btn-primary" do %>
-					  <span class="d-none d-lg-inline-block">進行綁定</span>
+					  進行綁定
 					<% end %>
 			  </div>
 			</div>
-
-			
 		</div>
 	</div>
 </body>

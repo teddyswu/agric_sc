@@ -1354,7 +1354,6 @@ class DataConnectsController < ApplicationController
       file.syswrite(%(#{Time.now.iso8601}: #{uid} \n---------------------------------------------\n\n))
       file.syswrite(%(#{Time.now.iso8601}: #{uri} \n---------------------------------------------\n\n))
       file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
-      file.syswrite(%(#{Time.now.iso8601}: #{total} \n---------------------------------------------\n\n))
       file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
     end
   end
