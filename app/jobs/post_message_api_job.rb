@@ -30,6 +30,7 @@ class PostMessageApiJob < ActiveJob::Base
         file.syswrite(%(#{Time.now.iso8601}: #{gg} \n---------------------------------------------\n\n))
         file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
         file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
+        file.syswrite(%(#{Time.now.iso8601}: NEW \n---------------------------------------------\n\n))
       end
       res_body = JSON res.body
       total += 1 if res_body["Count"].to_i == 1
