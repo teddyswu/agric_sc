@@ -6,11 +6,11 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         def #{provider}
           User.transaction do
             if !current_user.blank?
-              aa = FbBinding.find_by_binding_ip(request.remote_ip)
+              binding_ip = request.remote_ip + request.env["HTTP_USER_AGENT"]
+              aa = FbBinding.find_by_binding_ip(binding_ip)
               if aa.present?
-                aa = FbBinding.find_by_binding_ip(request.remote_ip)
                 Authorization.find_or_create_by(:provider => "facebook", :uid => aa.scoped_id, :user_id => current_user.id)
-                FbBinding.destroy_all(:binding_ip => request.remote_ip)
+                FbBinding.destroy_all(:binding_ip => binding_ip)
                 first_start(aa.scoped_id, aa.module_name)
                 render partial: "shared/fb"
               else
@@ -23,10 +23,11 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
                 render :text => "<script>alert('登入失敗，請檢查您的Facebook是否有電子郵件資料，並同意授權我們作為會員帳號使用，謝謝!');location.href='/footers/fb_faq';</script>" and return
               end
               if @user.persisted? 
-                aa = FbBinding.find_by_binding_ip(request.remote_ip)
+                binding_ip = request.remote_ip + request.env["HTTP_USER_AGENT"]
+                aa = FbBinding.find_by_binding_ip(binding_ip)
                 if aa.present?
                   Authorization.create(:provider => "facebook", :uid => aa.scoped_id, :user_id => @user.id)
-                  FbBinding.destroy_all(:binding_ip => request.remote_ip)
+                  FbBinding.destroy_all(:binding_ip => binding_ip)
                   sign_in @user
                   first_start(aa.scoped_id, aa.module_name)
                   render partial: "shared/fb"

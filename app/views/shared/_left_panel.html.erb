@@ -40,15 +40,6 @@
         <li>
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>JSON產生器 ".html_safe, new_wording_path, :target => "_blank"  %>
         </li>
-        <!-- <li <%#= "class='active'".html_safe if request.url.include?("movie") %>>
-          <%#= link_to " <i class='menu-icon fa fa-film'></i>影片 ".html_safe,  movie_agris_path %>
-        </li>
-        <li <%#= "class='active'".html_safe if request.url.include?("comic") %>>
-          <%#= link_to " <i class='menu-icon fa fa-rocket'></i>漫畫 ".html_safe, comic_agris_path  %>
-        </li>
-        <li <%#= "class='active'".html_safe if request.url.include?("article") %>>
-          <%#= link_to " <i class='menu-icon fa fa-edit'></i>文章 ".html_safe, article_agris_path  %>
-        </li> -->
         <h3 class="menu-title">網頁內容</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("stories") %>>
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>網頁內容 ".html_safe, stories_path  %>
@@ -81,6 +72,9 @@
         </li>
         <li>
           <%= link_to(" <i class='menu-icon fa fa-edit'></i>修改密碼 ".html_safe, edit_user_registration_path) %>
+        </li>
+        <li>
+          <%= link_to(" <i class='menu-icon fa fa-building'></i>提案管理 ".html_safe, "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/admin/campaigns", :target => "_blank") %>
         </li>
         <li>
         	<%= link_to(" <i class='menu-icon ti-shift-right'></i>登出 ".html_safe, destroy_user_session_path, :method => :delete) %>
