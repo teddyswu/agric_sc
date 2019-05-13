@@ -704,7 +704,7 @@ class DataConnectsController < ApplicationController
                 if order.paid == false
                   t1["type"] = "web_url"
                   t1["title"] = "付款去"
-                  t1["url"] = "#{@project_domain}/orders/#{order.id}/go_pay"
+                  t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
                 else
                   t1["type"] = "web_url"
                   t1["title"] = "查看詳細記錄"
@@ -1032,13 +1032,13 @@ class DataConnectsController < ApplicationController
               if u > 10
                 inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                 inter_ta["type"] = "text"
-                inter_ta["text"] = "很高興再見到你！我們新增了許多茶的故事和測驗喔，趕緊來補一下~"
+                inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
                 inter_ta["delay"] = "1"
                 next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
               else
                 inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                 inter_ta["type"] = "text"
-                inter_ta["text"] = "歡迎來到友故事！想要隨時隨地來杯好茶嗎，我們有許多茶的故事及有趣的測驗，還提供個人專屬的茶諮詢服務喔~"
+                inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
                 inter_ta["delay"] = "1"
                 next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
               end
@@ -1115,7 +1115,7 @@ class DataConnectsController < ApplicationController
               result["join"] = false
               text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
               text_1["type"] = "text"
-              text_1["text"] = "咦！目前您尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知您第一手消息！"
+              text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
               text_1["delay"] = 1
               total = Array.new
               proposal = Array.new
@@ -1152,15 +1152,16 @@ class DataConnectsController < ApplicationController
           else
             result["register"] = false
             result["join"] = false
-            text_1["name"] = "ugooz.b2c.menulist.mb1.01.01"
-            text_1["type"] = "text"
+            text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+            text_1["template_type"] = "button"
             text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
-            text_1["delay"] = 1
-            text_2 = Hash.new
-            text_2["name"] = "ugooz.b2c.menulist.mb1.01.02"
-            text_2["type"] = "text"
-            text_2["text"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
-            text_2["delay"] = 1
+            buttons = Array.new
+            t2 = Hash.new
+            t2["type"] = "web_url"
+            t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
+            t2["title"] = "開始登入！"
+            buttons << t2
+            text_1["buttons"] = buttons
           end
           text << result
           total << text
@@ -1247,7 +1248,7 @@ class DataConnectsController < ApplicationController
             text = Array.new
             text_1 = Hash.new
             text_1["type"] = "text"
-            text_1["text"] = "您已完成追蹤，若有這項提案最新消息茶福會通知您唷。"
+            text_1["text"] = "已完成追蹤，若提案有最新消息會立即通知你唷。"
             text_1["delay"] = 1
             text << text_1
             text_2 = Hash.new
@@ -1314,8 +1315,8 @@ class DataConnectsController < ApplicationController
             x+=1
             fl_card = Hash.new
             fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
-            fl_card["title"] = f_list.ps_group
-            fl_card["subtitle"] = f_list.name
+            fl_card["title"] = f_list.front_name
+            fl_card["subtitle"] = f_list.farm_name
             fl_card["image_url"] = f_list.user_pic_url
             fl_card["buttons"] = []
             fl_card_b = Hash.new

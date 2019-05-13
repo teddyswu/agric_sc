@@ -168,13 +168,13 @@
                               <i class="fas fa-fw fa-lg fa-share"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
-                              <a class="text-fb" href="#">
+                              <a class="text-fb" href="https://www.facebook.com/sharer/sharer.php?u=<%= "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(@farmer.id, wd.id )}"%>">
                                 <i class="fab fa-fw fa-2x fa-facebook"></i>
                               </a>
-                              <a class="text-line" href="#">
+                              <a class="text-line" href="#" style="display:none">
                                 <i class="fab fa-fw fa-2x fa-line"></i>
                               </a>
-                              <a class="text-dark" href="#">
+                              <a class="text-dark" href="#" style="display:none">
                                 <i class="far fa-fw fa-2x fa-envelope"></i>
                               </a>
                             </div>
