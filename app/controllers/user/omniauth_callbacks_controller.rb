@@ -92,7 +92,7 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         t1 = Hash.new
         t1["type"] = "web_url"
         t1["title"] = "追蹤♥"
-        t1["url"] = "#{@root_domain}/data_connects/story?motion=get&type=fb_track&scoped_id=[[RECIPIENT_ID]]&slug=#{campaign.slug}"
+        t1["url"] = "FLW_proj_#{campaign.slug}"
         buttons << t1
         t2 = Hash.new
         t2["type"] = "web_url"
