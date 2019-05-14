@@ -993,6 +993,10 @@ class DataConnectsController < ApplicationController
             when "", "\"\"" #個人化問候語
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
               n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
+              File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+                file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
+                file.syswrite(%(#{Time.now.iso8601}: #{n.size} \n---------------------------------------------\n\n))
+              end
               name = (n.present? ? n.last.name : "匿名訪客")
               gg.name = name
               gg.start = (params[:start] == "1" ? true : false)

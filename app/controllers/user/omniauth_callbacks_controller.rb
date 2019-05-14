@@ -62,47 +62,90 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{module_name}%","user")
       total = JSON.parse(word.first.json.gsub("=>", ":"))
     else
+      auth = Authorization.find_by_uid(scoped_id)
       total = Array.new
       text = Array.new
+      text_a = Array.new
       text_1 = Hash.new
-      text_1["name"] = "TEAFU.MENU.B2C.05.01"
-      text_1["type"] = "text"
-      text_1["text"] = "茶福感謝您訂閱。"
-      text_1["delay"] = 1
-      text << text_1
-      text_2 = Hash.new
-      text_2["name"] = "TEAFU.MENU.B2C.05.02"
-      text_2["type"] = "text"
-      text_2["text"] = "咦！目前您尚未有紀錄喔。這是最新最熱門的提案，若有喜歡記得加入愛心，我會通知第一手的訊息給您。"
-      text_2["delay"] = 1
-      text << text_2
-      total << text
-      card = Array.new
-      campaigns = Campaign.where("status = 3 and start_date < ? and end_date > ?",Date.today,Date.today).limit(10)
-      campaigns.each do |campaign|
-        remain_day = (campaign.end_date - Date.today).to_i
-        amount_raised = campaign.amount_raised
-        percentage = 100*(amount_raised.to_f / campaign.goal)
-        description = campaign.description.first(40)
-        text_a = Hash.new
-        text_a["title"] = campaign.title
-        text_a["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
-        text_a["image_url"] = campaign.campaign_image.campaign_path
-        buttons = Array.new #[]
-        t1 = Hash.new
-        t1["type"] = "web_url"
-        t1["title"] = "追蹤♥"
-        t1["url"] = "FLW_proj_#{campaign.slug}"
-        buttons << t1
-        t2 = Hash.new
-        t2["type"] = "web_url"
-        t2["title"] = "查看內容"
-        t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
-        buttons << t2
-        text_a["buttons"] = buttons
-        card << text_a
+      if auth.user.orders.size > 0
+        text_1["NAME"] = "TEAFU.MENU.B2C.05.01"
+        text_1["type"] = "text"
+        text_1["text"] = "#{params[:n]}您好，這是您支持中的提案："
+        text_1["delay"] = 1
+        text << text_1
+        auth.user.orders.order(:paid).limit(10).each_with_index do |order, i|
+          if order.goody.campaign.end_date > Date.today
+            remain_day = (order.goody.campaign.end_date - Date.today).to_i
+            amount_raised = order.goody.campaign.amount_raised
+            percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+            text_2_c = Hash.new
+            text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+            text_2_c["title"] = order.goody.campaign.title
+            text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+            text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+            buttons = Array.new #[]
+            t1 = Hash.new
+            if order.paid == false
+              t1["type"] = "web_url"
+              t1["title"] = "付款去"
+              t1["url"] = "#{@project_domain}/orders/#{order.id}/go_pay"
+            else
+              t1["type"] = "web_url"
+              t1["title"] = "查看詳細記錄"
+              t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+            end
+            buttons << t1
+            t2 = Hash.new
+            t2["type"] = "web_url"
+            t2["title"] = "查看最新進度"
+            t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+            buttons << t2
+            text_2_c["buttons"] = buttons 
+            text_a << text_2_c
+          end
+        end
+        total << text
+        total << text_a
+      else
+        text_1["name"] = "TEAFU.MENU.B2C.05.01"
+        text_1["type"] = "text"
+        text_1["text"] = "茶福感謝您訂閱。"
+        text_1["delay"] = 1
+        text << text_1
+        text_2 = Hash.new
+        text_2["name"] = "TEAFU.MENU.B2C.05.02"
+        text_2["type"] = "text"
+        text_2["text"] = "咦！目前您尚未有紀錄喔。這是最新最熱門的提案，若有喜歡記得加入愛心，我會通知第一手的訊息給您。"
+        text_2["delay"] = 1
+        text << text_2
+        total << text
+        card = Array.new
+        campaigns = Campaign.where("status = 3 and start_date < ? and end_date > ?",Date.today,Date.today).limit(10)
+        campaigns.each do |campaign|
+          remain_day = (campaign.end_date - Date.today).to_i
+          amount_raised = campaign.amount_raised
+          percentage = 100*(amount_raised.to_f / campaign.goal)
+          description = campaign.description.first(40)
+          text_a = Hash.new
+          text_a["title"] = campaign.title
+          text_a["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+          text_a["image_url"] = campaign.campaign_image.campaign_path
+          buttons = Array.new #[]
+          t1 = Hash.new
+          t1["type"] = "web_url"
+          t1["title"] = "追蹤♥"
+          t1["url"] = "FLW_proj_#{campaign.slug}"
+          buttons << t1
+          t2 = Hash.new
+          t2["type"] = "web_url"
+          t2["title"] = "查看內容"
+          t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
+          buttons << t2
+          text_a["buttons"] = buttons
+          card << text_a
+        end
+        total << card
       end
-      total << card
     end
     customization = YAML.load_file("config/customization.yml")
     uri = URI.parse(customization[:user_message_post])
