@@ -993,10 +993,6 @@ class DataConnectsController < ApplicationController
             when "", "\"\"" #個人化問候語
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
               n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
-              File.open("#{Rails.root}/log/mm.log", "a+") do |file|
-                file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
-                file.syswrite(%(#{Time.now.iso8601}: #{n.size} \n---------------------------------------------\n\n))
-              end
               name = (n.present? ? n.last.name : "匿名訪客")
               gg.name = name
               gg.start = (params[:start] == "1" ? true : false)
@@ -1005,7 +1001,7 @@ class DataConnectsController < ApplicationController
               word = Hash.new
               say_hi = true if gg.new_record?
               gg.save!
-              # if (Time.now - gg.updated_at) > 30 or say_hi == true
+              if (Time.now - gg.updated_at) > 30 or say_hi == true
                 case Time.now.strftime('%H').to_i
                 when 0..4
                   sta = "晚安！"
@@ -1022,7 +1018,7 @@ class DataConnectsController < ApplicationController
                 word["text"] = "Hi #{name} #{sta}"
                 word["delay"] = "1"
                 gg.updated_at = Time.now
-              # end
+              end
               word_a << word
               gg.save!
               word_t << word_a
