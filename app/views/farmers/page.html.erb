@@ -59,7 +59,7 @@
         <div class="row article">
           <% @work_records.each_with_index do |wr, i| %>
             <% if i == 0 %>
-              <div class="post">
+              <div class="post" style="padding-left: 0px;padding-right: 0px;">
               <script>
                 $("#modal").append($("#page_modal").html());
                 $("#page_modal").remove();
@@ -75,8 +75,7 @@
                     <div class="mb-auto"></div>
                     <div class="text-center">
                       <div class="my-auto">
-                        <div class="align-self-center"><%= wr.comment%></div>
-                        <div class=""></div>
+                        <%= wr.comment%>
                       </div>
                     </div>
                     <div class="row no-gutters mt-auto">
