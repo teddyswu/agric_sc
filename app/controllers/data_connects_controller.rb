@@ -993,6 +993,10 @@ class DataConnectsController < ApplicationController
             when "", "\"\"" #個人化問候語
               gg = Greeting.find_or_initialize_by(:uid => params[:uid])
               n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
+              File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+                file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
+                file.syswrite(%(#{Time.now.iso8601}: db has #{n.size} \n---------------------------------------------\n\n))
+              end
               name = (n.present? ? n.last.name : "匿名訪客")
               gg.name = name
               gg.start = (params[:start] == "1" ? true : false)
@@ -1095,7 +1099,7 @@ class DataConnectsController < ApplicationController
                   if order.paid == false
                     t1["type"] = "web_url"
                     t1["title"] = "付款去"
-                    t1["url"] = "#{@project_domain}/orders/#{order.id}/go_pay"
+                    t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
                   else
                     t1["type"] = "web_url"
                     t1["title"] = "查看詳細記錄"
@@ -1198,6 +1202,10 @@ class DataConnectsController < ApplicationController
         ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
+        File.open("#{Rails.root}/log/mm.log", "a+") do |file|
+          file.syswrite(%(#{Time.now.iso8601}: #{params[:uid]} \n---------------------------------------------\n\n))
+          file.syswrite(%(#{Time.now.iso8601}: get one \n---------------------------------------------\n\n))
+        end
         case params[:pl]
         when /SY_/,/TT_/,/GE_/,/ST_/,/AR_/
           word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")

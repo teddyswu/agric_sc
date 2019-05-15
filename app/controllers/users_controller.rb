@@ -15,7 +15,7 @@ class UsersController < ApplicationController
 	end
 
 	def fb_binding
-		set_page_title "FB 快速登入 | 友故事"
+		set_page_title "FB 快速登入"
 		ff = FbBinding.where(:scoped_id => params[:scoped_id])
 		ff.destroy_all
 		binding_ip = request.remote_ip + request.env["HTTP_USER_AGENT"]
