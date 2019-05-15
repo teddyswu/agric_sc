@@ -147,6 +147,13 @@ namespace :custom do
   end
 end
 
+namespace :delayed_job do 
+  desc "Restart the delayed_job process"
+  task :restart, :roles => :app do
+    run "cd #{current_path}; source ~/.bash_profile; RAILS_ENV=#{rails_env} bin/delayed_job restart"
+  end
+end
+
 # 執行完deploy:setup就把local端的config檔印到server上的某個目錄
 after "deploy:setup", "custom:config_setup"
 
@@ -155,3 +162,5 @@ after "deploy:finalize_update", "custom:symlink_config"
 
 # 同步完程式、跑完bundle之後就執行rake db:migrate
 after "deploy:finalize_update", "deploy:migrate"
+
+after "deploy:finalize_update", "delayed_job:restart"
