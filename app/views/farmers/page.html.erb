@@ -159,13 +159,13 @@
                                   </a>
                                   <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
                                     <a class="text-fb" href="#">
-                                      <i class="fab fa-fw fa-2x fa-facebook"></i>
+                                      <i class="fab fa-fw fa-2x fa-facebook" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(@farmer.id, wd.id )}" + "\"" %>)"></i>
                                     </a>
                                     <a class="text-line" href="#">
-                                      <i class="fab fa-fw fa-2x fa-line"></i>
+                                      <i class="fab fa-fw fa-2x fa-line" style="display:none"></i>
                                     </a>
                                     <a class="text-dark" href="#">
-                                      <i class="far fa-fw fa-2x fa-envelope"></i>
+                                      <i class="far fa-fw fa-2x fa-envelope" style="display:none"></i>
                                     </a>
                                   </div>
                                 </div>
