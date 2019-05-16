@@ -22,7 +22,7 @@ class PostMessageApiJob < ActiveJob::Base
       gg << group.uid
       post_data = {'recipient_ids'=> gg, 'user' => user, 'password' => password, 'name' => mp.module_name }.to_json
       https = Net::HTTP.new(uri.host,uri.port)
-      https.use_ssl = true
+      # https.use_ssl = true
       req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
       req.body = post_data
       res = https.request(req)

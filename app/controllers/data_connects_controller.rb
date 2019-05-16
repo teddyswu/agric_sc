@@ -1355,7 +1355,7 @@ class DataConnectsController < ApplicationController
     password = customization[:password]
     post_data = {'recipient_id'=> uid, 'user' => user, 'password' => password, 'elements' => total }.to_json
     https = Net::HTTP.new(uri.host,uri.port)
-    https.use_ssl = true
+    # https.use_ssl = true
     req = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
     req.body = post_data
     res = https.request(req)
