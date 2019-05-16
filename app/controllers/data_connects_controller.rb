@@ -1001,7 +1001,7 @@ class DataConnectsController < ApplicationController
               word = Hash.new
               say_hi = true if gg.new_record?
               gg.save!
-              if (Time.now - gg.updated_at) > 30 or say_hi == true
+              if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
                 case Time.now.strftime('%H').to_i
                 when 0..4
                   sta = "晚安！"
@@ -1199,8 +1199,16 @@ class DataConnectsController < ApplicationController
         ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
         ua.save!
         case params[:pl]
-        when /SY_/,/TT_/,/GE_/,/ST_/,/AR_/
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
+        when /SY_/,/TT_/,/AR_/
+          aa = Authorization.find_by_uid(params[:uid])
+          bb = UserSubscription.find_by_scoped_id(params[:uid])
+          if aa.present?
+            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
+          elsif bb.present?
+            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","subscribe_guest")
+          else
+            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
+          end
           cw = ParameterSet.find(word.first.parameter_set_id)
           if cw.enabled == true
             total = JSON.parse(word.first.json.gsub("=>", ":"))
