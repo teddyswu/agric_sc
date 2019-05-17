@@ -70,7 +70,7 @@
             <% if wr.work_diary_images.normal_state.size > 0 %>
               <div class="col-6 col-lg-4 my-3 post" >
                 <%= render_is_mobile_link(browser.device.mobile?, params[:id], wr.id, (params[:page].to_i * 10 ) + i +1) %>
-                  <%= "<div class='multi p-2'><i class='far fa-clone'></i></div>".html_safe if wr.work_diary_images.normal_state.size > 1%>
+                  <%= "<div class='multi p-2' style='position: absolute;right: 0;z-index: 10;'><i class='far fa-clone'></i></div>".html_safe if wr.work_diary_images.normal_state.size > 1%>
                   <div class="position-absolute d-flex flex-column w-100 h-100 p-2 text-white">
                     <div class="mb-auto"></div>
                     <div class="text-center">
