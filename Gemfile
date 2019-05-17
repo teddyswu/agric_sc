@@ -24,7 +24,7 @@ gem "browser"
 gem 'will_paginate', '~> 3.1.0'
 gem 'rails-jquery-tokeninput'
 
-gem 'newrelic_rpm' # 效能監控
+gem 'newrelic_rpm', '~> 5.3', '>= 5.3.0.346' # 效能監控
 
 gem 'prawn'
 gem 'prawn-table'
