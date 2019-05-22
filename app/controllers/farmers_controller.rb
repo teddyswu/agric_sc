@@ -46,7 +46,7 @@ class FarmersController < ApplicationController
 		@mood = WorkDiaryMood.find_by(:work_diary_id => params[:record_id], :user_id => current_user.id) if user_signed_in?
 		set_page_description @work_diary.comment
     set_page_image @work_diary.work_diary_images.first.cover_url
-    set_page_title "友善小農-#{@farmer.farmer_profile.front_name}的工作牆 | 友故事"
+    set_page_title "友善小農-#{@farmer.farmer_profile.front_name}的工作牆"
 		render layout: "story"
 	end
 end
