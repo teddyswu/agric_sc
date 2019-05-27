@@ -1,8 +1,9 @@
 <body>
 	<%= render "shared/left_panel" %>
   <div id="right-panel" class="right-panel">
-  	<%= current_user.email %>
-  	<%= current_user.is_admin%>
+  	登入帳號：<%= current_user.email %><br >
+  	以下資訊每小時更新<br>
+  	不重複聊天人數：<%= @talk_user.size %>
   </div>
 </body>
 

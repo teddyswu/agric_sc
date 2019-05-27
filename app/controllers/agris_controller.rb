@@ -16,8 +16,13 @@ class AgrisController < ApplicationController
     cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
   }, :expires_in => 24.hour
 
+  caches_action :index, :cache_path => Proc.new {
+    cache_path = "#{WebConf.host}-#{request.path}_index_cache"
+  }, :expires_in => 1.hour
+
 
   def index
+    @talk_user = UserAnalyze.group(:uid).count
 	end
 
   def user_list
