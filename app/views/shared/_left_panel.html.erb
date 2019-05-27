@@ -10,7 +10,7 @@
     <div id="main-menu" class="main-menu collapse navbar-collapse">
     	<ul class="nav navbar-nav">
         <li class="active">
-        	<%= link_to " <i class='menu-icon fa fa-dashboard'></i>Dashboard ".html_safe, root_path %>
+        	<%= link_to " <i class='menu-icon fa fa-dashboard'></i>Dashboard ".html_safe, agris_path %>
         </li>
         <h3 class="menu-title">聊天內容</h3><!-- /.menu-title -->
         <li <%= "class='active'".html_safe if request.url.include?("gif") %>>
