@@ -22,7 +22,7 @@ safely_and_compute_time do
   scheduler  = Rufus::Scheduler.start_new
   proc_mutex = Mutex.new # 初始化一個 process 鎖  
   scheduler.cron '00 02 * * *', :mutex => proc_mutex do
-    ua = UserAnalyze.where(:pl => nil, :ref => nil).where("created_at < ?", Date.today - 1.day)
+    ua = UserAnalyze.where(:pl => nil, :ref => nil).where("created_at < ?", Date.today - 1.day).where.not(:watermarks => nil, :status => nil)
     ua.destroy_all
   end
 end
