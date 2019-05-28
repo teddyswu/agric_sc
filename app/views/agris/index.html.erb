@@ -3,7 +3,9 @@
   <div id="right-panel" class="right-panel">
   	登入帳號：<%= current_user.email %><br >
   	以下資訊每小時更新<br>
-  	不重複聊天人數：<%= @talk_user.size %>
+  	<% cache :talk_user, :expires_in => 1.hours do %>
+  		不重複聊天人數：<%= @talk_user.size %>
+  	<% end %>
   </div>
 </body>
 
