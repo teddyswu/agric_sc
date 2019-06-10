@@ -267,14 +267,15 @@ class DataConnectsController < ApplicationController
         end
         render json: work
       when "farmer_group"
-      	farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group)
+      	farmer_groups = PsGroup.normal_state.to_a
         farmer_group = Array.new
         farmer_groups.each do |fg|
-        	farmer_group << fg.ps_group
+        	farmer_group << fg.name
         end
         render json: farmer_group
       when "farmer_list"
-      	farmer_lists = FarmerProfile.joins(:user).where("farmer_profiles.ps_group = ?",params[:group])
+        ps_group = PsGroup.find_by_name(params[:group])
+      	farmer_lists = FarmerProfile.joins(:user).where("farmer_profiles.ps_group_id = ?",ps_group.id)
         farmer = Array.new
         farmer_lists.each do |fl|
           farmer_list = Hash.new
@@ -1279,7 +1280,8 @@ class DataConnectsController < ApplicationController
           j.id != js.last.id ? wording << aa[1..aa.size-2] + "," : wording << aa[1..aa.size-2]
         end
         wording << ","
-        farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
+        farmer_groups = PsGroup.normal_state.to_a
+        # farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
         farmer_group = Array.new
         fg_text_h = Array.new
         fg_text = Hash.new
@@ -1294,7 +1296,7 @@ class DataConnectsController < ApplicationController
           i+=1
           fg_card = Hash.new
           fg_card["NAME"] = "ugooz.b2c.menulist.ab1.01.02.0#{i}"
-          fg_card["title"] = fg
+          fg_card["title"] = fg.name
           fg_card["subtitle"] = "用好茶邀請您，一同為台灣的好山好水盡一份力，讓更多的人願意加入守護土地與水源的行動。"
           fg_card["image_url"] = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/project/campaign_image/file/5/campaign_path_0039.png"
           fg_card["buttons"] = []
@@ -1317,7 +1319,7 @@ class DataConnectsController < ApplicationController
           fg_list_talk["delay"] = "1"
           list_talk << fg_list_talk
           farmer_group << list_talk
-          farmer_group_lists = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").where(:ps_group => fg)
+          farmer_group_lists = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").where(:ps_group_id => fg.id)
           fgl = Array.new
           farmer_group_lists.each_with_index do |f_list, x|
             x+=1

@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
   has_many :campaign_groups
   has_many :tracks
 
+  scope :farmer_status, -> { where(is_farmer: true, is_check_farmer: true) }
+
 
   extend OmniauthCallbacks
 

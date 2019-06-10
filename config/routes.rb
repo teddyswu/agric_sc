@@ -44,6 +44,8 @@ Rails.application.routes.draw do
 
   resources :user_groups
 
+  resources :ps_groups
+
   resources :wordings
   resources :wording_cats
 

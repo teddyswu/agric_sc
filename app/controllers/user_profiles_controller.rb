@@ -13,7 +13,7 @@ class UserProfilesController < ApplicationController
     	farm_cate.save!
     end
     auth = Authorization.find_or_initialize_by(:provider => "facebook", :uid => params[:farmer_profile][:fb_uid], :user_id => params[:farmer_profile][:user_id])
-    auth.save!
+    auth.save! if params[:farmer_profile][:fb_uid].present?
     if params[:filed_code].present?
       @filed_code = FiledCode.where(:user_id => params[:farmer_profile][:user_id])
       @filed_code.destroy_all
@@ -30,6 +30,6 @@ class UserProfilesController < ApplicationController
 	end
 
 	def user_profile_params
-		params.require(:farmer_profile).permit(:user_id, :fb_url, :farm_name, :ps_group, :name, :tel, :cell_phone, :address, :certification_body,:certificate_photo, :certificate_photo_2, :oc_num, :crop_name, :validity_period, :introduce, :user_pic_url, :front_name)
+		params.require(:farmer_profile).permit(:user_id, :fb_url, :fb_uid, :ps_group_id,  :farm_name, :ps_group, :name, :tel, :cell_phone, :address, :certification_body,:certificate_photo, :certificate_photo_2, :oc_num, :crop_name, :validity_period, :introduce, :user_pic_url, :front_name)
 	end
 end

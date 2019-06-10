@@ -15,7 +15,7 @@
             <ol class="breadcrumb text-right">
               <li><a href="#">Dashboard</a></li>
               <li><a href="#">資料</a></li>
-              <li class="active">會員群組</li>
+              <li class="active">產銷班管理</li>
             </ol>
           </div>
         </div>
@@ -27,28 +27,31 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
-                <strong class="card-title">Table List</strong> 
-                <%= link_to "新增", new_user_group_path%>
+                <strong class="card-title">Table List</strong>
+                <%= link_to "新增", new_ps_group_path, :class => "btn btn-secondary"%>
               </div>
                 <div class="card-body">
                   <table class="table">
                     <thead class="thead-dark">
                       <tr>
-                        <th scope="col">群組名稱</th>
-                        <th scpoe="col">編輯</th>
-                        <th scpoe="col">刪除</th>
+                        <th scope="col">#</th>
+                        <th scope="col">名稱</th>
+                        <th scope="col">編輯</th>
+                        <th scope='col'>狀態</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% @groups.each do |group|%>
+                      <% @ps_groups.each do |ps_group|%>
                         <tr>
-                          <th scope="row"><%= group.name %></th>
-                          <td><%= link_to "[edit]", edit_user_group_path(group.id)%></td>
-                          <td><%= link_to "[del]", user_group_path(group.id), :method => :delete%></td>
+                          <th scope="row"><%= ps_group.id %></th>
+                          <td><%= ps_group.name%></td>
+                          <th><%= link_to "編輯", edit_ps_group_path(ps_group.id) %></th>
+                          <td><%= link_to render_enabled(ps_group.enabled), ps_group_path(ps_group.id), :method => :delete%></td>
                         </tr>
                       <% end %>
                     </tbody>
                   </table>
+                  <%= will_paginate @ps_groups %>
                 </div>
             </div>
           </div>
