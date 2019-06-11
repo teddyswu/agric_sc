@@ -58,7 +58,7 @@
           <%= f.label("產銷班", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.select :ps_group_id, options_for_select(@ps_groups.collect{ |c| [c.name, c.id]}, :selected => @user.farmer_profile.try(:ps_group).try(:id)),{}, { required: 'true', :class => "form-control"} %>
+          <%= f.select :ps_group_id, options_for_select(@ps_groups.collect{ |c| [c.name, c.id]}, :selected => @user.farmer_profile.try(:ps_group).try(:id)), { :include_blank => '無', required: 'true'},{ :class => "form-control"} %>
         </div>
       </div>
       <div class="row form-group">

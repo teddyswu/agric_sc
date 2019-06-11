@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190603083852) do
+ActiveRecord::Schema.define(version: 20190611073413) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -100,7 +100,6 @@ ActiveRecord::Schema.define(version: 20190603083852) do
     t.text     "fb_url",              limit: 65535
     t.string   "farm_name",           limit: 255
     t.string   "ps_group",            limit: 255
-    t.integer  "ps_group_id",         limit: 4
     t.string   "front_name",          limit: 255
     t.string   "name",                limit: 255
     t.string   "tel",                 limit: 255
@@ -236,6 +235,8 @@ ActiveRecord::Schema.define(version: 20190603083852) do
 
   create_table "ps_groups", force: :cascade do |t|
     t.string   "name",       limit: 255
+    t.string   "image_url",  limit: 255
+    t.string   "subtitle",   limit: 255
     t.boolean  "enabled"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false

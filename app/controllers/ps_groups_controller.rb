@@ -37,6 +37,6 @@ class PsGroupsController < ApplicationController
   end
 
   def ps_group_params
-  	params.require(:ps_group).permit(:name)
+  	params.require(:ps_group).permit(:name, :image_url, :subtitle)
   end
 end

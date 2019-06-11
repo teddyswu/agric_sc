@@ -1080,9 +1080,14 @@ class DataConnectsController < ApplicationController
               text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
               text_3["delay"] = 1
               text_3_a << text_3
-              auth.user.orders.order(:paid).limit(10).each_with_index do |order, i|
+              order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
+              order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
+              order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
+              order_ids = order_a + order_b + order_c
+              orders = Order.where(:id => order_ids).order(id: :desc).to_a
+              orders.each_with_index do |order, i|
                 i+=1
-                if order.goody.campaign.end_date > Date.today
+                if order.goody.campaign.end_date >= Date.today
                   remain_day = (order.goody.campaign.end_date - Date.today).to_i
                   amount_raised = order.goody.campaign.amount_raised
                   percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
@@ -1297,8 +1302,8 @@ class DataConnectsController < ApplicationController
           fg_card = Hash.new
           fg_card["NAME"] = "ugooz.b2c.menulist.ab1.01.02.0#{i}"
           fg_card["title"] = fg.name
-          fg_card["subtitle"] = "用好茶邀請您，一同為台灣的好山好水盡一份力，讓更多的人願意加入守護土地與水源的行動。"
-          fg_card["image_url"] = "https://soginationaltest.s3-ap-southeast-1.amazonaws.com/project/campaign_image/file/5/campaign_path_0039.png"
+          fg_card["subtitle"] = fg.subtitle.to_s
+          fg_card["image_url"] = fg.image_url.to_s
           fg_card["buttons"] = []
           fg_card_b = Hash.new
           fg_card_b["type"] = "postback"

@@ -39,6 +39,22 @@
                       <%= f.text_field(:name, :class => "form-control", :maxlength => 20)%>
                     </div>
                   </div>
+                  <div class="row form-group">
+                    <div class="col col-md-3">
+                      <%= f.label("圖片路徑", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= f.text_field(:image_url, :class => "form-control")%>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col col-md-3">
+                      <%= f.label("副標題", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-12 col-md-9">
+                      <%= f.text_field(:subtitle, :class => "form-control")%>
+                    </div>
+                  </div>
                   <div class="card-footer">
                     <button type="submit" class="btn btn-primary btn-sm">
                       <i class="fa fa-dot-circle-o"></i> Submit
