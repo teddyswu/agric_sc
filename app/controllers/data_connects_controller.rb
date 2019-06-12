@@ -1094,7 +1094,7 @@ class DataConnectsController < ApplicationController
                   text_2_c = Hash.new
                   text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
                   text_2_c["title"] = order.goody.campaign.title
-                  text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                  text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
                   text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
                   buttons = Array.new #[]
                   t1 = Hash.new
