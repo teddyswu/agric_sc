@@ -1,8 +1,8 @@
-<%= link_to farmer_mobile_img_path(wwb.work_diary.owner_id,wwb.work_diary_id), :class => "block-info" do %>
+<a class="block-info" href="javascript:void();" data-toggle="modal" data-target="#modal-detail_<%= wwb.id %>">
   <div class="overlay flex-column">
     <div class="my-auto">
       <%= wwb.work_diary.comment%>
     </div>
   </div>
   <img class="img-fluid filter-<%= wwb.filter %>" src="<%= wwb.cover_url%>" alt="">
-<% end %>
+</a>
