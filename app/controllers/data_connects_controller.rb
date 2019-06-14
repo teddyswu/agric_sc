@@ -1073,48 +1073,87 @@ class DataConnectsController < ApplicationController
           if auth.present?
             result["register"] = true
             if auth.user.orders.size > 0 
-              text_3_a = Array.new
-              result["join"] = true
-              text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-              text_3["type"] = "text"
-              text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
-              text_3["delay"] = 1
-              text_3_a << text_3
               order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
               order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
               order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
               order_ids = order_a + order_b + order_c
               orders = Order.where(:id => order_ids).order(id: :desc).to_a
-              orders.each_with_index do |order, i|
-                i+=1
-                if order.goody.campaign.end_date >= Date.today
-                  remain_day = (order.goody.campaign.end_date - Date.today).to_i
-                  amount_raised = order.goody.campaign.amount_raised
-                  percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
-                  text_2_c = Hash.new
-                  text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                  text_2_c["title"] = order.goody.campaign.title
-                  text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
-                  text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+              if orders.size > 0
+                text_3_a = Array.new
+                result["join"] = true
+                text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                text_3["type"] = "text"
+                text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
+                text_3["delay"] = 1
+                text_3_a << text_3
+                orders.last(10).each_with_index do |order, i|
+                  i+=1
+                  if order.goody.campaign.end_date >= Date.today
+                    remain_day = (order.goody.campaign.end_date - Date.today).to_i
+                    amount_raised = order.goody.campaign.amount_raised
+                    percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+                    text_2_c = Hash.new
+                    text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                    text_2_c["title"] = order.goody.campaign.title
+                    text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                    text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+                    buttons = Array.new #[]
+                    t1 = Hash.new
+                    if order.paid == false
+                      t1["type"] = "web_url"
+                      t1["title"] = "付款去"
+                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                    else
+                      t1["type"] = "web_url"
+                      t1["title"] = "查看詳細記錄"
+                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                    end
+                    buttons << t1
+                    t2 = Hash.new
+                    t2["type"] = "web_url"
+                    t2["title"] = "查看最新進度"
+                    t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                    buttons << t2
+                    text_2_c["buttons"] = buttons
+                    text_a << text_2_c
+                  end
+                end
+              else
+                result["join"] = false
+                text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                text_1["type"] = "text"
+                text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                text_1["delay"] = 1
+                total = Array.new
+                proposal = Array.new
+                proposal_1 = Array.new
+                text_t = Array.new
+                text_2 = Hash.new
+                campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+                campaigns.each_with_index do |campaign, i|
+                  i+=1
+                  remain_day = (campaign.end_date - Date.today).to_i
+                  amount_raised = campaign.amount_raised
+                  percentage = 100*(amount_raised.to_f / campaign.goal)
+                  description = campaign.description.first(40)
+                  text_c = Hash.new
+                  text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                  text_c["title"] = campaign.title
+                  text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                  text_c["image_url"] = campaign.campaign_image.campaign_path
                   buttons = Array.new #[]
                   t1 = Hash.new
-                  if order.paid == false
-                    t1["type"] = "web_url"
-                    t1["title"] = "付款去"
-                    t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                  else
-                    t1["type"] = "web_url"
-                    t1["title"] = "查看詳細記錄"
-                    t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                  end
+                  t1["type"] = "postback"
+                  t1["title"] = "追蹤♥"
+                  t1["payload"] = "FLW_proj_#{campaign.slug}"
                   buttons << t1
                   t2 = Hash.new
                   t2["type"] = "web_url"
-                  t2["title"] = "查看最新進度"
-                  t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                  t2["title"] = "查看內容"
+                  t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
                   buttons << t2
-                  text_2_c["buttons"] = buttons
-                  text_a << text_2_c
+                  text_c["buttons"] = buttons
+                  proposal_1 << text_c
                 end
               end
             else
