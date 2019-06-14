@@ -1142,7 +1142,7 @@ class DataConnectsController < ApplicationController
                   text_c = Hash.new
                   text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
                   text_c["title"] = campaign.title
-                  text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                  text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
                   text_c["image_url"] = campaign.campaign_image.campaign_path
                   buttons = Array.new #[]
                   t1 = Hash.new
@@ -1180,7 +1180,7 @@ class DataConnectsController < ApplicationController
                 text_c = Hash.new
                 text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
                 text_c["title"] = campaign.title
-                text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
                 text_c["image_url"] = campaign.campaign_image.campaign_path
                 buttons = Array.new #[]
                 t1 = Hash.new
