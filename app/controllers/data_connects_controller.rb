@@ -338,7 +338,7 @@ class DataConnectsController < ApplicationController
                 income = group.income
                 supporter = group.campaign.orders.is_paid.size
                 img = group.campaign.campaign_image.campaign_path
-                line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{percentage}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "#{@project_domain}/campaigns/#{group.campaign.slug}" + '"}]}'      
+                line = '{"title": "' + "#{group.campaign.title}"+ '","subtitle": "提案剩餘: ' + "#{remain_day}" + '天\n目前達成: ' + "#{number_to_currency(percentage,precision: 1)}%" + '\n預計收益: ' + "#{number_to_currency(income, precision: 0)}" + '元\n支持人數: ' + "#{supporter}" + '","image_url": "' + "#{img}" + '","buttons": [{"type": "web_url","title": "查看詳細內容","url": "' + "#{@project_domain}/campaigns/#{group.campaign.slug}" + '"}]}'      
                 proposal_1 << JSON.parse(line)
               end
             end
@@ -370,7 +370,7 @@ class DataConnectsController < ApplicationController
               description = campaign.description.first(40)
               text_1 = Hash.new
               text_1["title"] = campaign.title
-              text_1["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+              text_1["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_1["image_url"] = campaign.campaign_image.campaign_path
               text_1["buttons"] = JSON.parse("[{\"type\": \"web_url\",\"title\": \"追蹤♥\",\"url\": \"#{@root_domain}/stories/13\"}, {\"type\": \"web_url\",\"title\": \"查看內容\",\"url\": \"" + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
               proposal_1 << text_1
@@ -425,7 +425,7 @@ class DataConnectsController < ApplicationController
           description = campaign.description.first(40)
           text = Hash.new
           text["title"] = campaign.title
-          text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+          text["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
           text["image_url"] = campaign.campaign_image.campaign_path
           buttons = Array.new #[]
           t1 = Hash.new
@@ -649,7 +649,7 @@ class DataConnectsController < ApplicationController
               description = campaign.description.first(40)
               text_3 = Hash.new
               text_3["title"] = campaign.title
-              text_3["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+              text_3["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_3["image_url"] = campaign.campaign_image.campaign_path
               text_3["buttons"] = JSON.parse("[{\"type\": \"web_url\",\"title\": \"追蹤♥\",\"url\": \"#{@root_domain}/stories/13\"}, {\"type\": \"web_url\",\"title\": \"查看內容\",\"url\": \"" + "#{@project_domain}/campaigns/#{campaign.slug}" + '"}]')
               proposal << text_3
@@ -701,7 +701,7 @@ class DataConnectsController < ApplicationController
                 percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
                 text_2_c = Hash.new
                 text_2_c["title"] = order.goody.campaign.title
-                text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
                 text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
                 buttons = Array.new #[]
                 t1 = Hash.new
@@ -743,7 +743,7 @@ class DataConnectsController < ApplicationController
               description = campaign.description.first(40)
               text_c = Hash.new
               text_c["title"] = campaign.title
-              text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{percentage}%\n支持人數: #{campaign.orders.is_paid.size}人"
+              text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
               text_c["image_url"] = campaign.campaign_image.campaign_path
               buttons = Array.new #[]
               t1 = Hash.new
