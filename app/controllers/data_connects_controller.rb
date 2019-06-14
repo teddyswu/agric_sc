@@ -358,8 +358,11 @@ class DataConnectsController < ApplicationController
             proposal << text_2
             proposal_1 = Array.new
             user = User.joins(:farmer_profile).where("farmer_profiles.name = ? and users.is_farmer = true and users.is_check_farmer = true", params[:name])
-            similar_user = FarmerProfile.where(:category => user[0].farmer_profile.category).map {|user| user.user_id }
-            campaigns = Campaign.where(:status => 3, :user_id => similar_user).limit(10)
+            cate = user[0].farming_categories.map{|fc|fc.id}
+            similar_user = UserFarmingCategoryShip.where(:farming_category_id => cate).map { |user| user.user_id }
+            # similar_user = FarmerProfile.where(:category => user[0].farmer_profile.category).map {|user| user.user_id }
+            campaign_ids = CampaignGroup.where(:user_id => similar_user).group(:campaign_id).map { |campaign| campaign.campaign_id }
+            campaigns = Campaign.where(:status => 3, :id => campaign_ids).limit(10)
             campaigns.each do |campaign|
               remain_day = (campaign.end_date - Date.today).to_i
               amount_raised = campaign.amount_raised
