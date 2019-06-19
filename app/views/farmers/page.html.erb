@@ -243,7 +243,11 @@
       <% end %>
     }
     $('.article').infiniteScroll({
-      path: '<%= params[:id]%>/page/{{#}}',
+      <% if params[:page].present? %>
+        path: '/farmers/<%= params[:id]%>/page/{{#}}',
+      <% else %>
+        path: '<%= params[:id]%>/page/{{#}}',
+      <% end %>
       append: '.post',
       status: ".scroller-status"
     });
