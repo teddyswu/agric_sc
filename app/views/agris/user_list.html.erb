@@ -1,118 +1,75 @@
-<body>
-  <%= render "shared/left_panel" %>
-  <div id="right-panel" class="right-panel">
-    <div class="breadcrumbs">
-      <div class="col-sm-4">
-        <div class="page-header float-left">
-          <div class="page-title">
-            <h1>Dashboard</h1>
+<% cache ["user_list",params[:page]], :expires_in => 1.hours do %>
+  <body>
+    <%= render "shared/left_panel" %>
+    <div id="right-panel" class="right-panel">
+      <div class="breadcrumbs">
+        <div class="col-sm-4">
+          <div class="page-header float-left">
+            <div class="page-title">
+              <h1>Dashboard</h1>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="page-header float-right">
+            <div class="page-title">
+              <ol class="breadcrumb text-right">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">網頁內容</a></li>
+                <li class="active">用戶列表</li>
+              </ol>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-sm-8">
-        <div class="page-header float-right">
-          <div class="page-title">
-            <ol class="breadcrumb text-right">
-              <li><a href="#">Dashboard</a></li>
-              <li><a href="#">網頁內容</a></li>
-              <li class="active">用戶列表</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="content mt-3">
-      <div class="animated fadeIn">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-header">
-                <strong class="card-title">Table List</strong>
-              </div>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-lg-6">
-                      <canvas id="pieChart"></canvas>
-                    </div>
-                    <div class="col-lg-6">
-                    </div>
-                  </div>
-                  <div>
-                    <div class="col-lg-6">
-                    </div>
-                    <div class="col-lg-6">
-                      共 <span style="padding-left: 1px;padding-right: 1px;color: #0084ff;"><%= @users.size %></span> 名用戶
-                    </div>
-                  </div>
-                  <table class="table">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">姓名</th>
-                        <th scope="col">性別</th>
-                        <th scope="col">初次使用時間</th>
-                        <th scope="col">最後使用時間</th>
-                        <th scope="col">粉絲專頁</th>
-                        <th scope="col">使用平台</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% @users.each do |user|%>
-                        <tr>
-                          <th scope="row"><%= user.id %></th>
-                          <td><%= user.full_name %></td>
-                          <td>男</td>
-                          <td><%= user.created_at %></td>
-                          <td><%= user.updated_at %></td>
-                          <td></td>
-                          <td>Facebook</td>
-                        </tr>
-                      <% end %>
-                    </tbody>
-                  </table>
-                  <%= will_paginate @users %>
+      <div class="content mt-3">
+        <div class="animated fadeIn">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <strong class="card-title">Table List</strong>
                 </div>
+                  <div class="card-body">
+                    <div>
+                      <div class="col-lg-6">
+                      </div>
+                      <div class="col-lg-6">
+                        共 <span style="padding-left: 1px;padding-right: 1px;color: #0084ff;"><%= @total_user.size %></span> 名用戶
+                      </div>
+                    </div>
+                    <table class="table">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th scope="col">UID</th>
+                          <th scope="col">姓名</th>
+                          <th scope="col">性別</th>
+                          <th scope="col">初次使用時間</th>
+                          <th scope="col">最後使用時間</th>
+                          <th scope="col">使用平台</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% @users.each do |user|%>
+                          <tr>
+                            <th scope="row"><%= user.uid %></th>
+                            <td><%= user.name %></td>
+                            <td>男</td>
+                            <td><%= user.created_at.strftime("%F %T") %></td>
+                            <% last_time = UserAnalyze.where(:uid => user.uid).order(created_at: :asc).last%>
+                            <td><%= last_time.created_at.strftime("%F %T") %></td>
+                            <td>Facebook</td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                    <%= will_paginate @users %>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</body>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
-<script>
-( function ( $ ) {
-    "use strict";
-    var ctx = document.getElementById( "pieChart" );
-    ctx.height = 300;
-    var myChart = new Chart( ctx, {
-        type: 'pie',
-        data: {
-            datasets: [ {
-                data: [ 45, 25, 20 ],
-                backgroundColor: [
-                                    "rgba(0, 123, 255,0.9)",
-                                    "rgba(0, 123, 255,0.7)",
-                                    "rgba(0,0,0,0.07)"
-                                ],
-                hoverBackgroundColor: [
-                                    "rgba(0, 123, 255,0.9)",
-                                    "rgba(0, 123, 255,0.7)",
-                                    "rgba(0,0,0,0.07)"
-                                ]
-
-                            } ],
-            labels: [
-                            "male",
-                            "female",
-                            "unknown"
-                        ]
-        },
-        options: {
-            responsive: true
-        }
-    } );
-} )( jQuery );
-</script>
+  </body>
+<% end %>

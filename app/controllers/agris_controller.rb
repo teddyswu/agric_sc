@@ -26,7 +26,8 @@ class AgrisController < ApplicationController
 	end
 
   def user_list
-    @users = UserSubscription.all.paginate(:page => params[:page], per_page: 10)
+    @total_user = UserAnalyze.group("uid").to_a
+    @users = UserAnalyze.group("uid").order(id: :desc).paginate(:page => params[:page], per_page: 20)
   end
 	def comic
 		@type = FileList.new
