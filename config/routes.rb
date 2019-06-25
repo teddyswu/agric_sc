@@ -60,6 +60,7 @@ Rails.application.routes.draw do
     post "movie_create", :on => :collection
     get "article", :on => :collection
     get "user_list", :on => :collection
+    get "user_list_alert", :on => :collection
     post "article_create", :on => :collection
   end
   resources :upload_tools

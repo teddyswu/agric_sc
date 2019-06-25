@@ -16,6 +16,10 @@ class AgrisController < ApplicationController
     cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
   }, :expires_in => 24.hour
 
+  caches_action :user_list, :cache_path => Proc.new {
+    cache_path = "#{WebConf.host}-#{request.path}_user_list_cache"
+  }, :expires_in => 1.hour
+
   # caches_action :index, :cache_path => Proc.new {
   #   cache_path = "#{WebConf.host}-#{request.path}_index_cache"
   # }, :expires_in => 1.hour
@@ -29,6 +33,14 @@ class AgrisController < ApplicationController
     @total_user = UserAnalyze.group("uid").to_a
     @users = UserAnalyze.group("uid").order(id: :desc).paginate(:page => params[:page], per_page: 20)
   end
+
+  def user_list_alert
+    @user = UserAnalyze.where(:uid => params[:uid]).group("uid")
+    @user_ref = UserAnalyze.where(:uid => params[:uid]).where.not(:ref => nil)
+    @user_last_time = UserAnalyze.where(:uid => params[:uid]).order(created_at: :asc)
+    render :layout => false
+  end
+
 	def comic
 		@type = FileList.new
     @type_comic = TypeComic.new

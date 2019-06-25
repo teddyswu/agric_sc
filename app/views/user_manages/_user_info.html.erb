@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-header">
+    <strong>會員資料</strong>
+  </div>
+  <div class="card-body card-block">
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">暱稱</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.nickname%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">姓名</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.first_name%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">性別</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.gender == 1 ? "男" : "女"%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">生日</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.birthday.strftime("%Y年%m月%d日") if @user.user_profile.birthday.present? %></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">年齡級距</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.age_range%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">地址</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.try(:city).try(:name)%> <%= @user.user_profile.try(:district).try(:name)%> <%= @user.user_profile.address%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">手機號碼</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.cell_phone%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">個人臉書或粉專</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.user_profile.facebook_url%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">帳號建立時間</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.created_at.strftime("%Y年%m月%d日")%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">最後登入IP</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user.last_sign_in_ip%></p>
+      </div>
+    </div>
+  </div>
+</div>

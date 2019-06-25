@@ -90,6 +90,7 @@
                 </div>
             </div>
             <%= render "basic_info" if @user.is_farmer == true %>
+            <%= render "user_info" if @user.user_profile.present? %>
           </div>
         </div>
       </div>

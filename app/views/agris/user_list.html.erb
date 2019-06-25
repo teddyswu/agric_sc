@@ -41,24 +41,23 @@
                     <table class="table">
                       <thead class="thead-dark">
                         <tr>
-                          <th scope="col">UID</th>
+                          <th scope="col">IMG</th>
                           <th scope="col">姓名</th>
-                          <th scope="col">性別</th>
                           <th scope="col">初次使用時間</th>
-                          <th scope="col">最後使用時間</th>
-                          <th scope="col">使用平台</th>
+                          <th scope="col">查詢</th>
                         </tr>
                       </thead>
                       <tbody>
                         <% @users.each do |user|%>
                           <tr>
-                            <th scope="row"><%= user.uid %></th>
+                            <th scope="row"><img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= user.uid %>/picture" alt="" style="width: 30px"></th>
                             <td><%= user.name %></td>
-                            <td>男</td>
                             <td><%= user.created_at.strftime("%F %T") %></td>
-                            <% last_time = UserAnalyze.where(:uid => user.uid).order(created_at: :asc).last%>
-                            <td><%= last_time.created_at.strftime("%F %T") %></td>
-                            <td>Facebook</td>
+                            <td>
+                              <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#mediumModal" onclick="ChangeContent(<%= user.uid%>)">
+                                查詢
+                              </button>
+                            </td>
                           </tr>
                         <% end %>
                       </tbody>
@@ -72,4 +71,46 @@
       </div>
     </div>
   </body>
+  <div class="modal fade" id="mediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="mediumModalLabel"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modal_content">
+          <div class="row">
+            <div class="col-lg-12" style="text-align: center;">
+              NAME
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-lg-6">
+              123
+            </div>
+            <div class="col-lg-6">
+              456
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>
+<script>
+  function ChangeContent(uid){
+    url = '/agris/user_list_alert?uid=' + uid;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false );
+    xmlHttp.send( null );
+    content = xmlHttp.responseText;
+    $("#modal_content").html("");
+    $("#modal_content").html(content);
+  };
+</script>

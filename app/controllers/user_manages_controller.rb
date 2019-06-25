@@ -14,6 +14,7 @@ class UserManagesController < ApplicationController
     @filed_code = FiledCode.where(:user_id => params[:id])
     @ps_groups = PsGroup.normal_state.to_a
 	end
+
 	def update
 		@user = User.find(params[:id])
 		@user.update(user_params)

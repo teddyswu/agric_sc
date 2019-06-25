@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-lg-12" style="text-align: center;">
+    <%= @user[0].name%>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-lg-6">
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">UID</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user[0].uid%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">初次使用時間</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user[0].created_at.strftime("%F %T")%></p>
+      </div>
+    </div>
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">最近使用時間</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= @user_last_time.last.created_at.strftime("%F %T")%></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" style="max-height: 300px;overflow: auto;">
+    <div class="row form-group">
+      <div class="col col-md-3"><label class=" form-control-label">REF</label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"></p>
+      </div>
+    </div>
+    <% @user_ref.each_with_index do |ref,i|%>
+      <div class="col col-md-3"><label class=" form-control-label"><%= i %></label></div>
+      <div class="col-12 col-md-9">
+        <p class="form-control-static"><%= ref.ref %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
