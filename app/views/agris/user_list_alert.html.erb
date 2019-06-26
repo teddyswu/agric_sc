@@ -13,14 +13,14 @@
       </div>
     </div>
     <div class="row form-group">
-      <div class="col col-md-3"><label class=" form-control-label">初次使用時間</label></div>
-      <div class="col-12 col-md-9">
+      <div class="col col-md-5"><label class=" form-control-label">初次互動時間</label></div>
+      <div class="col-12 col-md-7">
         <p class="form-control-static"><%= @user[0].created_at.strftime("%F %T")%></p>
       </div>
     </div>
     <div class="row form-group">
-      <div class="col col-md-3"><label class=" form-control-label">最近使用時間</label></div>
-      <div class="col-12 col-md-9">
+      <div class="col col-md-5"><label class=" form-control-label">最近互動時間</label></div>
+      <div class="col-12 col-md-7">
         <p class="form-control-static"><%= @user_last_time.last.created_at.strftime("%F %T")%></p>
       </div>
     </div>
@@ -33,9 +33,11 @@
       </div>
     </div>
     <% @user_ref.each_with_index do |ref,i|%>
-      <div class="col col-md-3"><label class=" form-control-label"><%= i %></label></div>
-      <div class="col-12 col-md-9">
-        <p class="form-control-static"><%= ref.ref %></p>
+      <div class="col col-md-5">
+        <label class=" form-control-label"><%= ref.ref %></label>
+      </div>
+      <div class="col-12 col-md-7">
+        <p class="form-control-static"><%= ref.created_at.strftime("%F %T") %></p>
       </div>
     <% end %>
   </div>

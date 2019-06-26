@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     get "article", :on => :collection
     get "user_list", :on => :collection
     get "user_list_alert", :on => :collection
+    post "user_list_search", :on => :collection
     post "article_create", :on => :collection
   end
   resources :upload_tools

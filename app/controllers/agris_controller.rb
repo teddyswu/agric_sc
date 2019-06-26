@@ -16,13 +16,9 @@ class AgrisController < ApplicationController
     cache_path = "#{WebConf.host}-#{request.path}_showgif_cache"
   }, :expires_in => 24.hour
 
-  caches_action :user_list, :cache_path => Proc.new {
-    cache_path = "#{WebConf.host}-#{request.path}_user_list_cache"
+  caches_action :user_list_alert, :cache_path => Proc.new {
+    cache_path = "#{WebConf.host}-#{request.path}-#{params[:uid]}_user_list_alert_cache"
   }, :expires_in => 1.hour
-
-  # caches_action :index, :cache_path => Proc.new {
-  #   cache_path = "#{WebConf.host}-#{request.path}_index_cache"
-  # }, :expires_in => 1.hour
 
 
   def index
@@ -39,6 +35,11 @@ class AgrisController < ApplicationController
     @user_ref = UserAnalyze.where(:uid => params[:uid]).where.not(:ref => nil)
     @user_last_time = UserAnalyze.where(:uid => params[:uid]).order(created_at: :asc)
     render :layout => false
+  end
+
+  def user_list_search
+    @total_user = UserAnalyze.group("uid").to_a
+    @users = UserAnalyze.where("name like ?", "%#{params[:post][:name]}%").group("uid").order(id: :desc).paginate(:page => params[:page], per_page: 20)
   end
 
 	def comic
