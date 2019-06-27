@@ -32,7 +32,7 @@
                     <div class="row form-group">
                       <div class="col col-md-12">
                         <div class="input-group">
-                          <%= text_field(:post, :name, size: 20, class: "form-control", placeholder: "Search" ) %>
+                          <%= text_field(:post, :name, size: 20, class: "form-control", placeholder: "請輸入FB姓名" ) %>
                           <div class="input-group-btn"><button type="submit" class="btn btn-primary">Submit</button></div>
                         </div>
                       </div>
@@ -45,7 +45,7 @@
               <div class="card">
                 <div class="card-header">
                   <strong class="card-title" style="float: left;">Table List</strong>
-                  <div  style="float: right;">提示文案：<br>✽用戶資料每整點更新一次，包括新增用戶及查詢的內容。</div>
+                  <div  style="float: right;">✽用戶資料每整點更新一次，包括新增用戶及查詢的內容。</div>
                 </div>
                   <div class="card-body">
                     <div>
@@ -79,7 +79,7 @@
                         <% end %>
                       </tbody>
                     </table>
-                    <%= will_paginate @users %>
+                    <%= will_paginate @users, :renderer => WillPaginateRenderer::WebPageRenderer %>
                   </div>
               </div>
             </div>

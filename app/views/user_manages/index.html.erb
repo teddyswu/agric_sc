@@ -34,9 +34,10 @@
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
+                        <th scope="col"></th>
+                        <th scope="col">暱稱</th>
+                        <th scope="col">建立時間</th>
                         <th scope="col">Email</th>
-                        <th scope="col">管理員</th>
-                        <th scope="col">友善農友</th>
                         <th scpoe="col">編輯</th>
                       </tr>
                     </thead>
@@ -44,15 +45,16 @@
                       <% @users.each do |user|%>
                         <tr>
                           <th scope="row"><%= user.id %></th>
+                          <td><img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= user.authorizations[0].try(:uid) %>/picture" alt="" style="width: 30px"></td>
+                          <td><%= user.user_profile.try(:nickname) %></td>
+                          <td><%= user.created_at.strftime("%F %T") %></td>
                           <td><%= user.email%></td>
-                          <td><%= render_is_true(user.is_admin) %></td>
-                          <td><%= render_is_farmer(user.is_farmer, user.is_check_farmer) %></td>
                           <td><%= link_to "[edit]", edit_user_manage_path(user.id)%></td>
                         </tr>
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @users %>
+                  <%= will_paginate @users, :renderer => WillPaginateRenderer::WebPageRenderer %>
                 </div>
             </div>
           </div>

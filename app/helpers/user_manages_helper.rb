@@ -16,6 +16,26 @@ module UserManagesHelper
 		end
 	end
 
+	def render_age_range(range)
+		case range
+		when 1
+			"19(含)以下"
+		when 2
+			"20~29"
+		when 3
+			"30~39"
+		when 4
+			"40~49"
+		when 5
+			"50~59"
+		when 6
+			"60(含)以上"
+		else
+			"無"
+		end
+			
+	end
+
 	def render_row(filed_code)
 		if filed_code.present?
 			filed = ""

@@ -3,7 +3,7 @@ class UserManagesController < ApplicationController
   before_action :is_admin, only: [:farmer, :index]
 
 	def index
-		@users = User.all.order(id: :desc).paginate(:page => params[:page], per_page: 10)
+		@users = User.all.order(id: :desc).paginate(:page => params[:page], per_page: 20)
 	end
 
 	def edit

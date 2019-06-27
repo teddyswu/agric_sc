@@ -78,7 +78,7 @@
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @users %>
+                  <%= will_paginate @users, :renderer => WillPaginateRenderer::WebPageRenderer %>
                 </div>
             </div>
           </div>

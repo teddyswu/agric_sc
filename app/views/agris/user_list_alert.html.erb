@@ -33,10 +33,10 @@
       </div>
     </div>
     <% @user_ref.each_with_index do |ref,i|%>
-      <div class="col col-md-5">
+      <div class="col col-md-5" style="font-size: 14px;height: 42px;">
         <label class=" form-control-label"><%= ref.ref %></label>
       </div>
-      <div class="col-12 col-md-7">
+      <div class="col-12 col-md-7" style="height: 42px;">
         <p class="form-control-static"><%= ref.created_at.strftime("%F %T") %></p>
       </div>
     <% end %>

@@ -32,7 +32,7 @@ class AgrisController < ApplicationController
 
   def user_list_alert
     @user = UserAnalyze.where(:uid => params[:uid]).group("uid")
-    @user_ref = UserAnalyze.where(:uid => params[:uid]).where.not(:ref => nil)
+    @user_ref = UserAnalyze.where(:uid => params[:uid]).where.not(:ref => nil).order(created_at: :desc)
     @user_last_time = UserAnalyze.where(:uid => params[:uid]).order(created_at: :asc)
     render :layout => false
   end
