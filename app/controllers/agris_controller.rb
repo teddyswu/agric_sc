@@ -117,6 +117,8 @@ class AgrisController < ApplicationController
     @wording.enabled = true
     @wording.save!
 
+    analysis_json(@wording.content, @wording.id)
+
     redirect_to :action => :wording_list
   end
 
@@ -136,14 +138,7 @@ class AgrisController < ApplicationController
   def wording_update
     @wording = Wording.find(params[:id])
     @wording.update(word_params)
-    # cpp = ParameterSet.find_by_wording_id(@wording.id)
-    # if cpp.present?
-    #   cpd = ParameterJson.where(:parameter_set_id => cpp.id)
-    #   cpd.destroy_all
-    #   analysis_json(@wording.content, cpp.id, "guest")
-    #   analysis_json(@wording.content, cpp.id, "subscribe_guest")
-    #   analysis_json(@wording.content, cpp.id, "user")
-    # end
+    analysis_json(@wording.content, @wording.id)
 
     redirect_to :action => :wording_list
   end
@@ -152,7 +147,7 @@ class AgrisController < ApplicationController
     params.require(:wording).permit(:name, :content, :wording_cat_id)
   end
 
-  def analysis_json(content, id, type)
+  def analysis_json(content, id)
     ana = JSON.parse(content)
     aa = Array.new
     name = ""
@@ -160,11 +155,10 @@ class AgrisController < ApplicationController
       name = jj[0]["NAME"] if name == ""
       aa << jj
       if jj[0]["quick_replies"].present? or jj[0]["buttons"].present?
-        pj = ParameterJson.new
+        pj = WordingJson.new
         pj.name = name
         pj.json = aa
-        pj.parameter_set_id = id
-        pj.parameter_set_type = type
+        pj.wording_id = id
         pj.save!
         name = ""
         aa = []
