@@ -995,38 +995,49 @@ class DataConnectsController < ApplicationController
           when "", "\"\""
             case params[:start]
             when "", "\"\"" #個人化問候語
-              gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-              n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
-              name = (n.present? ? n.last.name : "匿名訪客")
-              gg.name = name
-              gg.start = (params[:start] == "1" ? true : false)
-              word_t = Array.new
-              word_a = Array.new
-              word = Hash.new
-              say_hi = true if gg.new_record?
-              gg.save!
-              if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
-                case Time.now.strftime('%H').to_i
-                when 0..4
-                  sta = "晚安！"
-                when 5..10
-                  sta = "早安！"
-                when 11..13
-                  sta = "午安！"
-                when 14..17
-                  sta = "下午好~"
-                when 18..23
-                  sta = "晚安！"
+              case params[:type]
+                when "", "\"\"", nil
+                  gg = Greeting.find_or_initialize_by(:uid => params[:uid])
+                  n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
+                  name = (n.present? ? n.last.name : "匿名訪客")
+                  gg.name = name
+                  gg.start = (params[:start] == "1" ? true : false)
+                  word_t = Array.new
+                  word_a = Array.new
+                  word = Hash.new
+                  say_hi = true if gg.new_record?
+                  gg.save!
+                  if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
+                    case Time.now.strftime('%H').to_i
+                    when 0..4
+                      sta = "晚安！"
+                    when 5..10
+                      sta = "早安！"
+                    when 11..13
+                      sta = "午安！"
+                    when 14..17
+                      sta = "下午好~"
+                    when 18..23
+                      sta = "晚安！"
+                    end
+                    word["type"] = "text"
+                    word["text"] = "Hi #{name} #{sta}"
+                    word["delay"] = "1"
+                    gg.updated_at = Time.now
+                  end
+                  word_a << word
+                  gg.save!
+                  word_t << word_a
+                  render json: word_t
+                else
+                  ua = UserAnalyze.new
+                  ua.uid = params[:uid] if params[:uid].present?
+                  ua.type = params[:type] if params[:type].present? and params[:type] != "\"\""
+                  ua.url = params[:url] if params[:url].present? and params[:url] != "\"\""
+                  ua.text = params[:text] if params[:text].present? and params[:text] != "\"\""
+                  ua.save!
+                  render json: JSON.parse("{\"result\": \"OK\"}")
                 end
-                word["type"] = "text"
-                word["text"] = "Hi #{name} #{sta}"
-                word["delay"] = "1"
-                gg.updated_at = Time.now
-              end
-              word_a << word
-              gg.save!
-              word_t << word_a
-              render json: word_t
             when "1" #B2C 個人化啟動互動
               u = UserAnalyze.where(:uid => params[:uid]).size
               inter_t = Array.new

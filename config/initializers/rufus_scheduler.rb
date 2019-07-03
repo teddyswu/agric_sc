@@ -23,7 +23,7 @@ proc_mutex = Mutex.new # 初始化一個 process 鎖
 
 scheduler.cron '00 02 * * *', :mutex => proc_mutex do
   safely_and_compute_time do  
-    ua = UserAnalyze.where(:pl => nil, :ref => nil).where("created_at < ?", Date.today - 1.day).where.not(:watermarks => nil, :status => nil)
+    ua = UserAnalyze.where(:pl => nil, :ref => nil).where("created_at < ?", Date.today - 1.day).where.not(:watermarks => nil, :status => nil, :type => nil)
     ua.destroy_all
   end
 end

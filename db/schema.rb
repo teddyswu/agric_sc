@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190702073542) do
+ActiveRecord::Schema.define(version: 20190703100246) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -332,6 +332,9 @@ ActiveRecord::Schema.define(version: 20190702073542) do
     t.text     "ref",        limit: 65535
     t.string   "age",        limit: 255
     t.string   "name",       limit: 255
+    t.string   "type",       limit: 255
+    t.string   "url",        limit: 255
+    t.string   "text",       limit: 255
     t.text     "watermarks", limit: 65535
     t.text     "status",     limit: 65535
     t.datetime "created_at",               null: false
