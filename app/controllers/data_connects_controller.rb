@@ -995,6 +995,255 @@ class DataConnectsController < ApplicationController
           when "", "\"\""
             case params[:start]
             when "", "\"\"" #個人化問候語
+              gg = Greeting.find_or_initialize_by(:uid => params[:uid])
+              n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
+              name = (n.present? ? n.last.name : "匿名訪客")
+              gg.name = name
+              gg.start = (params[:start] == "1" ? true : false)
+              word_t = Array.new
+              word_a = Array.new
+              word = Hash.new
+              say_hi = true if gg.new_record?
+              gg.save!
+              if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
+                case Time.now.strftime('%H').to_i
+                when 0..4
+                  sta = "晚安！"
+                when 5..10
+                  sta = "早安！"
+                when 11..13
+                  sta = "午安！"
+                when 14..17
+                  sta = "下午好~"
+                when 18..23
+                  sta = "晚安！"
+                end
+                word["type"] = "text"
+                word["text"] = "Hi #{name} #{sta}"
+                word["delay"] = "1"
+                gg.updated_at = Time.now
+              end
+              word_a << word
+              gg.save!
+              word_t << word_a
+              render json: word_t
+            when "1" #B2C 個人化啟動互動
+              u = UserAnalyze.where(:uid => params[:uid]).size
+              inter_t = Array.new
+              inter_to = Array.new
+              inter_ta = Hash.new
+              inter_tb = Hash.new
+              if u > 10
+                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                inter_ta["type"] = "text"
+                inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
+                inter_ta["delay"] = "1"
+                next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
+              else
+                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                inter_ta["type"] = "text"
+                inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
+                inter_ta["delay"] = "1"
+                next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
+              end
+              inter_to << inter_ta
+              inter_t << inter_to
+              render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
+            end
+          else
+            ref = params[:ref]
+            uid = params[:uid]
+            aa = Authorization.find_by_uid(uid)
+            bb = UserSubscription.find_by_scoped_id(uid)
+            ww = ParameterSet.find_by_ref_and_enabled(ref, true)
+            if aa.present?
+              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "user")
+            elsif bb.present?
+              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "subscribe_guest")
+            else
+              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
+            end
+            render json: JSON.parse(ps.json.gsub("=>", ":"))
+          end
+        when "my_proposal"
+          total = Array.new
+          text = Array.new
+          text_a = Array.new
+          result = Hash.new
+          text_1 = Hash.new
+          text_3 = Hash.new
+          auth = Authorization.find_by_uid(params[:uid])
+          if auth.present?
+            result["register"] = true
+            if auth.user.orders.size > 0 
+              order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
+              order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
+              order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
+              order_ids = order_a + order_b + order_c
+              orders = Order.where(:id => order_ids).order(id: :desc).to_a
+              if orders.size > 0
+                text_3_a = Array.new
+                result["join"] = true
+                text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                text_3["type"] = "text"
+                text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
+                text_3["delay"] = 1
+                text_3_a << text_3
+                orders.last(10).each_with_index do |order, i|
+                  i+=1
+                  if order.goody.campaign.end_date >= Date.today
+                    remain_day = (order.goody.campaign.end_date - Date.today).to_i
+                    amount_raised = order.goody.campaign.amount_raised
+                    percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+                    text_2_c = Hash.new
+                    text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                    text_2_c["title"] = order.goody.campaign.title
+                    text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                    text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+                    buttons = Array.new #[]
+                    t1 = Hash.new
+                    if order.paid == false
+                      t1["type"] = "web_url"
+                      t1["title"] = "付款去"
+                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                    else
+                      t1["type"] = "web_url"
+                      t1["title"] = "查看詳細記錄"
+                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                    end
+                    buttons << t1
+                    t2 = Hash.new
+                    t2["type"] = "web_url"
+                    t2["title"] = "查看最新進度"
+                    t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                    buttons << t2
+                    text_2_c["buttons"] = buttons
+                    text_a << text_2_c
+                  end
+                end
+              else
+                result["join"] = false
+                text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                text_1["type"] = "text"
+                text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                text_1["delay"] = 1
+                total = Array.new
+                proposal = Array.new
+                proposal_1 = Array.new
+                text_t = Array.new
+                text_2 = Hash.new
+                campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+                campaigns.each_with_index do |campaign, i|
+                  i+=1
+                  remain_day = (campaign.end_date - Date.today).to_i
+                  amount_raised = campaign.amount_raised
+                  percentage = 100*(amount_raised.to_f / campaign.goal)
+                  description = campaign.description.first(40)
+                  text_c = Hash.new
+                  text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                  text_c["title"] = campaign.title
+                  text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                  text_c["image_url"] = campaign.campaign_image.campaign_path
+                  buttons = Array.new #[]
+                  t1 = Hash.new
+                  t1["type"] = "postback"
+                  t1["title"] = "追蹤♥"
+                  t1["payload"] = "FLW_proj_#{campaign.slug}"
+                  buttons << t1
+                  t2 = Hash.new
+                  t2["type"] = "web_url"
+                  t2["title"] = "查看內容"
+                  t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
+                  buttons << t2
+                  text_c["buttons"] = buttons
+                  proposal_1 << text_c
+                end
+              end
+            else
+              result["join"] = false
+              text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+              text_1["type"] = "text"
+              text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+              text_1["delay"] = 1
+              total = Array.new
+              proposal = Array.new
+              proposal_1 = Array.new
+              text_t = Array.new
+              text_2 = Hash.new
+              campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+              campaigns.each_with_index do |campaign, i|
+                i+=1
+                remain_day = (campaign.end_date - Date.today).to_i
+                amount_raised = campaign.amount_raised
+                percentage = 100*(amount_raised.to_f / campaign.goal)
+                description = campaign.description.first(40)
+                text_c = Hash.new
+                text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                text_c["title"] = campaign.title
+                text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                text_c["image_url"] = campaign.campaign_image.campaign_path
+                buttons = Array.new #[]
+                t1 = Hash.new
+                t1["type"] = "postback"
+                t1["title"] = "追蹤♥"
+                t1["payload"] = "FLW_proj_#{campaign.slug}"
+                buttons << t1
+                t2 = Hash.new
+                t2["type"] = "web_url"
+                t2["title"] = "查看內容"
+                t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
+                buttons << t2
+                text_c["buttons"] = buttons
+                proposal_1 << text_c
+              end
+            end
+          else
+            result["register"] = false
+            result["join"] = false
+            text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+            text_1["template_type"] = "button"
+            text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
+            buttons = Array.new
+            t2 = Hash.new
+            t2["type"] = "web_url"
+            t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
+            t2["title"] = "開始登入！"
+            buttons << t2
+            text_1["buttons"] = buttons
+          end
+          text << result
+          total << text
+          total << text_3_a if text_3_a.present?
+          text_a << text_1 if text_1 != {}
+          text_a << text_2 if text_2.present?
+          total << text_a
+          total << proposal_1 if proposal_1.present?
+          render json: total
+        when /-/
+          ids = ParameterSet.all.map { |f| f.id }
+          params[:arg].split("-").each do |a|
+            ww = ParameterSet.where("id in (?) and ref like ?", ids, "%#{a}%")
+            ids = ww.map { |w| w.id }
+          end
+          aa = Authorization.find_by_uid(uid)
+          bb = UserSubscription.find_by_scoped_id(uid)
+          set = ParameterSet.find_by_id_and_enabled(ids, true)
+          if aa.present?
+            w = set.user
+          elsif bb.present?
+            w = set.subscribe_guest
+          else
+            w = set.guest
+          end
+          render json: w
+        end
+      when ["v0.02","return_data"]
+        case params[:arg]
+        when "", "\"\""
+          case params[:ref]
+          when "", "\"\""
+            case params[:start]
+            when "", "\"\"" #個人化問候語
               case params[:type]
                 when "", "\"\"", nil
                   gg = Greeting.find_or_initialize_by(:uid => params[:uid])
