@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190703100246) do
+ActiveRecord::Schema.define(version: 20190715075402) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -162,6 +162,22 @@ ActiveRecord::Schema.define(version: 20190703100246) do
     t.datetime "updated_at",                  null: false
   end
 
+  create_table "generic_jsons", force: :cascade do |t|
+    t.integer  "generic_keyword_id", limit: 4
+    t.text     "json",               limit: 65535
+    t.integer  "cat",                limit: 4
+    t.integer  "wording_id",         limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  create_table "generic_keywords", force: :cascade do |t|
+    t.text     "keyword",      limit: 65535
+    t.integer  "keyword_type", limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
   create_table "greetings", force: :cascade do |t|
     t.string   "uid",        limit: 255
     t.string   "name",       limit: 255
@@ -251,6 +267,26 @@ ActiveRecord::Schema.define(version: 20190703100246) do
     t.boolean  "enabled"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "specify_jsons", force: :cascade do |t|
+    t.integer  "specify_keyword_id", limit: 4
+    t.text     "json",               limit: 65535
+    t.integer  "cat",                limit: 4
+    t.integer  "wording_id",         limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  create_table "specify_keywords", force: :cascade do |t|
+    t.string   "resource_type", limit: 255
+    t.integer  "resource_id",   limit: 4
+    t.string   "pl_name",       limit: 255
+    t.string   "role",          limit: 255
+    t.integer  "keyword_type",  limit: 4
+    t.text     "keyword",       limit: 65535
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "stories", force: :cascade do |t|

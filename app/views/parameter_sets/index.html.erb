@@ -38,6 +38,7 @@
                       <th scope="col">參數名稱</th>
                       <th scope="col">編輯</th>
                       <th scope="col">狀態</th>
+                      <th scope="col">設定</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -48,6 +49,7 @@
                         <th><%= par.ref %></th>
                         <th><%= link_to "編輯", edit_parameter_set_path(par.id) %></th>
                         <th><%= link_to render_enabled(par.enabled), parameter_set_path(par.id), :method => :delete %></th>
+                        <th><%= link_to "[set]", list_parameter_set_path(par.id)%></th>
                       </tr>
                     <% end %>
                   </tbody>

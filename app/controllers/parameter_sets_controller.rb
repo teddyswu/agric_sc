@@ -58,6 +58,64 @@ class ParameterSetsController < ApplicationController
   	redirect_to :action => :index
   end
 
+  def list
+    @parameter_jsons = ParameterJson.where(:parameter_set_id => params[:id])
+  end
+
+  def set_list
+    @wording_set = ParameterJson.find(params[:id])
+    @specify_keywords = SpecifyKeyword.where(:resource_id => params[:id], :resource_type => "ParameterJson")
+  end
+
+  def set_new
+    @wording_set = ParameterJson.find(params[:id])
+    @specify_keyword = SpecifyKeyword.new
+    @wordings = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
+  end
+
+  def set_edit
+    @specify_keyword = SpecifyKeyword.find(params[:id])
+    @wording_set = @specify_keyword.resource
+    @wordings = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
+    @keyword = Array.new
+    @specify_keyword.keyword.split(",").each_with_index do |k, i|
+      @keyword[i] = {"id" => k, "name" => k}
+    end
+  end
+
+  def set_create
+    @specify_keyword = SpecifyKeyword.new(wording_params)
+    @specify_keyword.save!
+    specify_json = SpecifyJson.new()
+    specify_json.specify_keyword_id = @specify_keyword.id
+    specify_json.cat = params[:specify_json][:cat]
+    specify_json.json = params[:specify_json][:json]
+    specify_json.wording_id = params[:specify_json][:wording_id]
+    specify_json.save!
+
+    redirect_to set_list_parameter_set_path(@specify_keyword.resource_id)
+  end
+
+  def set_update
+    @specify_keyword = SpecifyKeyword.find(params[:id])
+    @specify_keyword.update(wording_params)
+
+    specify_json = SpecifyJson.find_by(:specify_keyword_id => params[:id])
+    specify_json.cat = params[:specify_json][:cat]
+    specify_json.json = params[:specify_json][:json]
+    specify_json.wording_id = params[:specify_json][:wording_id]
+    specify_json.save!
+
+    redirect_to set_list_parameter_set_path(@specify_keyword.resource_id)
+  end
+
+  def set_delete
+    kw = SpecifyKeyword.find(params[:id])
+    d = kw.resource_id
+    kw.destroy
+    redirect_to set_list_parameter_set_path(d)
+  end
+
   def analysis_json(content, id, type)
     ana = JSON.parse(content)
     aa = Array.new
@@ -80,5 +138,11 @@ class ParameterSetsController < ApplicationController
 
   def parameter_set_params
 		params.require(:parameter_set).permit(:name, :cat, :wording_id, :ref, :guest, :subscribe_guest, :user)
+  end
+
+  def wording_params
+    params.require(:specify_keyword).permit(:resource_type, :resource_id, :pl_name, :role, :keyword_type, :keyword,
+      specify_json_attributes:
+      [:json, :cat, :wording_cat_id])
   end
 end

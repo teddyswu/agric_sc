@@ -37,6 +37,9 @@
         <li <%= "class='active'".html_safe if request.url.include?("interplay") %>>
           <%= link_to " <i class='menu-icon fa fa-american-sign-language-interpreting'></i>啟動互動 ".html_safe, personal_interplays_path  %>
         </li>
+        <li <%= "class='active'".html_safe if request.url.include?("input") %>>
+          <%= link_to " <i class='menu-icon fa fa-american-sign-language-interpreting'></i>用戶輸入 ".html_safe, user_inputs_path  %>
+        </li>
         <li>
           <%= link_to " <i class='menu-icon fa fa-briefcase'></i>JSON產生器 ".html_safe, new_wording_path, :target => "_blank"  %>
         </li>

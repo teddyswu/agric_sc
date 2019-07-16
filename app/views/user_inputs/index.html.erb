@@ -1,0 +1,60 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">用戶輸入</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title"></strong><%= link_to "新增", new_user_input_path%>
+              </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">類型</th>
+                        <th scope="col">關鍵字</th>
+                        <th scope="col">編輯</th>
+                        <th scope="col">刪除</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @generic_keywords.each do |gk|%>
+                        <tr>
+                          <td><%= specify_keyword_type(gk.keyword_type) %></td>
+                          <td><%= gk.keyword %></td>
+                          <td><%= link_to "[edit]", edit_user_input_path(gk.id)%></td>
+                          <td><%= link_to "[delete]", user_input_path(gk.id), :method => :delete %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

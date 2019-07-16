@@ -1,0 +1,163 @@
+<script type="text/javascript" src="https://loopj.com/jquery-tokeninput/src/jquery.tokeninput.js"></script>
+<link rel="stylesheet" href="https://loopj.com/jquery-tokeninput/styles/token-input-facebook.css" type="text/css" />
+<style>
+ul.token-input-list-facebook {
+  border :0px;
+  color: transparent;
+}
+</style>
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">文案</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <%= form_for @specify_keyword, :url => wording_set_create_path, :class => "form-horizontal" do |f| %>
+                <div class="card-header">
+                  <strong class="card-title"><%= @wording_set.name%></strong>
+                </div>
+                <div class="card-body">
+                  <div class="row form-group">
+                    <div class="col col-md-3"><label for="select" class="form-control-label">類型</label></div>
+                    <div class="col-12 col-md-3">
+                      <select name="select" id="select_type" class="form-control">
+                        <option value="1">輸入內容</option>
+                        <option value="2">輸入類型</option>
+                        <option value="3">輸入格式</option>
+                        <option value="4">預設行為</option>
+                      </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <select name="specify_keyword[keyword_type]" id="select_content" class="form-control">
+                        <option value="1">含任一關鍵字</option>
+                        <option value="2">含所有關鍵字</option>
+                        <option value="3">完全相符</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row form-group" id="key_in">
+                    <div class="col col-md-3"><label for="select" class="form-control-label">關鍵字</label></div>
+                    <div class="col-12 col-md-9">
+                      <div style="display:inline;float:left;"><%= text_field_tag :keyin %></div><div style="display:inline;float:left;"><%= f.text_field :keyword%></div>
+                    </div>
+                  </div>
+                  <%= f.hidden_field :pl_name,value: @wording_set.name %>
+                  <%= f.hidden_field :resource_type, value: "WordingJson" %>
+                  <%= f.hidden_field :resource_id, value: params[:id] %>
+                  <%= fields_for :specify_json do |s| %>  
+                    <hr/>
+                    <div class="row form-group">
+                      <div class="col col-md-3"><label class=" form-control-label">JSON類型</label></div>
+                      <div class="col col-md-9">
+                        <div class="form-check">
+                          <div class="radio">
+                            <label class="form-check-label">
+                              <input type="radio" name="specify_json[cat]" value="1" class="form-check-input" onclick="show1();" checked> 自定義
+                            </label>
+                          </div>
+                          <div class="radio">
+                            <label class="form-check-label">
+                              <input type="radio" name="specify_json[cat]" value="2" class="form-check-input" onclick="show1();"> 文案
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group" id="def_json">
+                      <div class="col col-md-3">
+                        <label class=" form-control-label">JSON</label>
+                      </div>
+                      <div class="col col-md-9">
+                        <%= s.text_area :json, :class => "form-control", :rows => "9" %>
+                      </div>
+                    </div>
+                    <div class="row form-group" id="sel_json" style="display: none;">
+                      <div class="col col-md-3">
+                        <label class=" form-control-label">文案</label>
+                      </div>
+                      <div class="col col-md-9">
+                        <%= s.select :wording_id, options_from_collection_for_select(@wordings, "id", "name"), :class => "form-control-sm form-control" %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>       
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                  </button>
+                  <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Reset
+                  </button>
+                </div>
+              <% end %> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  $( "#select_type" ).change(function() {
+    switch($( "#select_type" ).val()){
+      case "1":
+        $( "#select_content" ).html("<option value=\"1\">含任一關鍵字</option><option value=\"2\">含所有關鍵字</option><option value=\"3\">完全相符</option>");
+        $("#key_in").show();
+        break;
+      case "2":
+        $( "#select_content" ).html("<option value=\"4\">純文字</option><option value=\"5\">圖片</option><option value=\"6\">影片</option><option value=\"7\">音訊</option><option value=\"8\">位置</option>");
+        $("#key_in").hide();
+        break;
+      case "3":
+        $( "#select_content" ).html("<option value=\"9\">電話號碼</option><option value=\"10\">Email</option><option value=\"11\">數字</option>");
+        $("#key_in").hide();
+        break;
+      case "4":
+        $( "#select_content" ).html("<option value=\"12\">任意輸入</option>");
+        $("#key_in").hide();
+        break;
+    }
+  });
+  $(document).ready(function() {
+    $("#specify_keyword_keyword").tokenInput([],{
+      hintText: "",
+      noResultsText: "",
+      searchingText: "",
+      theme: 'facebook'
+    });
+    $("#keyin").on('keypress',function(e) {
+      if(e.which == 13) {
+        var word = $("#keyin").val();
+        $( "#specify_keyword_keyword" ).tokenInput("add", {id: word, name: word});
+        $("#keyin").val("");
+        return false;
+      }
+    });
+  });
+  function show1(){
+    $('#def_json').toggle();
+    $('#sel_json').toggle();
+  };
+</script>

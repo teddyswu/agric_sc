@@ -1,0 +1,185 @@
+<script type="text/javascript" src="https://loopj.com/jquery-tokeninput/src/jquery.tokeninput.js"></script>
+<link rel="stylesheet" href="https://loopj.com/jquery-tokeninput/styles/token-input-facebook.css" type="text/css" />
+<style>
+ul.token-input-list-facebook {
+  border :0px;
+  color: transparent;
+}
+</style>
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">用戶輸入</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <%= form_for @generic_keyword, :url => user_input_path, :class => "form-horizontal", method: "patch" do |f| %>
+                <div class="card-header">
+                  <strong class="card-title">全域用戶輸入</strong>
+                </div>
+                <div class="card-body">
+                  <div class="row form-group">
+                    <div class="col col-md-3"><label for="select" class="form-control-label">類型</label></div>
+                    <div class="col-12 col-md-3">
+                      <select name="select" id="select_type" class="form-control">
+                        <option value="1" <%= "selected=\"selected\"" if @generic_keyword.keyword_type == 1 || @generic_keyword.keyword_type == 2 || @generic_keyword.keyword_type == 3 %> >輸入內容</option>
+                        <option value="2" <%= "selected=\"selected\"" if @generic_keyword.keyword_type == 4 || @generic_keyword.keyword_type == 5 || @generic_keyword.keyword_type == 6 || @generic_keyword.keyword_type == 7 || @generic_keyword.keyword_type == 8 %>>輸入類型</option>
+                        <option value="3" <%= "selected=\"selected\"" if @generic_keyword.keyword_type == 9 || @generic_keyword.keyword_type == 10 || @generic_keyword.keyword_type == 11 %>>輸入格式</option>
+                        <option value="4" <%= "selected=\"selected\"" if @generic_keyword.keyword_type == 12 %>>預設行為</option>
+                      </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                      <select name="generic_keyword[keyword_type]" id="select_content" class="form-control">
+                        <option value="1">含任一關鍵字</option>
+                        <option value="2">含所有關鍵字</option>
+                        <option value="3">完全相符</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row form-group" id="key_in">
+                    <div class="col col-md-3"><label for="select" class="form-control-label">關鍵字</label></div>
+                    <div class="col-12 col-md-9">
+                      <div style="display:inline;float:left;"><%= text_field_tag :keyin %></div><div style="display:inline;float:left;"><%= f.text_field :keyword%></div>
+                    </div>
+                  </div>
+                  <%= fields_for :generic_json do |s| %>  
+                    <hr/>
+                    <div class="row form-group">
+                      <div class="col col-md-3"><label class=" form-control-label">JSON類型</label></div>
+                      <div class="col col-md-9">
+                        <div class="form-check">
+                          <div class="radio">
+                            <label class="form-check-label">
+                              <input type="radio" name="generic_json[cat]" value="1" class="form-check-input" onclick="show1();" <%= "checked" if @generic_keyword.generic_json.cat == 1%>> 自定義
+                            </label>
+                          </div>
+                          <div class="radio">
+                            <label class="form-check-label">
+                              <input type="radio" name="generic_json[cat]" value="2" class="form-check-input" onclick="show1();" <%= "checked" if @generic_keyword.generic_json.cat == 2%>> 文案
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group" id="def_json">
+                      <div class="col col-md-3">
+                        <label class=" form-control-label">JSON</label>
+                      </div>
+                      <div class="col col-md-9">
+                        <%= s.text_area :json, :class => "form-control", :rows => "9", :value => @generic_keyword.generic_json.json %>
+                      </div>
+                    </div>
+                    <div class="row form-group" id="sel_json" style="display: none;">
+                      <div class="col col-md-3">
+                        <label class=" form-control-label">文案</label>
+                      </div>
+                      <div class="col col-md-9">
+                        <%= s.select :wording_id, options_from_collection_for_select(@wordings, "id", "name", @generic_keyword.generic_json.wording_id), :class => "form-control-sm form-control" %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>       
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                  </button>
+                  <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Reset
+                  </button>
+                </div>
+              <% end %> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  $( "#select_type" ).change(function() {
+    switch($( "#select_type" ).val()){
+      case "1":
+        $( "#select_content" ).html("<option value=\"1\">含任一關鍵字</option><option value=\"2\">含所有關鍵字</option><option value=\"3\">完全相符</option>");
+        $("#key_in").show();
+        break;
+      case "2":
+        $( "#select_content" ).html("<option value=\"4\">純文字</option><option value=\"5\">圖片</option><option value=\"6\">影片</option><option value=\"7\">音訊</option><option value=\"8\">位置</option>");
+        $("#key_in").hide();
+        break;
+      case "3":
+        $( "#select_content" ).html("<option value=\"9\">電話號碼</option><option value=\"10\">Email</option><option value=\"11\">數字</option>");
+        $("#key_in").hide();
+        break;
+      case "4":
+        $( "#select_content" ).html("<option value=\"12\">任意輸入</option>");
+        $("#key_in").hide();
+        break;
+    }
+  });
+  $(document).ready(function() {
+    $("#generic_keyword_keyword").tokenInput([],{
+      prePopulate: <%= raw @keyword.to_s.gsub("=>",":") %>,
+      hintText: "",
+      noResultsText: "",
+      searchingText: "",
+      theme: 'facebook'
+    });
+    $("#keyin").on('keypress',function(e) {
+      if(e.which == 13) {
+        var word = $("#keyin").val();
+        $( "#generic_keyword_keyword" ).tokenInput("add", {id: word, name: word});
+        $("#keyin").val("");
+        return false;
+      }
+    });
+    switch($( "#select_type" ).val()){
+      case "1":
+        $( "#select_content" ).html("<option value=\"1\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 1  %> >含任一關鍵字</option><option value=\"2\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 2  %>>含所有關鍵字</option><option value=\"3\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 3  %>>完全相符</option>");
+        break;
+      case "2":
+        $( "#select_content" ).html("<option value=\"4\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 4 %>>純文字</option><option value=\"5\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 5 %>>圖片</option><option value=\"6\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 6 %>>影片</option><option value=\"7\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 7 %>>音訊</option><option value=\"8\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 8 %>>位置</option>");
+        $("#key_in").hide();
+        break;
+      case "3":
+        $( "#select_content" ).html("<option value=\"9\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 9 %>>電話號碼</option><option value=\"10\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 10 %>>Email</option><option value=\"11\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 11 %>>數字</option>");
+        $("#key_in").hide();
+        break;
+      case "4":
+        $( "#select_content" ).html("<option value=\"12\">任意輸入</option>");
+        $("#key_in").hide();
+        break;
+    }
+    if($("input[name='generic_json[cat]']:checked").val() == 1){
+      $('#def_json').show();
+      $('#sel_json').hide();
+    }else{
+      $('#def_json').hide();
+      $('#sel_json').show();
+    }
+  });
+  function show1(){
+    $('#def_json').toggle();
+    $('#sel_json').toggle();
+  };
+</script>

@@ -106,6 +106,66 @@ class AgrisController < ApplicationController
     end
   end
 
+  def wording_json
+    @wording_jsons = WordingJson.where(:wording_id => params[:id])
+  end
+
+  def wording_set_list
+    @wording_set = WordingJson.find(params[:id])
+    @specify_keywords = SpecifyKeyword.where(:resource_id => params[:id], :resource_type => "WordingJson")
+  end
+
+  def wording_set_new
+    @wording_set = WordingJson.find(params[:id])
+    @specify_keyword = SpecifyKeyword.new
+    @wordings = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
+  end
+
+  def wording_set_create
+    @specify_keyword = SpecifyKeyword.new(wording_params)
+    @specify_keyword.save!
+    specify_json = SpecifyJson.new()
+    specify_json.specify_keyword_id = @specify_keyword.id
+    specify_json.cat = params[:specify_json][:cat]
+    specify_json.json = params[:specify_json][:json]
+    specify_json.wording_id = params[:specify_json][:wording_id]
+    specify_json.save!
+
+    redirect_to wording_set_list_path(@specify_keyword.resource_id)
+  end
+
+  def wording_set_edit
+    @specify_keyword = SpecifyKeyword.find(params[:id])
+    @wording_set = @specify_keyword.resource
+    @wordings = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
+    @keyword = Array.new
+    @specify_keyword.keyword.split(",").each_with_index do |k, i|
+      @keyword[i] = {"id" => k, "name" => k}
+    end
+  end
+
+  def wording_set_update
+    @specify_keyword = SpecifyKeyword.find(params[:id])
+    @specify_keyword.update(wording_params)
+
+    specify_json = SpecifyJson.find_by(:specify_keyword_id => params[:id])
+    specify_json.cat = params[:specify_json][:cat]
+    specify_json.json = params[:specify_json][:json]
+    specify_json.wording_id = params[:specify_json][:wording_id]
+    specify_json.save!
+
+    redirect_to wording_set_list_path(@specify_keyword.resource_id)
+
+  end
+
+  def wording_set_delete
+    kw = SpecifyKeyword.find(params[:id])
+    d = kw.resource_id
+    kw.destroy
+    redirect_to wording_set_list_path(d)
+  end
+
+
   def wording_new
     @wording = Wording.new
     @cat = WordingCat.all
@@ -138,6 +198,8 @@ class AgrisController < ApplicationController
   def wording_update
     @wording = Wording.find(params[:id])
     @wording.update(word_params)
+    dd = WordingJson.where(:wording_id => @wording.id)
+    dd.destroy_all
     analysis_json(@wording.content, @wording.id)
 
     redirect_to :action => :wording_list
@@ -236,5 +298,10 @@ class AgrisController < ApplicationController
   end
   def article_params
     params.require(:type_article).permit(:content, :web_url, :description)
+  end
+  def wording_params
+    params.require(:specify_keyword).permit(:resource_type, :resource_id, :pl_name, :keyword_type, :keyword,
+      specify_json_attributes:
+      [:json, :cat, :wording_cat_id])
   end
 end

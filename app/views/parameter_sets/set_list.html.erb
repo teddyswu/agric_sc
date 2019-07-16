@@ -1,0 +1,62 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">REF使用者輸入</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title"></strong><%= link_to "新增", set_new_parameter_set_path%>
+              </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">對象</th>
+                        <th scope="col">類型</th>
+                        <th scope="col">關鍵字</th>
+                        <th scope="col">編輯</th>
+                        <th scope="col">刪除</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @specify_keywords.each do |sk|%>
+                        <tr>
+                          <th scope="row"><%= specify_keyword_role(sk.role) %></th>
+                          <td><%= specify_keyword_type(sk.keyword_type) %></td>
+                          <td><%= sk.keyword %></td>
+                          <td><%= link_to "[edit]", set_edit_parameter_set_path(sk.id)%></td>
+                          <td><%= link_to "[delete]", set_delete_parameter_set_path(sk.id), :method => :delete %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

@@ -25,17 +25,6 @@
       <div class="animated fadeIn">
         <div class="row">
           <div class="col-lg-12">
-            <!-- <div class="card">
-              <div class="card-header">
-                <strong>快搜類別</strong>
-              </div>
-              <div class="card-body"> -->
-                <%#= link_to "TEAFU.STORY.MESSAGE", wording_list_path(:type => "TEAFU.STORY.MESSAGE"), :class => "btn btn-outline-primary", :role => "button"%>
-                <%#= link_to "TEAFU.STORY.LEVEL", wording_list_path(:type => "TEAFU.STORY.LEVEL"), :class => "btn btn-outline-secondary", :role => "button"%>
-                <%#= link_to "TEAFU.MENU.B2B", wording_list_path(:type => "TEAFU.MENU.B2B"), :class => "btn btn-outline-success", :role => "button"%>
-                <%#= link_to "TEAFU.MENU.B2C", wording_list_path(:type => "TEAFU.MENU.B2C"), :class => "btn btn-outline-danger", :role => "button"%>
-              <!-- </div>
-            </div> -->
             <div class="card">
               <div class="card-header">
                 <strong>類別管理</strong>
@@ -60,6 +49,7 @@
                         <th scope="col">編輯</th>
                         <th scope="col">類別</th>
                         <th scope="col">狀態</th>
+                        <th scope="col">設定</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -67,8 +57,9 @@
                         <tr>
                           <th scope="row"><%= wording_list.name %></th>
                           <td><%= link_to wording_list.name, wording_edit_path(wording_list.id) %></td>
-                          <th><%= wording_list.wording_cat.name if wording_list.wording_cat.present? %>
+                          <td><%= wording_list.wording_cat.name if wording_list.wording_cat.present? %></td>
                           <td><%= link_to render_enabled(wording_list.enabled), wording_delete_path(wording_list.id), :method => :delete %></td>
+                          <td><%= link_to "[edit]", wording_json_path(wording_list.id)%></td>
                         </tr>
                       <% end %>
                     </tbody>

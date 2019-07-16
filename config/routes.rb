@@ -19,12 +19,21 @@ Rails.application.routes.draw do
   get "showpng/:id", :to => "agris#showpng", :as =>"show_png"
   
   get "agris/wording_list", :to => "agris#wording_list", :as => "wording_list"
+  
+  get "agris/wording_json/:id", :to => "agris#wording_json", :as => "wording_json"
+  get "agris/wording_set_list/:id", :to => "agris#wording_set_list", :as => "wording_set_list"
+  get "agris/wording_set_new/:id", :to => "agris#wording_set_new", :as => "wording_set_new"
+  get "agris/wording_set_edit/:id", :to => "agris#wording_set_edit", :as => "wording_set_edit"
+  patch "agris/wording_set_update/:id", :to => "agris#wording_set_update", :as => "wording_set_update"
+  post "agris/wording_set_create", :to => "agris#wording_set_create", :as => "wording_set_create"
+  delete "agris/wording_set_delete/:id", :to => "agris#wording_set_delete", :as => "wording_set_delete"
   get "agris/wording_new", :to => "agris#wording_new", :as => "wording_new"
   post "agris/wording_create", :to => "agris#wording_create", :as => "wording_create"
   patch "agris/wording_update/:id", :to => "agris#wording_update", :as => "wording_update"
   get "agris/wording_edit/:id", :to => "agris#wording_edit", :as => "wording_edit"
   delete "agris/wording_delete/:id", :to => "agris#wording_delete", :as => "wording_delete"
   
+  resources :user_inputs
   resources :farmers do 
     get "work_record", on: :member
     post "favo_farmers", :on => :collection
@@ -36,7 +45,15 @@ Rails.application.routes.draw do
 
   resources :message_pushes
 
-  resources :parameter_sets
+  resources :parameter_sets do
+    get "list", on: :member
+    get "set_list", on: :member
+    get "set_new", on: :member
+    get "set_edit", on: :member
+    post "set_create", on: :collection
+    patch "set_update", on: :member
+    delete "set_delete", on: :member
+  end
 
   resources :personal_interplays
 
