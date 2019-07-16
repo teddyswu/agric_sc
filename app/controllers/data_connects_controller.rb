@@ -1307,11 +1307,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     when 2 #輸入內容 含所有關鍵字
@@ -1325,11 +1325,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     when 3 #輸入內容 完全相符
@@ -1338,11 +1338,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     when 9 #電話號碼
@@ -1352,11 +1352,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     when 10 #Email
@@ -1366,11 +1366,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     when 11 #數字
@@ -1380,11 +1380,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     when 4 #純文字
@@ -1394,11 +1394,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     when 12
@@ -1407,11 +1407,11 @@ class DataConnectsController < ApplicationController
                         when 1
                           total = w.specify_json.json
                         when 2
-                          total = Wording.find(w.specify_json.wording_id).content
+                          total = WordingJson.find(w.specify_json.wording_json_id).json
                         end
                         customization = YAML.load_file("config/customization.yml")
                         uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total))
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         is_send = 1
                       end
                     end
@@ -1431,11 +1431,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                         end
                       when 2
                         ch_word = gk.keyword.split(",").size
@@ -1448,11 +1448,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 3
@@ -1461,11 +1461,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 9
@@ -1475,11 +1475,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 10
@@ -1489,11 +1489,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 11
@@ -1503,11 +1503,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 4
@@ -1517,11 +1517,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 12
@@ -1530,11 +1530,11 @@ class DataConnectsController < ApplicationController
                           when 1
                             total = gk.generic_json.json
                           when 2
-                            total = Wording.find(gk.generic_json.wording_id).content
+                            total = WordingJson.find(gk.generic_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total))
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       end
@@ -1561,11 +1561,11 @@ class DataConnectsController < ApplicationController
                     when 1
                       total = w.specify_json.json
                     when 2
-                      total = Wording.find(w.specify_json.wording_id).content
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
                     end
                     customization = YAML.load_file("config/customization.yml")
                     uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total))
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "5")
@@ -1574,11 +1574,11 @@ class DataConnectsController < ApplicationController
                       when 1
                         total = gk.generic_json.json
                       when 2
-                        total = Wording.find_by(:wording_id =>gk.generic_json.wording_id).content
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total))
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
@@ -1598,9 +1598,15 @@ class DataConnectsController < ApplicationController
                     end
                   end
                   word.each do |w|
+                    case w.specify_json.cat
+                    when 1
+                      total = w.specify_json.json
+                    when 2
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    end
                     customization = YAML.load_file("config/customization.yml")
                     uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total))
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "7")
@@ -1609,11 +1615,11 @@ class DataConnectsController < ApplicationController
                       when 1
                         total = gk.generic_json.json
                       when 2
-                        total = Wording.find_by(:wording_id =>gk.generic_json.wording_id).content
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total))
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
@@ -1633,9 +1639,15 @@ class DataConnectsController < ApplicationController
                     end
                   end
                   word.each do |w|
+                    case w.specify_json.cat
+                    when 1
+                      total = w.specify_json.json
+                    when 2
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    end
                     customization = YAML.load_file("config/customization.yml")
                     uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total))
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "6")
@@ -1644,11 +1656,11 @@ class DataConnectsController < ApplicationController
                       when 1
                         total = gk.generic_json.json
                       when 2
-                        total = Wording.find_by(:wording_id =>gk.generic_json.wording_id).content
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total))
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
@@ -1668,9 +1680,15 @@ class DataConnectsController < ApplicationController
                     end
                   end
                   word.each do |w|
+                    case w.specify_json.cat
+                    when 1
+                      total = w.specify_json.json
+                    when 2
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    end
                     customization = YAML.load_file("config/customization.yml")
                     uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total))
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "8")
@@ -1679,11 +1697,11 @@ class DataConnectsController < ApplicationController
                       when 1
                         total = gk.generic_json.json
                       when 2
-                        total = Wording.find_by(:wording_id =>gk.generic_json.wording_id).content
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total))
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")

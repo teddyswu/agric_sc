@@ -113,4 +113,7 @@ class WordingsController < ApplicationController
 			end
 		end 
 	end
+	def json
+		@wording_jsons = WordingJson.where(:wording_id => params[:wording_id]).map { |j| [j.name, j.id] }
+	end
 end

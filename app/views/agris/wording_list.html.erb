@@ -59,7 +59,7 @@
                           <td><%= link_to wording_list.name, wording_edit_path(wording_list.id) %></td>
                           <td><%= wording_list.wording_cat.name if wording_list.wording_cat.present? %></td>
                           <td><%= link_to render_enabled(wording_list.enabled), wording_delete_path(wording_list.id), :method => :delete %></td>
-                          <td><%= link_to "[edit]", wording_json_path(wording_list.id)%></td>
+                          <td><%= link_to "[set]", wording_json_path(wording_list.id)%></td>
                         </tr>
                       <% end %>
                     </tbody>

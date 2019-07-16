@@ -60,7 +60,7 @@ ul.token-input-list-facebook {
                   <div class="row form-group" id="key_in">
                     <div class="col col-md-3"><label for="select" class="form-control-label">關鍵字</label></div>
                     <div class="col-12 col-md-9">
-                      <div style="display:inline;float:left;"><%= text_field_tag :keyin %></div><div style="display:inline;float:left;"><%= f.text_field :keyword%></div>
+                      <div style="display:inline;float:left;"><%= text_field_tag :keyin %><small class="form-text text-muted">輸入後請先 Enter 送出，關鍵字才會儲存成功</small></div><div style="display:inline;float:left;"><%= f.text_field :keyword%></div>
                     </div>
                   </div>
                   <%= fields_for :generic_json do |s| %>  
@@ -87,15 +87,18 @@ ul.token-input-list-facebook {
                         <label class=" form-control-label">JSON</label>
                       </div>
                       <div class="col col-md-9">
-                        <%= s.text_area :json, :class => "form-control", :rows => "9", :value => @generic_keyword.generic_json.json %>
+                        <%= s.text_area :json, :class => "form-control", :rows => "9", :value => @generic_keyword.generic_json.json %><small class="form-text text-muted">對話內容會一次傳送，建議設定一階層的對話再搭配文案使用</small>
                       </div>
                     </div>
                     <div class="row form-group" id="sel_json" style="display: none;">
                       <div class="col col-md-3">
                         <label class=" form-control-label">文案</label>
                       </div>
-                      <div class="col col-md-9">
-                        <%= s.select :wording_id, options_from_collection_for_select(@wordings, "id", "name", @generic_keyword.generic_json.wording_id), :class => "form-control-sm form-control" %>
+                      <div class="col col-md-6">
+                        <%= s.select :wording_id, options_from_collection_for_select(@wordings, "id", "name", @wording), {include_blank: "選擇文案"}, { :class => 'custom-select',:onchange => "change_wording_id();" } %>
+                      </div>
+                      <div class="col col-md-3">
+                        <%= s.select :wording_json_id, options_from_collection_for_select(@wording_jsons, "id", "name", @generic_keyword.generic_json.wording_json_id), {include_blank: "選擇JSON"}, { :class => 'custom-select' } %>
                       </div>
                     </div>
                   <% end %>
@@ -137,6 +140,9 @@ ul.token-input-list-facebook {
         break;
     }
   });
+  function change_wording_id(){
+    jQuery.get("<%= json_wordings_path() %>", { wording_id : jQuery('#generic_json_wording_id').val() },null, "script");
+  }
   $(document).ready(function() {
     $("#generic_keyword_keyword").tokenInput([],{
       prePopulate: <%= raw @keyword.to_s.gsub("=>",":") %>,
@@ -162,7 +168,7 @@ ul.token-input-list-facebook {
         $("#key_in").hide();
         break;
       case "3":
-        $( "#select_content" ).html("<option value=\"9\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 9 %>>電話號碼</option><option value=\"10\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 10 %>>Email</option><option value=\"11\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 11 %>>數字</option>");
+        $( "#select_content" ).html("<option value=\"9\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 9 %>>手機號碼</option><option value=\"10\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 10 %>>Email</option><option value=\"11\" <%= 'selected=\"selected\"' if @generic_keyword.keyword_type == 11 %>>數字</option>");
         $("#key_in").hide();
         break;
       case "4":

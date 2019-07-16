@@ -63,7 +63,9 @@ Rails.application.routes.draw do
 
   resources :ps_groups
 
-  resources :wordings
+  resources :wordings do
+    get "json", on: :collection
+  end
   resources :wording_cats
 
   resources :work_walls

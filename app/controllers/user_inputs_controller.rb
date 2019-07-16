@@ -18,7 +18,7 @@ class UserInputsController < ApplicationController
     generic_json.generic_keyword_id = @generic_keyword.id
     generic_json.cat = params[:generic_json][:cat]
     generic_json.json = params[:generic_json][:json]
-    generic_json.wording_id = params[:generic_json][:wording_id]
+    generic_json.wording_json_id = params[:generic_json][:wording_json_id]
     generic_json.save!
 
     redirect_to user_inputs_path
@@ -26,6 +26,13 @@ class UserInputsController < ApplicationController
 
   def edit
   	@generic_keyword = GenericKeyword.find(params[:id])
+    if @generic_keyword.generic_json.wording_json_id != 0
+      @wording = WordingJson.find(@generic_keyword.generic_json.wording_json_id).wording_id
+      @wording_jsons = WordingJson.where(:wording_id => @wording)
+    else
+      @wording = nil
+      @wording_jsons = []
+    end
     @wordings = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
     @keyword = Array.new
     @generic_keyword.keyword.split(",").each_with_index do |k, i|
@@ -40,7 +47,7 @@ class UserInputsController < ApplicationController
   	generic_json = GenericJson.find_by(:Generic_keyword_id => params[:id])
     generic_json.cat = params[:generic_json][:cat]
     generic_json.json = params[:generic_json][:json]
-    generic_json.wording_id = params[:generic_json][:wording_id]
+    generic_json.wording_json_id = params[:generic_json][:wording_json_id]
     generic_json.save!
 
     redirect_to user_inputs_path

@@ -1,0 +1,6 @@
+<% if params[:wording_id].present? %>
+$("#specify_json_wording_json_id").html('<%= escape_javascript select_tag("specify_json_wording_json_id", "<option
+value=''>請選擇JSON</option>".html_safe + options_for_select(@wording_jsons), :id => "specify_json_wording_json_id") %>');
+$("#generic_json_wording_json_id").html('<%= escape_javascript select_tag("generic_json_wording_json_id", "<option
+value=''>請選擇JSON</option>".html_safe + options_for_select(@wording_jsons), :id => "generic_json_wording_json_id") %>');
+<% end %>

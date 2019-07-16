@@ -38,7 +38,7 @@ module AgrisHelper
 		when 8
 			"輸入類型 位置"
 		when 9
-			"輸入格式 電話號碼"
+			"輸入格式 手機號碼"
 		when 10
 			"輸入格式 Email"
 		when 11

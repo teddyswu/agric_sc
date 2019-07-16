@@ -128,7 +128,7 @@ class AgrisController < ApplicationController
     specify_json.specify_keyword_id = @specify_keyword.id
     specify_json.cat = params[:specify_json][:cat]
     specify_json.json = params[:specify_json][:json]
-    specify_json.wording_id = params[:specify_json][:wording_id]
+    specify_json.wording_json_id = params[:specify_json][:wording_json_id]
     specify_json.save!
 
     redirect_to wording_set_list_path(@specify_keyword.resource_id)
@@ -136,6 +136,13 @@ class AgrisController < ApplicationController
 
   def wording_set_edit
     @specify_keyword = SpecifyKeyword.find(params[:id])
+    if @specify_keyword.specify_json.wording_json_id != 0
+      @wording = WordingJson.find(@specify_keyword.specify_json.wording_json_id).wording_id
+      @wording_jsons = WordingJson.where(:wording_id => @wording)
+    else
+      @wording = nil
+      @wording_jsons = []
+    end
     @wording_set = @specify_keyword.resource
     @wordings = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
     @keyword = Array.new
@@ -151,7 +158,7 @@ class AgrisController < ApplicationController
     specify_json = SpecifyJson.find_by(:specify_keyword_id => params[:id])
     specify_json.cat = params[:specify_json][:cat]
     specify_json.json = params[:specify_json][:json]
-    specify_json.wording_id = params[:specify_json][:wording_id]
+    specify_json.wording_json_id = params[:specify_json][:wording_json_id]
     specify_json.save!
 
     redirect_to wording_set_list_path(@specify_keyword.resource_id)

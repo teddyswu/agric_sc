@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190715075402) do
+ActiveRecord::Schema.define(version: 20190716082257) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -166,7 +166,7 @@ ActiveRecord::Schema.define(version: 20190715075402) do
     t.integer  "generic_keyword_id", limit: 4
     t.text     "json",               limit: 65535
     t.integer  "cat",                limit: 4
-    t.integer  "wording_id",         limit: 4
+    t.integer  "wording_json_id",    limit: 4
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
   end
@@ -273,7 +273,7 @@ ActiveRecord::Schema.define(version: 20190715075402) do
     t.integer  "specify_keyword_id", limit: 4
     t.text     "json",               limit: 65535
     t.integer  "cat",                limit: 4
-    t.integer  "wording_id",         limit: 4
+    t.integer  "wording_json_id",    limit: 4
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
   end
