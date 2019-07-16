@@ -15,7 +15,7 @@
             <ol class="breadcrumb text-right">
               <li><a href="#">Dashboard</a></li>
               <li><a href="#">網頁內容</a></li>
-              <li class="active">文案</li>
+              <li class="active">REF使用者輸入</li>
             </ol>
           </div>
         </div>
@@ -30,24 +30,22 @@
                 <strong class="card-title"></strong>
               </div>
                 <div class="card-body">
-                  <table class="table">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th scope="col">名稱</th>
-                        <th scope="col">自定義名稱</th>
-                        <th scope="col">使用者輸入設定</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% @wording_jsons.each do |wording_json|%>
-                        <tr>
-                          <th scope="row"><%= wording_json.name %></th>
-                          <td><%= wording_json.def_name %>  <%= link_to "[edit]",wording_json_edit_path(wording_json.id)%></td>
-                          <td><%= link_to "[set]", wording_set_list_path(wording_json.id)%></td>
-                        </tr>
-                      <% end %>
-                    </tbody>
-                  </table>
+                  <%= form_for @wording_jsons, :url => wording_json_update_path, method: "patch" do |f| %>
+                    <div class="form-group">
+                      <%= f.label("名稱", :class => 'form-control-label') %><%= @wording_jsons.name %>
+                    </div>
+                    <div class="form-group">
+                      <%= f.label("自定義名稱", :class => 'form-control-label') %><%= f.text_field(:def_name, :class => "form-control", placeholder: "輸入名稱")%>
+                    </div>
+                    <div class="card-footer">
+                      <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-dot-circle-o"></i> 送出
+                      </button>
+                      <button type="reset" class="btn btn-danger btn-sm">
+                        <i class="fa fa-ban"></i> 清除
+                      </button>
+                    </div>
+                  <% end %>
                 </div>
             </div>
           </div>

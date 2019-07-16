@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190716082257) do
+ActiveRecord::Schema.define(version: 20190716110506) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 20190716082257) do
 
   create_table "parameter_jsons", force: :cascade do |t|
     t.string   "name",               limit: 255
+    t.string   "def_name",           limit: 255
     t.text     "json",               limit: 65535
     t.integer  "parameter_set_id",   limit: 4
     t.string   "parameter_set_type", limit: 255
@@ -450,6 +451,7 @@ ActiveRecord::Schema.define(version: 20190716082257) do
 
   create_table "wording_jsons", force: :cascade do |t|
     t.string   "name",       limit: 255
+    t.string   "def_name",   limit: 255
     t.text     "json",       limit: 65535
     t.integer  "wording_id", limit: 4
     t.datetime "created_at",               null: false

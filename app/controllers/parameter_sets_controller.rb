@@ -33,6 +33,18 @@ class ParameterSetsController < ApplicationController
     redirect_to :action => :index
   end
 
+  def name_edit
+    @parameter_json = ParameterJson.find(params[:id])
+  end
+
+  def name_update
+    @parameter_json = ParameterJson.find(params[:id])
+    @parameter_json.def_name = params[:parameter_json][:def_name]
+    @parameter_json.save!
+
+    redirect_to list_parameter_set_path(@parameter_json.parameter_set_id)
+  end
+
   def update
   	@parameters = ParameterSet.find(params[:id])
   	@parameters.update(parameter_set_params)

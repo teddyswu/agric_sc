@@ -110,6 +110,18 @@ class AgrisController < ApplicationController
     @wording_jsons = WordingJson.where(:wording_id => params[:id])
   end
 
+  def wording_json_edit
+    @wording_jsons = WordingJson.find(params[:id])
+  end
+
+  def wording_json_update
+    @wording_jsons = WordingJson.find(params[:id])
+    @wording_jsons.def_name = params[:wording_json][:def_name]
+    @wording_jsons.save!
+
+    redirect_to wording_json_path(@wording_jsons.wording_id)
+  end
+
   def wording_set_list
     @wording_set = WordingJson.find(params[:id])
     @specify_keywords = SpecifyKeyword.where(:resource_id => params[:id], :resource_type => "WordingJson")

@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   get "agris/wording_list", :to => "agris#wording_list", :as => "wording_list"
   
   get "agris/wording_json/:id", :to => "agris#wording_json", :as => "wording_json"
+  get "agris/wording_json_edit/:id", :to => "agris#wording_json_edit", :as => "wording_json_edit"
+  patch "agris/wording_json_update/:id", :to => "agris#wording_json_update", :as => "wording_json_update"
   get "agris/wording_set_list/:id", :to => "agris#wording_set_list", :as => "wording_set_list"
   get "agris/wording_set_new/:id", :to => "agris#wording_set_new", :as => "wording_set_new"
   get "agris/wording_set_edit/:id", :to => "agris#wording_set_edit", :as => "wording_set_edit"
@@ -47,6 +49,8 @@ Rails.application.routes.draw do
 
   resources :parameter_sets do
     get "list", on: :member
+    get "name_edit", on: :member
+    patch "name_update", on: :member
     get "set_list", on: :member
     get "set_new", on: :member
     get "set_edit", on: :member

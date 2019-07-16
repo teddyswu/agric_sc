@@ -34,6 +34,7 @@
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">名稱</th>
+                        <th scope="col">自定義名稱</th>
                         <th scope="col">對象</th>
                         <th scope="col">使用者輸入設定</th>
                       </tr>
@@ -42,6 +43,7 @@
                       <% @parameter_jsons.each do |parameter_json|%>
                         <tr>
                           <th scope="row"><%= parameter_json.name %></th>
+                          <td><%= parameter_json.def_name %>   <%= link_to "[edit]",name_edit_parameter_set_path(parameter_json.id)%></td>
                           <td><%= render_role(parameter_json.parameter_set_type) %></td>
                           <td><%= link_to "[set]", set_list_parameter_set_path(parameter_json.id)%></td>
                         </tr>
