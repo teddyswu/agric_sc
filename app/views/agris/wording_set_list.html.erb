@@ -46,7 +46,7 @@
                           <th scope="row"><%= specify_keyword_role(sk.role) %></th>
                           <td><%= specify_keyword_type(sk.keyword_type) %></td>
                           <td><%= sk.keyword %></td>
-                          <td><%= link_to "[edit]", wording_set_edit_path(sk.id)%></td>
+                          <td><%= link_to "[set]", wording_set_edit_path(sk.id)%></td>
                           <td><%= link_to "[delete]", wording_set_delete_path(sk.id), :method => :delete %></td>
                         </tr>
                       <% end %>

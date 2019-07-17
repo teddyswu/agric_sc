@@ -1745,10 +1745,13 @@ class DataConnectsController < ApplicationController
             ww = ParameterSet.find_by_ref_and_enabled(ref, true)
             if aa.present?
               ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "user")
+              user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
             elsif bb.present?
               ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "subscribe_guest")
+              user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
             else
               ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
+              user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
             end
             render json: JSON.parse(ps.json.gsub("=>", ":"))
           end

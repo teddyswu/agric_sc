@@ -18,6 +18,7 @@ class PostMessageApiJob < ActiveJob::Base
     password = customization[:password]
     total = 0
     mp.group.group_user_ships.each do |group|
+      user_rec = UserAnalyze.create(:uid => group.uid, :pl => mp.module_name)
       gg = []
       gg << group.uid
       post_data = {'recipient_ids'=> gg, 'user' => user, 'password' => password, 'name' => mp.module_name }.to_json
