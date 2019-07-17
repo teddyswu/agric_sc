@@ -1439,6 +1439,7 @@ class DataConnectsController < ApplicationController
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
                           end
                         when 2
                           ch_word = gk.keyword.split(",").size
