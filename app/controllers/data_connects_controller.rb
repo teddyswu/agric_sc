@@ -1295,229 +1295,107 @@ class DataConnectsController < ApplicationController
                     end
                   end
                   word.each do |w|
-                    case w.keyword_type
-                    when 1 #輸入內容 含任一關鍵字
-                      ch_word = w.keyword.split(",").size
-                      t_word = 0
-                      w.keyword.split(",").each do |wk|
-                        t_word +=1 if user_text.include? wk
-                      end
-                      if t_word > 0
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    when 2 #輸入內容 含所有關鍵字
-                      ch_word = w.keyword.split(",").size
-                      t_word = 0
-                      w.keyword.split(",").each do |wk|
-                        t_word +=1 if user_text.include? wk
-                      end
-                      if t_word == ch_word
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    when 3 #輸入內容 完全相符
-                      if user_text == w.keyword
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    when 9 #電話號碼
-                      a = /^09\d{8}$/.match(user_text)
-                      if a.present?
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    when 10 #Email
-                      a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
-                      if a.present?
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    when 11 #數字
-                      a = /[0-9]/.match(user_text)
-                      if a.present?
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    when 4 #純文字
-                      a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
-                      if a.present?
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    when 12
-                      if user_text != "" || user_text != "\"\""
-                        case w.specify_json.cat
-                        when 1
-                          total = w.specify_json.json
-                        when 2
-                          total = WordingJson.find(w.specify_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                        is_send = 1
-                      end
-                    end
-                  end
-                  if is_send == 0
-                    global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)")
-                    global_keyword.each do |gk|
-                      case gk.keyword_type
-                      when 1
-                        ch_word = gk.keyword.split(",").size
+                    if is_send == 0
+                      case w.keyword_type
+                      when 1 #輸入內容 含任一關鍵字
+                        ch_word = w.keyword.split(",").size
                         t_word = 0
-                        gk.keyword.split(",").each do |wk|
+                        w.keyword.split(",").each do |wk|
                           t_word +=1 if user_text.include? wk
                         end
                         if t_word > 0
-                          case gk.generic_json.cat
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
                           send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
                         end
-                      when 2
-                        ch_word = gk.keyword.split(",").size
+                      when 2 #輸入內容 含所有關鍵字
+                        ch_word = w.keyword.split(",").size
                         t_word = 0
-                        gk.keyword.split(",").each do |wk|
+                        w.keyword.split(",").each do |wk|
                           t_word +=1 if user_text.include? wk
                         end
                         if t_word == ch_word
-                          case gk.generic_json.cat
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
                           send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
-                      when 3
-                        if user_text == gk.keyword
-                          case gk.generic_json.cat
+                      when 3 #輸入內容 完全相符
+                        if user_text == w.keyword
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
                           send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
-                      when 9
+                      when 9 #電話號碼
                         a = /^09\d{8}$/.match(user_text)
                         if a.present?
-                          case gk.generic_json.cat
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
                           send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
-                      when 10
+                      when 10 #Email
                         a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
                         if a.present?
-                          case gk.generic_json.cat
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
                           send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
-                      when 11
+                      when 11 #數字
                         a = /[0-9]/.match(user_text)
                         if a.present?
-                          case gk.generic_json.cat
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
                           send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
-                      when 4
+                      when 4 #純文字
                         a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
                         if a.present?
-                          case gk.generic_json.cat
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
@@ -1526,16 +1404,142 @@ class DataConnectsController < ApplicationController
                         end
                       when 12
                         if user_text != "" || user_text != "\"\""
-                          case gk.generic_json.cat
+                          case w.specify_json.cat
                           when 1
-                            total = gk.generic_json.json
+                            total = w.specify_json.json
                           when 2
-                            total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
                           customization = YAML.load_file("config/customization.yml")
                           uri = URI.parse(customization[:user_message_post])
                           send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
+                        end
+                      end
+                    end
+                  end
+                  if is_send == 0
+                    global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)")
+                    global_keyword.each do |gk|
+                      if is_send == 0
+                        case gk.keyword_type
+                        when 1
+                          ch_word = gk.keyword.split(",").size
+                          t_word = 0
+                          gk.keyword.split(",").each do |wk|
+                            t_word +=1 if user_text.include? wk
+                          end
+                          if t_word > 0
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          end
+                        when 2
+                          ch_word = gk.keyword.split(",").size
+                          t_word = 0
+                          gk.keyword.split(",").each do |wk|
+                            t_word +=1 if user_text.include? wk
+                          end
+                          if t_word == ch_word
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
+                          end
+                        when 3
+                          if user_text == gk.keyword
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
+                          end
+                        when 9
+                          a = /^09\d{8}$/.match(user_text)
+                          if a.present?
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
+                          end
+                        when 10
+                          a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
+                          if a.present?
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
+                          end
+                        when 11
+                          a = /[0-9]/.match(user_text)
+                          if a.present?
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
+                          end
+                        when 4
+                          a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
+                          if a.present?
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
+                          end
+                        when 12
+                          if user_text != "" || user_text != "\"\""
+                            case gk.generic_json.cat
+                            when 1
+                              total = gk.generic_json.json
+                            when 2
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                            end
+                            customization = YAML.load_file("config/customization.yml")
+                            uri = URI.parse(customization[:user_message_post])
+                            send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                            is_send = 1
+                          end
                         end
                       end
                     end
