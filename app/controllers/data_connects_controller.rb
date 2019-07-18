@@ -1347,8 +1347,6 @@ class DataConnectsController < ApplicationController
                           is_send = 1
                         end
                       when 9 #電話號碼
-                        p user_text
-                        p "global_keyword"
                         a = /^09\d{8}$/.match(user_text)
                         if a.present?
                           case w.specify_json.cat
@@ -1476,8 +1474,6 @@ class DataConnectsController < ApplicationController
                             is_send = 1
                           end
                         when 9
-                          p user_text
-                          p "-----"
                           a = /^09\d{8}$/.match(user_text)
                           if a.present?
                             case gk.generic_json.cat
