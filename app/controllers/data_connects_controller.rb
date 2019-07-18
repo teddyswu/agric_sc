@@ -1285,13 +1285,13 @@ class DataConnectsController < ApplicationController
                   aa = Authorization.find_by_uid(uid)
                   bb = UserSubscription.find_by_scoped_id(uid)
                   if aa.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "user")
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "user").order(keyword_type: :asc)
                   elsif bb.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "subscribe_guest")
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "subscribe_guest").order(keyword_type: :asc)
                   else
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "guest")
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "guest").order(keyword_type: :asc)
                     if word.blank?
-                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%")
+                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%").order(keyword_type: :asc)
                     end
                   end
                   word.each do |w|
@@ -1347,6 +1347,8 @@ class DataConnectsController < ApplicationController
                           is_send = 1
                         end
                       when 9 #電話號碼
+                        p user_text
+                        p "global_keyword"
                         a = /^09\d{8}$/.match(user_text)
                         if a.present?
                           case w.specify_json.cat
@@ -1419,9 +1421,10 @@ class DataConnectsController < ApplicationController
                     end
                   end
                   if is_send == 0
-                    global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)")
+                    global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)").order(keyword_type: :asc)
                     global_keyword.each do |gk|
                       if is_send == 0
+                        p gk.keyword_type
                         case gk.keyword_type
                         when 1
                           ch_word = gk.keyword.split(",").size
@@ -1473,6 +1476,8 @@ class DataConnectsController < ApplicationController
                             is_send = 1
                           end
                         when 9
+                          p user_text
+                          p "-----"
                           a = /^09\d{8}$/.match(user_text)
                           if a.present?
                             case gk.generic_json.cat

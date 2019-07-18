@@ -170,7 +170,7 @@ class AgrisController < ApplicationController
     specify_json = SpecifyJson.find_by(:specify_keyword_id => params[:id])
     specify_json.cat = params[:specify_json][:cat]
     specify_json.json = params[:specify_json][:json]
-    specify_json.wording_json_id = params[:specify_json][:wording_json_id]
+    specify_json.wording_json_id = params[:specify_json][:wording_json_id].to_i
     specify_json.save!
 
     redirect_to wording_set_list_path(@specify_keyword.resource_id)

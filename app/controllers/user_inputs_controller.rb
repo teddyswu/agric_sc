@@ -47,7 +47,7 @@ class UserInputsController < ApplicationController
   	generic_json = GenericJson.find_by(:Generic_keyword_id => params[:id])
     generic_json.cat = params[:generic_json][:cat]
     generic_json.json = params[:generic_json][:json]
-    generic_json.wording_json_id = params[:generic_json][:wording_json_id]
+    generic_json.wording_json_id = params[:generic_json][:wording_json_id].to_i
     generic_json.save!
 
     redirect_to user_inputs_path
