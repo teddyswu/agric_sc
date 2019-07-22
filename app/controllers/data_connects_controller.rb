@@ -987,138 +987,178 @@ class DataConnectsController < ApplicationController
         end
       end
 		else
-      case [params[:v],params[:m]]
-      when ["v0.01","return_data"]
-        case params[:arg]
-        when "", "\"\""
-          case params[:ref]
+      case params[:d]
+      when "ugooz"
+        case [params[:v],params[:m]]
+        when ["v0.01","return_data"]
+          case params[:arg]
           when "", "\"\""
-            case params[:start]
-            when "", "\"\"" #個人化問候語
-              gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-              n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
-              name = (n.present? ? n.last.name : "匿名訪客")
-              gg.name = name
-              gg.start = (params[:start] == "1" ? true : false)
-              word_t = Array.new
-              word_a = Array.new
-              word = Hash.new
-              say_hi = true if gg.new_record?
-              gg.save!
-              if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
-                case Time.now.strftime('%H').to_i
-                when 0..4
-                  sta = "晚安！"
-                when 5..10
-                  sta = "早安！"
-                when 11..13
-                  sta = "午安！"
-                when 14..17
-                  sta = "下午好~"
-                when 18..23
-                  sta = "晚安！"
+            case params[:ref]
+            when "", "\"\""
+              case params[:start]
+              when "", "\"\"" #個人化問候語
+                gg = Greeting.find_or_initialize_by(:uid => params[:uid])
+                n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
+                name = (n.present? ? n.last.name : "匿名訪客")
+                gg.name = name
+                gg.start = (params[:start] == "1" ? true : false)
+                word_t = Array.new
+                word_a = Array.new
+                word = Hash.new
+                say_hi = true if gg.new_record?
+                gg.save!
+                if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
+                  case Time.now.strftime('%H').to_i
+                  when 0..4
+                    sta = "晚安！"
+                  when 5..10
+                    sta = "早安！"
+                  when 11..13
+                    sta = "午安！"
+                  when 14..17
+                    sta = "下午好~"
+                  when 18..23
+                    sta = "晚安！"
+                  end
+                  word["type"] = "text"
+                  word["text"] = "Hi #{name} #{sta}"
+                  word["delay"] = "1"
+                  gg.updated_at = Time.now
                 end
-                word["type"] = "text"
-                word["text"] = "Hi #{name} #{sta}"
-                word["delay"] = "1"
-                gg.updated_at = Time.now
+                word_a << word
+                gg.save!
+                word_t << word_a
+                render json: word_t
+              when "1" #B2C 個人化啟動互動
+                u = UserAnalyze.where(:uid => params[:uid]).size
+                inter_t = Array.new
+                inter_to = Array.new
+                inter_ta = Hash.new
+                inter_tb = Hash.new
+                if u > 10
+                  inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                  inter_ta["type"] = "text"
+                  inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
+                  inter_ta["delay"] = "1"
+                  next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
+                else
+                  inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                  inter_ta["type"] = "text"
+                  inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
+                  inter_ta["delay"] = "1"
+                  next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
+                end
+                inter_to << inter_ta
+                inter_t << inter_to
+                render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
               end
-              word_a << word
-              gg.save!
-              word_t << word_a
-              render json: word_t
-            when "1" #B2C 個人化啟動互動
-              u = UserAnalyze.where(:uid => params[:uid]).size
-              inter_t = Array.new
-              inter_to = Array.new
-              inter_ta = Hash.new
-              inter_tb = Hash.new
-              if u > 10
-                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
-                inter_ta["type"] = "text"
-                inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
-                inter_ta["delay"] = "1"
-                next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
-              else
-                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
-                inter_ta["type"] = "text"
-                inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
-                inter_ta["delay"] = "1"
-                next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
-              end
-              inter_to << inter_ta
-              inter_t << inter_to
-              render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
-            end
-          else
-            ref = params[:ref]
-            uid = params[:uid]
-            aa = Authorization.find_by_uid(uid)
-            bb = UserSubscription.find_by_scoped_id(uid)
-            ww = ParameterSet.find_by_ref_and_enabled(ref, true)
-            if aa.present?
-              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "user")
-            elsif bb.present?
-              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "subscribe_guest")
             else
-              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
+              ref = params[:ref]
+              uid = params[:uid]
+              aa = Authorization.find_by_uid(uid)
+              bb = UserSubscription.find_by_scoped_id(uid)
+              ww = ParameterSet.find_by_ref_and_enabled(ref, true)
+              if aa.present?
+                ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "user")
+              elsif bb.present?
+                ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "subscribe_guest")
+              else
+                ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
+              end
+              render json: JSON.parse(ps.json.gsub("=>", ":"))
             end
-            render json: JSON.parse(ps.json.gsub("=>", ":"))
-          end
-        when "my_proposal"
-          total = Array.new
-          text = Array.new
-          text_a = Array.new
-          result = Hash.new
-          text_1 = Hash.new
-          text_3 = Hash.new
-          auth = Authorization.find_by_uid(params[:uid])
-          if auth.present?
-            result["register"] = true
-            if auth.user.orders.size > 0 
-              order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
-              order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
-              order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
-              order_ids = order_a + order_b + order_c
-              orders = Order.where(:id => order_ids).order(id: :desc).to_a
-              if orders.size > 0
-                text_3_a = Array.new
-                result["join"] = true
-                text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-                text_3["type"] = "text"
-                text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
-                text_3["delay"] = 1
-                text_3_a << text_3
-                orders.last(10).each_with_index do |order, i|
-                  i+=1
-                  if order.goody.campaign.end_date >= Date.today
-                    remain_day = (order.goody.campaign.end_date - Date.today).to_i
-                    amount_raised = order.goody.campaign.amount_raised
-                    percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
-                    text_2_c = Hash.new
-                    text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                    text_2_c["title"] = order.goody.campaign.title
-                    text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
-                    text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+          when "my_proposal"
+            total = Array.new
+            text = Array.new
+            text_a = Array.new
+            result = Hash.new
+            text_1 = Hash.new
+            text_3 = Hash.new
+            auth = Authorization.find_by_uid(params[:uid])
+            if auth.present?
+              result["register"] = true
+              if auth.user.orders.size > 0 
+                order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
+                order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
+                order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
+                order_ids = order_a + order_b + order_c
+                orders = Order.where(:id => order_ids).order(id: :desc).to_a
+                if orders.size > 0
+                  text_3_a = Array.new
+                  result["join"] = true
+                  text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                  text_3["type"] = "text"
+                  text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
+                  text_3["delay"] = 1
+                  text_3_a << text_3
+                  orders.last(10).each_with_index do |order, i|
+                    i+=1
+                    if order.goody.campaign.end_date >= Date.today
+                      remain_day = (order.goody.campaign.end_date - Date.today).to_i
+                      amount_raised = order.goody.campaign.amount_raised
+                      percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+                      text_2_c = Hash.new
+                      text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                      text_2_c["title"] = order.goody.campaign.title
+                      text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                      text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+                      buttons = Array.new #[]
+                      t1 = Hash.new
+                      if order.paid == false
+                        t1["type"] = "web_url"
+                        t1["title"] = "付款去"
+                        t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                      else
+                        t1["type"] = "web_url"
+                        t1["title"] = "查看詳細記錄"
+                        t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                      end
+                      buttons << t1
+                      t2 = Hash.new
+                      t2["type"] = "web_url"
+                      t2["title"] = "查看最新進度"
+                      t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                      buttons << t2
+                      text_2_c["buttons"] = buttons
+                      text_a << text_2_c
+                    end
+                  end
+                else
+                  result["join"] = false
+                  text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                  text_1["type"] = "text"
+                  text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                  text_1["delay"] = 1
+                  total = Array.new
+                  proposal = Array.new
+                  proposal_1 = Array.new
+                  text_t = Array.new
+                  text_2 = Hash.new
+                  campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+                  campaigns.each_with_index do |campaign, i|
+                    i+=1
+                    remain_day = (campaign.end_date - Date.today).to_i
+                    amount_raised = campaign.amount_raised
+                    percentage = 100*(amount_raised.to_f / campaign.goal)
+                    description = campaign.description.first(40)
+                    text_c = Hash.new
+                    text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                    text_c["title"] = campaign.title
+                    text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                    text_c["image_url"] = campaign.campaign_image.campaign_path
                     buttons = Array.new #[]
                     t1 = Hash.new
-                    if order.paid == false
-                      t1["type"] = "web_url"
-                      t1["title"] = "付款去"
-                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                    else
-                      t1["type"] = "web_url"
-                      t1["title"] = "查看詳細記錄"
-                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                    end
+                    t1["type"] = "postback"
+                    t1["title"] = "追蹤♥"
+                    t1["payload"] = "FLW_proj_#{campaign.slug}"
                     buttons << t1
                     t2 = Hash.new
                     t2["type"] = "web_url"
-                    t2["title"] = "查看最新進度"
-                    t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                    t2["title"] = "查看內容"
+                    t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
                     buttons << t2
-                    text_2_c["buttons"] = buttons
-                    text_a << text_2_c
+                    text_c["buttons"] = buttons
+                    proposal_1 << text_c
                   end
                 end
               else
@@ -1160,369 +1200,204 @@ class DataConnectsController < ApplicationController
                 end
               end
             else
+              result["register"] = false
               result["join"] = false
               text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-              text_1["type"] = "text"
-              text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
-              text_1["delay"] = 1
-              total = Array.new
-              proposal = Array.new
-              proposal_1 = Array.new
-              text_t = Array.new
-              text_2 = Hash.new
-              campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
-              campaigns.each_with_index do |campaign, i|
-                i+=1
-                remain_day = (campaign.end_date - Date.today).to_i
-                amount_raised = campaign.amount_raised
-                percentage = 100*(amount_raised.to_f / campaign.goal)
-                description = campaign.description.first(40)
-                text_c = Hash.new
-                text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                text_c["title"] = campaign.title
-                text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
-                text_c["image_url"] = campaign.campaign_image.campaign_path
-                buttons = Array.new #[]
-                t1 = Hash.new
-                t1["type"] = "postback"
-                t1["title"] = "追蹤♥"
-                t1["payload"] = "FLW_proj_#{campaign.slug}"
-                buttons << t1
-                t2 = Hash.new
-                t2["type"] = "web_url"
-                t2["title"] = "查看內容"
-                t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
-                buttons << t2
-                text_c["buttons"] = buttons
-                proposal_1 << text_c
-              end
+              text_1["template_type"] = "button"
+              text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
+              buttons = Array.new
+              t2 = Hash.new
+              t2["type"] = "web_url"
+              t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
+              t2["title"] = "開始登入！"
+              buttons << t2
+              text_1["buttons"] = buttons
             end
-          else
-            result["register"] = false
-            result["join"] = false
-            text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-            text_1["template_type"] = "button"
-            text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
-            buttons = Array.new
-            t2 = Hash.new
-            t2["type"] = "web_url"
-            t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
-            t2["title"] = "開始登入！"
-            buttons << t2
-            text_1["buttons"] = buttons
+            text << result
+            total << text
+            total << text_3_a if text_3_a.present?
+            text_a << text_1 if text_1 != {}
+            text_a << text_2 if text_2.present?
+            total << text_a
+            total << proposal_1 if proposal_1.present?
+            render json: total
+          when /-/
+            ids = ParameterSet.all.map { |f| f.id }
+            params[:arg].split("-").each do |a|
+              ww = ParameterSet.where("id in (?) and ref like ?", ids, "%#{a}%")
+              ids = ww.map { |w| w.id }
+            end
+            aa = Authorization.find_by_uid(uid)
+            bb = UserSubscription.find_by_scoped_id(uid)
+            set = ParameterSet.find_by_id_and_enabled(ids, true)
+            if aa.present?
+              w = set.user
+            elsif bb.present?
+              w = set.subscribe_guest
+            else
+              w = set.guest
+            end
+            render json: w
           end
-          text << result
-          total << text
-          total << text_3_a if text_3_a.present?
-          text_a << text_1 if text_1 != {}
-          text_a << text_2 if text_2.present?
-          total << text_a
-          total << proposal_1 if proposal_1.present?
-          render json: total
-        when /-/
-          ids = ParameterSet.all.map { |f| f.id }
-          params[:arg].split("-").each do |a|
-            ww = ParameterSet.where("id in (?) and ref like ?", ids, "%#{a}%")
-            ids = ww.map { |w| w.id }
-          end
-          aa = Authorization.find_by_uid(uid)
-          bb = UserSubscription.find_by_scoped_id(uid)
-          set = ParameterSet.find_by_id_and_enabled(ids, true)
-          if aa.present?
-            w = set.user
-          elsif bb.present?
-            w = set.subscribe_guest
-          else
-            w = set.guest
-          end
-          render json: w
-        end
-      when ["v0.02","return_data"]
-        case params[:arg]
-        when "", "\"\""
-          case params[:ref]
+        when ["v0.02","return_data"]
+          case params[:arg]
           when "", "\"\""
-            case params[:start]
-            when "", "\"\"" #個人化問候語
-              case params[:type]
-                when "", "\"\"", nil
-                  gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-                  n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
-                  name = (n.present? ? n.last.name : "匿名訪客")
-                  gg.name = name
-                  gg.start = (params[:start] == "1" ? true : false)
-                  word_t = Array.new
-                  word_a = Array.new
-                  word = Hash.new
-                  say_hi = true if gg.new_record?
-                  gg.save!
-                  if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
-                    case Time.now.strftime('%H').to_i
-                    when 0..4
-                      sta = "晚安！"
-                    when 5..10
-                      sta = "早安！"
-                    when 11..13
-                      sta = "午安！"
-                    when 14..17
-                      sta = "下午好~"
-                    when 18..23
-                      sta = "晚安！"
+            case params[:ref]
+            when "", "\"\""
+              case params[:start]
+              when "", "\"\"" #個人化問候語
+                case params[:type]
+                  when "", "\"\"", nil
+                    gg = Greeting.find_or_initialize_by(:uid => params[:uid])
+                    n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
+                    name = (n.present? ? n.last.name : "匿名訪客")
+                    gg.name = name
+                    gg.start = (params[:start] == "1" ? true : false)
+                    word_t = Array.new
+                    word_a = Array.new
+                    word = Hash.new
+                    say_hi = true if gg.new_record?
+                    gg.save!
+                    if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
+                      case Time.now.strftime('%H').to_i
+                      when 0..4
+                        sta = "晚安！"
+                      when 5..10
+                        sta = "早安！"
+                      when 11..13
+                        sta = "午安！"
+                      when 14..17
+                        sta = "下午好~"
+                      when 18..23
+                        sta = "晚安！"
+                      end
+                      word["type"] = "text"
+                      word["text"] = "Hi #{name} #{sta}"
+                      word["delay"] = "1"
+                      gg.updated_at = Time.now
                     end
-                    word["type"] = "text"
-                    word["text"] = "Hi #{name} #{sta}"
-                    word["delay"] = "1"
-                    gg.updated_at = Time.now
-                  end
-                  word_a << word
-                  gg.save!
-                  word_t << word_a
-                  render json: word_t
-                when "text"
-                  is_send = 0
-                  user_text = params[:text]
-                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                  aa = Authorization.find_by_uid(uid)
-                  bb = UserSubscription.find_by_scoped_id(uid)
-                  if aa.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "user").order(keyword_type: :asc)
-                  elsif bb.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "subscribe_guest").order(keyword_type: :asc)
-                  else
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "guest").order(keyword_type: :asc)
-                    if word.blank?
-                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%").order(keyword_type: :asc)
-                    end
-                  end
-                  word.each do |w|
-                    if is_send == 0
-                      case w.keyword_type
-                      when 1 #輸入內容 含任一關鍵字
-                        ch_word = w.keyword.split(",").size
-                        t_word = 0
-                        w.keyword.split(",").each do |wk|
-                          t_word +=1 if user_text.include? wk
-                        end
-                        if t_word > 0
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
-                      when 2 #輸入內容 含所有關鍵字
-                        ch_word = w.keyword.split(",").size
-                        t_word = 0
-                        w.keyword.split(",").each do |wk|
-                          t_word +=1 if user_text.include? wk
-                        end
-                        if t_word == ch_word
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
-                      when 3 #輸入內容 完全相符
-                        if user_text == w.keyword
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
-                      when 9 #電話號碼
-                        a = /^09\d{8}$/.match(user_text)
-                        if a.present?
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
-                      when 10 #Email
-                        a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
-                        if a.present?
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
-                      when 11 #數字
-                        a = /[0-9]/.match(user_text)
-                        if a.present?
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
-                      when 4 #純文字
-                        a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
-                        if a.present?
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
-                      when 12
-                        if user_text != "" || user_text != "\"\""
-                          case w.specify_json.cat
-                          when 1
-                            total = w.specify_json.json
-                          when 2
-                            total = WordingJson.find(w.specify_json.wording_json_id).json
-                          end
-                          customization = YAML.load_file("config/customization.yml")
-                          uri = URI.parse(customization[:user_message_post])
-                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                          is_send = 1
-                        end
+                    word_a << word
+                    gg.save!
+                    word_t << word_a
+                    render json: word_t
+                  when "text"
+                    is_send = 0
+                    user_text = params[:text]
+                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                    aa = Authorization.find_by_uid(uid)
+                    bb = UserSubscription.find_by_scoped_id(uid)
+                    if aa.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "user").order(keyword_type: :asc)
+                    elsif bb.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "subscribe_guest").order(keyword_type: :asc)
+                    else
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "guest").order(keyword_type: :asc)
+                      if word.blank?
+                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%").order(keyword_type: :asc)
                       end
                     end
-                  end
-                  if is_send == 0
-                    global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)").order(keyword_type: :asc)
-                    global_keyword.each do |gk|
+                    word.each do |w|
                       if is_send == 0
-                        p gk.keyword_type
-                        case gk.keyword_type
-                        when 1
-                          ch_word = gk.keyword.split(",").size
+                        case w.keyword_type
+                        when 1 #輸入內容 含任一關鍵字
+                          ch_word = w.keyword.split(",").size
                           t_word = 0
-                          gk.keyword.split(",").each do |wk|
+                          w.keyword.split(",").each do |wk|
                             t_word +=1 if user_text.include? wk
                           end
                           if t_word > 0
-                            case gk.generic_json.cat
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 2
-                          ch_word = gk.keyword.split(",").size
+                        when 2 #輸入內容 含所有關鍵字
+                          ch_word = w.keyword.split(",").size
                           t_word = 0
-                          gk.keyword.split(",").each do |wk|
+                          w.keyword.split(",").each do |wk|
                             t_word +=1 if user_text.include? wk
                           end
                           if t_word == ch_word
-                            case gk.generic_json.cat
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 3
-                          if user_text == gk.keyword
-                            case gk.generic_json.cat
+                        when 3 #輸入內容 完全相符
+                          if user_text == w.keyword
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 9
+                        when 9 #電話號碼
                           a = /^09\d{8}$/.match(user_text)
                           if a.present?
-                            case gk.generic_json.cat
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 10
+                        when 10 #Email
                           a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
                           if a.present?
-                            case gk.generic_json.cat
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 11
+                        when 11 #數字
                           a = /[0-9]/.match(user_text)
                           if a.present?
-                            case gk.generic_json.cat
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 4
+                        when 4 #純文字
                           a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
                           if a.present?
-                            case gk.generic_json.cat
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
@@ -1531,11 +1406,11 @@ class DataConnectsController < ApplicationController
                           end
                         when 12
                           if user_text != "" || user_text != "\"\""
-                            case gk.generic_json.cat
+                            case w.specify_json.cat
                             when 1
-                              total = gk.generic_json.json
+                              total = w.specify_json.json
                             when 2
-                              total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              total = WordingJson.find(w.specify_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
@@ -1545,276 +1420,612 @@ class DataConnectsController < ApplicationController
                         end
                       end
                     end
-                  end
-                  render json: JSON.parse("{\"result\": \"OK\"}")
-                when "image"
-                  user_text = params[:url]
-                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                  aa = Authorization.find_by_uid(uid)
-                  bb = UserSubscription.find_by_scoped_id(uid)
-                  if aa.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "5")
-                  elsif bb.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "5")
-                  else
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "5")
-                    if word.blank?
-                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "5")
+                    if is_send == 0
+                      global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)").order(keyword_type: :asc)
+                      global_keyword.each do |gk|
+                        if is_send == 0
+                          p gk.keyword_type
+                          case gk.keyword_type
+                          when 1
+                            ch_word = gk.keyword.split(",").size
+                            t_word = 0
+                            gk.keyword.split(",").each do |wk|
+                              t_word +=1 if user_text.include? wk
+                            end
+                            if t_word > 0
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          when 2
+                            ch_word = gk.keyword.split(",").size
+                            t_word = 0
+                            gk.keyword.split(",").each do |wk|
+                              t_word +=1 if user_text.include? wk
+                            end
+                            if t_word == ch_word
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          when 3
+                            if user_text == gk.keyword
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          when 9
+                            a = /^09\d{8}$/.match(user_text)
+                            if a.present?
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          when 10
+                            a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
+                            if a.present?
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          when 11
+                            a = /[0-9]/.match(user_text)
+                            if a.present?
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          when 4
+                            a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
+                            if a.present?
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          when 12
+                            if user_text != "" || user_text != "\"\""
+                              case gk.generic_json.cat
+                              when 1
+                                total = gk.generic_json.json
+                              when 2
+                                total = WordingJson.find(gk.generic_json.wording_json_id).json
+                              end
+                              customization = YAML.load_file("config/customization.yml")
+                              uri = URI.parse(customization[:user_message_post])
+                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                              is_send = 1
+                            end
+                          end
+                        end
+                      end
                     end
-                  end
-                  word.each do |w|
-                    case w.specify_json.cat
-                    when 1
-                      total = w.specify_json.json
-                    when 2
-                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    render json: JSON.parse("{\"result\": \"OK\"}")
+                  when "image"
+                    user_text = params[:url]
+                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                    aa = Authorization.find_by_uid(uid)
+                    bb = UserSubscription.find_by_scoped_id(uid)
+                    if aa.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "5")
+                    elsif bb.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "5")
+                    else
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "5")
+                      if word.blank?
+                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "5")
+                      end
                     end
-                    customization = YAML.load_file("config/customization.yml")
-                    uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                  end
-                  if word.blank?
-                    global_keyword = GenericKeyword.where("keyword_type in (?)", "5")
-                    global_keyword.each do |gk|
-                      case gk.generic_json.cat
+                    word.each do |w|
+                      case w.specify_json.cat
                       when 1
-                        total = gk.generic_json.json
+                        total = w.specify_json.json
                       when 2
-                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        total = WordingJson.find(w.specify_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
                       send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
-                  end
-                  render json: JSON.parse("{\"result\": \"OK\"}")
-                when "audio"
-                  user_text = params[:url]
-                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                  aa = Authorization.find_by_uid(uid)
-                  bb = UserSubscription.find_by_scoped_id(uid)
-                  if aa.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "7")
-                  elsif bb.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "7")
-                  else
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "7")
                     if word.blank?
-                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "7")
+                      global_keyword = GenericKeyword.where("keyword_type in (?)", "5")
+                      global_keyword.each do |gk|
+                        case gk.generic_json.cat
+                        when 1
+                          total = gk.generic_json.json
+                        when 2
+                          total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        end
+                        customization = YAML.load_file("config/customization.yml")
+                        uri = URI.parse(customization[:user_message_post])
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                      end
                     end
-                  end
-                  word.each do |w|
-                    case w.specify_json.cat
-                    when 1
-                      total = w.specify_json.json
-                    when 2
-                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    render json: JSON.parse("{\"result\": \"OK\"}")
+                  when "audio"
+                    user_text = params[:url]
+                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                    aa = Authorization.find_by_uid(uid)
+                    bb = UserSubscription.find_by_scoped_id(uid)
+                    if aa.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "7")
+                    elsif bb.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "7")
+                    else
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "7")
+                      if word.blank?
+                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "7")
+                      end
                     end
-                    customization = YAML.load_file("config/customization.yml")
-                    uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                  end
-                  if word.blank?
-                    global_keyword = GenericKeyword.where("keyword_type in (?)", "7")
-                    global_keyword.each do |gk|
-                      case gk.generic_json.cat
+                    word.each do |w|
+                      case w.specify_json.cat
                       when 1
-                        total = gk.generic_json.json
+                        total = w.specify_json.json
                       when 2
-                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        total = WordingJson.find(w.specify_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
                       send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
-                  end
-                  render json: JSON.parse("{\"result\": \"OK\"}")
-                when "video"
-                  user_text = params[:url]
-                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                  aa = Authorization.find_by_uid(uid)
-                  bb = UserSubscription.find_by_scoped_id(uid)
-                  if aa.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "6")
-                  elsif bb.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "6")
-                  else
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "6")
                     if word.blank?
-                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "6")
+                      global_keyword = GenericKeyword.where("keyword_type in (?)", "7")
+                      global_keyword.each do |gk|
+                        case gk.generic_json.cat
+                        when 1
+                          total = gk.generic_json.json
+                        when 2
+                          total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        end
+                        customization = YAML.load_file("config/customization.yml")
+                        uri = URI.parse(customization[:user_message_post])
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                      end
                     end
-                  end
-                  word.each do |w|
-                    case w.specify_json.cat
-                    when 1
-                      total = w.specify_json.json
-                    when 2
-                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    render json: JSON.parse("{\"result\": \"OK\"}")
+                  when "video"
+                    user_text = params[:url]
+                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                    aa = Authorization.find_by_uid(uid)
+                    bb = UserSubscription.find_by_scoped_id(uid)
+                    if aa.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "6")
+                    elsif bb.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "6")
+                    else
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "6")
+                      if word.blank?
+                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "6")
+                      end
                     end
-                    customization = YAML.load_file("config/customization.yml")
-                    uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                  end
-                  if word.blank?
-                    global_keyword = GenericKeyword.where("keyword_type in (?)", "6")
-                    global_keyword.each do |gk|
-                      case gk.generic_json.cat
+                    word.each do |w|
+                      case w.specify_json.cat
                       when 1
-                        total = gk.generic_json.json
+                        total = w.specify_json.json
                       when 2
-                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        total = WordingJson.find(w.specify_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
                       send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
-                  end
-                  render json: JSON.parse("{\"result\": \"OK\"}")
-                when "location"
-                  user_text = params[:url]
-                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                  aa = Authorization.find_by_uid(uid)
-                  bb = UserSubscription.find_by_scoped_id(uid)
-                  if aa.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "8")
-                  elsif bb.present?
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "8")
-                  else
-                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "8")
                     if word.blank?
-                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "8")
+                      global_keyword = GenericKeyword.where("keyword_type in (?)", "6")
+                      global_keyword.each do |gk|
+                        case gk.generic_json.cat
+                        when 1
+                          total = gk.generic_json.json
+                        when 2
+                          total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        end
+                        customization = YAML.load_file("config/customization.yml")
+                        uri = URI.parse(customization[:user_message_post])
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                      end
                     end
-                  end
-                  word.each do |w|
-                    case w.specify_json.cat
-                    when 1
-                      total = w.specify_json.json
-                    when 2
-                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    render json: JSON.parse("{\"result\": \"OK\"}")
+                  when "location"
+                    user_text = params[:url]
+                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                    aa = Authorization.find_by_uid(uid)
+                    bb = UserSubscription.find_by_scoped_id(uid)
+                    if aa.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "8")
+                    elsif bb.present?
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "8")
+                    else
+                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "8")
+                      if word.blank?
+                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "8")
+                      end
                     end
-                    customization = YAML.load_file("config/customization.yml")
-                    uri = URI.parse(customization[:user_message_post])
-                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                  end
-                  if word.blank?
-                    global_keyword = GenericKeyword.where("keyword_type in (?)", "8")
-                    global_keyword.each do |gk|
-                      case gk.generic_json.cat
+                    word.each do |w|
+                      case w.specify_json.cat
                       when 1
-                        total = gk.generic_json.json
+                        total = w.specify_json.json
                       when 2
-                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        total = WordingJson.find(w.specify_json.wording_json_id).json
                       end
                       customization = YAML.load_file("config/customization.yml")
                       uri = URI.parse(customization[:user_message_post])
                       send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
+                    if word.blank?
+                      global_keyword = GenericKeyword.where("keyword_type in (?)", "8")
+                      global_keyword.each do |gk|
+                        case gk.generic_json.cat
+                        when 1
+                          total = gk.generic_json.json
+                        when 2
+                          total = WordingJson.find(gk.generic_json.wording_json_id).json
+                        end
+                        customization = YAML.load_file("config/customization.yml")
+                        uri = URI.parse(customization[:user_message_post])
+                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                      end
+                    end
+                    render json: JSON.parse("{\"result\": \"OK\"}")
+                  else
+                    ua = UserAnalyze.new
+                    ua.uid = params[:uid] if params[:uid].present?
+                    ua.type = params[:type] if params[:type].present? and params[:type] != "\"\""
+                    ua.url = params[:url] if params[:url].present? and params[:url] != "\"\""
+                    ua.text = params[:text] if params[:text].present? and params[:text] != "\"\""
+                    ua.save!
+                    render json: JSON.parse("{\"result\": \"OK\"}")
                   end
-                  render json: JSON.parse("{\"result\": \"OK\"}")
+              when "1" #B2C 個人化啟動互動
+                u = UserAnalyze.where(:uid => params[:uid]).size
+                inter_t = Array.new
+                inter_to = Array.new
+                inter_ta = Hash.new
+                inter_tb = Hash.new
+                if u > 10
+                  inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                  inter_ta["type"] = "text"
+                  inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
+                  inter_ta["delay"] = "1"
+                  next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
                 else
-                  ua = UserAnalyze.new
-                  ua.uid = params[:uid] if params[:uid].present?
-                  ua.type = params[:type] if params[:type].present? and params[:type] != "\"\""
-                  ua.url = params[:url] if params[:url].present? and params[:url] != "\"\""
-                  ua.text = params[:text] if params[:text].present? and params[:text] != "\"\""
-                  ua.save!
-                  render json: JSON.parse("{\"result\": \"OK\"}")
+                  inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
+                  inter_ta["type"] = "text"
+                  inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
+                  inter_ta["delay"] = "1"
+                  next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
                 end
-            when "1" #B2C 個人化啟動互動
-              u = UserAnalyze.where(:uid => params[:uid]).size
-              inter_t = Array.new
-              inter_to = Array.new
-              inter_ta = Hash.new
-              inter_tb = Hash.new
-              if u > 10
-                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
-                inter_ta["type"] = "text"
-                inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
-                inter_ta["delay"] = "1"
-                next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
-              else
-                inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
-                inter_ta["type"] = "text"
-                inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
-                inter_ta["delay"] = "1"
-                next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
+                inter_to << inter_ta
+                inter_t << inter_to
+                render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
               end
-              inter_to << inter_ta
-              inter_t << inter_to
-              render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
+            else
+              ref = params[:ref]
+              uid = params[:uid]
+              aa = Authorization.find_by_uid(uid)
+              bb = UserSubscription.find_by_scoped_id(uid)
+              ww = ParameterSet.find_by_ref_and_enabled(ref, true)
+              if aa.present?
+                ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "user")
+                user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
+              elsif bb.present?
+                ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "subscribe_guest")
+                user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
+              else
+                ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
+                user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
+              end
+              render json: JSON.parse(ps.json.gsub("=>", ":"))
             end
-          else
-            ref = params[:ref]
-            uid = params[:uid]
+          when "my_proposal"
+            total = Array.new
+            text = Array.new
+            text_a = Array.new
+            result = Hash.new
+            text_1 = Hash.new
+            text_3 = Hash.new
+            auth = Authorization.find_by_uid(params[:uid])
+            if auth.present?
+              result["register"] = true
+              if auth.user.orders.size > 0 
+                order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
+                order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
+                order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
+                order_ids = order_a + order_b + order_c
+                orders = Order.where(:id => order_ids).order(id: :desc).to_a
+                if orders.size > 0
+                  text_3_a = Array.new
+                  result["join"] = true
+                  text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                  text_3["type"] = "text"
+                  text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
+                  text_3["delay"] = 1
+                  text_3_a << text_3
+                  orders.last(10).each_with_index do |order, i|
+                    i+=1
+                    if order.goody.campaign.end_date >= Date.today
+                      remain_day = (order.goody.campaign.end_date - Date.today).to_i
+                      amount_raised = order.goody.campaign.amount_raised
+                      percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+                      text_2_c = Hash.new
+                      text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                      text_2_c["title"] = order.goody.campaign.title
+                      text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                      text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+                      buttons = Array.new #[]
+                      t1 = Hash.new
+                      if order.paid == false
+                        t1["type"] = "web_url"
+                        t1["title"] = "付款去"
+                        t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                      else
+                        t1["type"] = "web_url"
+                        t1["title"] = "查看詳細記錄"
+                        t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                      end
+                      buttons << t1
+                      t2 = Hash.new
+                      t2["type"] = "web_url"
+                      t2["title"] = "查看最新進度"
+                      t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                      buttons << t2
+                      text_2_c["buttons"] = buttons
+                      text_a << text_2_c
+                    end
+                  end
+                else
+                  result["join"] = false
+                  text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                  text_1["type"] = "text"
+                  text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                  text_1["delay"] = 1
+                  total = Array.new
+                  proposal = Array.new
+                  proposal_1 = Array.new
+                  text_t = Array.new
+                  text_2 = Hash.new
+                  campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+                  campaigns.each_with_index do |campaign, i|
+                    i+=1
+                    remain_day = (campaign.end_date - Date.today).to_i
+                    amount_raised = campaign.amount_raised
+                    percentage = 100*(amount_raised.to_f / campaign.goal)
+                    description = campaign.description.first(40)
+                    text_c = Hash.new
+                    text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                    text_c["title"] = campaign.title
+                    text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                    text_c["image_url"] = campaign.campaign_image.campaign_path
+                    buttons = Array.new #[]
+                    t1 = Hash.new
+                    t1["type"] = "postback"
+                    t1["title"] = "追蹤♥"
+                    t1["payload"] = "FLW_proj_#{campaign.slug}"
+                    buttons << t1
+                    t2 = Hash.new
+                    t2["type"] = "web_url"
+                    t2["title"] = "查看內容"
+                    t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
+                    buttons << t2
+                    text_c["buttons"] = buttons
+                    proposal_1 << text_c
+                  end
+                end
+              else
+                result["join"] = false
+                text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                text_1["type"] = "text"
+                text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                text_1["delay"] = 1
+                total = Array.new
+                proposal = Array.new
+                proposal_1 = Array.new
+                text_t = Array.new
+                text_2 = Hash.new
+                campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+                campaigns.each_with_index do |campaign, i|
+                  i+=1
+                  remain_day = (campaign.end_date - Date.today).to_i
+                  amount_raised = campaign.amount_raised
+                  percentage = 100*(amount_raised.to_f / campaign.goal)
+                  description = campaign.description.first(40)
+                  text_c = Hash.new
+                  text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                  text_c["title"] = campaign.title
+                  text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                  text_c["image_url"] = campaign.campaign_image.campaign_path
+                  buttons = Array.new #[]
+                  t1 = Hash.new
+                  t1["type"] = "postback"
+                  t1["title"] = "追蹤♥"
+                  t1["payload"] = "FLW_proj_#{campaign.slug}"
+                  buttons << t1
+                  t2 = Hash.new
+                  t2["type"] = "web_url"
+                  t2["title"] = "查看內容"
+                  t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
+                  buttons << t2
+                  text_c["buttons"] = buttons
+                  proposal_1 << text_c
+                end
+              end
+            else
+              result["register"] = false
+              result["join"] = false
+              text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+              text_1["template_type"] = "button"
+              text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
+              buttons = Array.new
+              t2 = Hash.new
+              t2["type"] = "web_url"
+              t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
+              t2["title"] = "開始登入！"
+              buttons << t2
+              text_1["buttons"] = buttons
+            end
+            text << result
+            total << text
+            total << text_3_a if text_3_a.present?
+            text_a << text_1 if text_1 != {}
+            text_a << text_2 if text_2.present?
+            total << text_a
+            total << proposal_1 if proposal_1.present?
+            render json: total
+          when /-/
+            ids = ParameterSet.all.map { |f| f.id }
+            params[:arg].split("-").each do |a|
+              ww = ParameterSet.where("id in (?) and ref like ?", ids, "%#{a}%")
+              ids = ww.map { |w| w.id }
+            end
             aa = Authorization.find_by_uid(uid)
             bb = UserSubscription.find_by_scoped_id(uid)
-            ww = ParameterSet.find_by_ref_and_enabled(ref, true)
+            set = ParameterSet.find_by_id_and_enabled(ids, true)
             if aa.present?
-              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "user")
-              user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
+              w = set.user
             elsif bb.present?
-              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "subscribe_guest")
-              user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
+              w = set.subscribe_guest
             else
-              ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
-              user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
+              w = set.guest
             end
-            render json: JSON.parse(ps.json.gsub("=>", ":"))
-          end
-        when "my_proposal"
-          total = Array.new
-          text = Array.new
-          text_a = Array.new
-          result = Hash.new
-          text_1 = Hash.new
-          text_3 = Hash.new
-          auth = Authorization.find_by_uid(params[:uid])
-          if auth.present?
-            result["register"] = true
-            if auth.user.orders.size > 0 
-              order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
-              order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
-              order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
-              order_ids = order_a + order_b + order_c
-              orders = Order.where(:id => order_ids).order(id: :desc).to_a
-              if orders.size > 0
-                text_3_a = Array.new
-                result["join"] = true
-                text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-                text_3["type"] = "text"
-                text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
-                text_3["delay"] = 1
-                text_3_a << text_3
-                orders.last(10).each_with_index do |order, i|
-                  i+=1
-                  if order.goody.campaign.end_date >= Date.today
-                    remain_day = (order.goody.campaign.end_date - Date.today).to_i
-                    amount_raised = order.goody.campaign.amount_raised
-                    percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
-                    text_2_c = Hash.new
-                    text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                    text_2_c["title"] = order.goody.campaign.title
-                    text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
-                    text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+            render json: w
+          when "A_1"
+            total = Array.new
+            text = Array.new
+            text_a = Array.new
+            result = Hash.new
+            text_1 = Hash.new
+            text_3 = Hash.new
+            auth = Authorization.find_by_uid(params[:uid])
+            if auth.present?
+              result["register"] = true
+              if auth.user.orders.size > 0 
+                order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
+                order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
+                order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
+                order_ids = order_a + order_b + order_c
+                orders = Order.where(:id => order_ids).order(id: :desc).to_a
+                if orders.size > 0
+                  text_3_a = Array.new
+                  result["join"] = true
+                  text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                  text_3["type"] = "text"
+                  text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
+                  text_3["delay"] = 1
+                  text_3_a << text_3
+                  orders.last(10).each_with_index do |order, i|
+                    i+=1
+                    if order.goody.campaign.end_date >= Date.today
+                      remain_day = (order.goody.campaign.end_date - Date.today).to_i
+                      amount_raised = order.goody.campaign.amount_raised
+                      percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
+                      text_2_c = Hash.new
+                      text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                      text_2_c["title"] = order.goody.campaign.title
+                      text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
+                      text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
+                      buttons = Array.new #[]
+                      t1 = Hash.new
+                      if order.paid == false
+                        t1["type"] = "web_url"
+                        t1["title"] = "付款去"
+                        t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                      else
+                        t1["type"] = "web_url"
+                        t1["title"] = "查看詳細記錄"
+                        t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
+                      end
+                      buttons << t1
+                      t2 = Hash.new
+                      t2["type"] = "web_url"
+                      t2["title"] = "查看最新進度"
+                      t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                      buttons << t2
+                      text_2_c["buttons"] = buttons
+                      text_a << text_2_c
+                    end
+                  end
+                else
+                  result["join"] = false
+                  text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
+                  text_1["type"] = "text"
+                  text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                  text_1["delay"] = 1
+                  total = Array.new
+                  proposal = Array.new
+                  proposal_1 = Array.new
+                  text_t = Array.new
+                  text_2 = Hash.new
+                  campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
+                  campaigns.each_with_index do |campaign, i|
+                    i+=1
+                    remain_day = (campaign.end_date - Date.today).to_i
+                    amount_raised = campaign.amount_raised
+                    percentage = 100*(amount_raised.to_f / campaign.goal)
+                    description = campaign.description.first(40)
+                    text_c = Hash.new
+                    text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
+                    text_c["title"] = campaign.title
+                    text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
+                    text_c["image_url"] = campaign.campaign_image.campaign_path
                     buttons = Array.new #[]
                     t1 = Hash.new
-                    if order.paid == false
-                      t1["type"] = "web_url"
-                      t1["title"] = "付款去"
-                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                    else
-                      t1["type"] = "web_url"
-                      t1["title"] = "查看詳細記錄"
-                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                    end
+                    t1["type"] = "postback"
+                    t1["title"] = "追蹤♥"
+                    t1["payload"] = "FLW_proj_#{campaign.slug}"
                     buttons << t1
                     t2 = Hash.new
                     t2["type"] = "web_url"
-                    t2["title"] = "查看最新進度"
-                    t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
+                    t2["title"] = "查看內容"
+                    t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
                     buttons << t2
-                    text_2_c["buttons"] = buttons
-                    text_a << text_2_c
+                    text_c["buttons"] = buttons
+                    proposal_1 << text_c
                   end
                 end
               else
@@ -1856,550 +2067,347 @@ class DataConnectsController < ApplicationController
                 end
               end
             else
+              result["register"] = false
               result["join"] = false
               text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-              text_1["type"] = "text"
-              text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
-              text_1["delay"] = 1
-              total = Array.new
-              proposal = Array.new
-              proposal_1 = Array.new
-              text_t = Array.new
-              text_2 = Hash.new
-              campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
-              campaigns.each_with_index do |campaign, i|
-                i+=1
-                remain_day = (campaign.end_date - Date.today).to_i
-                amount_raised = campaign.amount_raised
-                percentage = 100*(amount_raised.to_f / campaign.goal)
-                description = campaign.description.first(40)
-                text_c = Hash.new
-                text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                text_c["title"] = campaign.title
-                text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
-                text_c["image_url"] = campaign.campaign_image.campaign_path
-                buttons = Array.new #[]
-                t1 = Hash.new
-                t1["type"] = "postback"
-                t1["title"] = "追蹤♥"
-                t1["payload"] = "FLW_proj_#{campaign.slug}"
-                buttons << t1
-                t2 = Hash.new
-                t2["type"] = "web_url"
-                t2["title"] = "查看內容"
-                t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
-                buttons << t2
-                text_c["buttons"] = buttons
-                proposal_1 << text_c
-              end
+              text_1["template_type"] = "button"
+              text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
+              buttons = Array.new
+              t2 = Hash.new
+              t2["type"] = "web_url"
+              t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
+              t2["title"] = "開始登入！"
+              buttons << t2
+              text_1["buttons"] = buttons
             end
-          else
-            result["register"] = false
-            result["join"] = false
-            text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-            text_1["template_type"] = "button"
-            text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
-            buttons = Array.new
-            t2 = Hash.new
-            t2["type"] = "web_url"
-            t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
-            t2["title"] = "開始登入！"
-            buttons << t2
-            text_1["buttons"] = buttons
+            text << result
+            total << text
+            total << text_3_a if text_3_a.present?
+            text_a << text_1 if text_1 != {}
+            text_a << text_2 if text_2.present?
+            total << text_a
+            total << proposal_1 if proposal_1.present?
+            customization = YAML.load_file("config/customization.yml")
+            uri = URI.parse(customization[:user_message_post])
+            send_message(uri, params[:uid], total)
+            render json: total
           end
-          text << result
-          total << text
-          total << text_3_a if text_3_a.present?
-          text_a << text_1 if text_1 != {}
-          text_a << text_2 if text_2.present?
-          total << text_a
-          total << proposal_1 if proposal_1.present?
-          render json: total
-        when /-/
-          ids = ParameterSet.all.map { |f| f.id }
-          params[:arg].split("-").each do |a|
-            ww = ParameterSet.where("id in (?) and ref like ?", ids, "%#{a}%")
-            ids = ww.map { |w| w.id }
-          end
-          aa = Authorization.find_by_uid(uid)
-          bb = UserSubscription.find_by_scoped_id(uid)
-          set = ParameterSet.find_by_id_and_enabled(ids, true)
-          if aa.present?
-            w = set.user
-          elsif bb.present?
-            w = set.subscribe_guest
-          else
-            w = set.guest
-          end
-          render json: w
-        when "A_1"
-          total = Array.new
-          text = Array.new
-          text_a = Array.new
-          result = Hash.new
-          text_1 = Hash.new
-          text_3 = Hash.new
-          auth = Authorization.find_by_uid(params[:uid])
-          if auth.present?
-            result["register"] = true
-            if auth.user.orders.size > 0 
-              order_a = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date > ? and expire_date like '% %'",Time.now.strftime('%Y/%m/%d %T')).map { |order| order.id }
-              order_b = Order.where(:user_id => auth.user.id, :status => 2).where("expire_date >= ? and expire_date not like '% %'",Time.now.strftime('%Y/%m/%d')).where.not(:id => order_a ).map { |order| order.id }
-              order_c = Order.where(:user_id => auth.user.id, :status => 3 ).map { |order| order.id }
-              order_ids = order_a + order_b + order_c
-              orders = Order.where(:id => order_ids).order(id: :desc).to_a
-              if orders.size > 0
-                text_3_a = Array.new
-                result["join"] = true
-                text_3["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-                text_3["type"] = "text"
-                text_3["text"] = "#{params[:n]}您好，這是您支持中的提案："
-                text_3["delay"] = 1
-                text_3_a << text_3
-                orders.last(10).each_with_index do |order, i|
-                  i+=1
-                  if order.goody.campaign.end_date >= Date.today
-                    remain_day = (order.goody.campaign.end_date - Date.today).to_i
-                    amount_raised = order.goody.campaign.amount_raised
-                    percentage = 100*(amount_raised.to_f / order.goody.campaign.goal)
-                    text_2_c = Hash.new
-                    text_2_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                    text_2_c["title"] = order.goody.campaign.title
-                    text_2_c["subtitle"] = "剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n回饋項目: #{order.goody.title}\n預計寄送: #{order.goody.delivery_time}"
-                    text_2_c["image_url"] = order.goody.campaign.campaign_image.campaign_path
-                    buttons = Array.new #[]
-                    t1 = Hash.new
-                    if order.paid == false
-                      t1["type"] = "web_url"
-                      t1["title"] = "付款去"
-                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                    else
-                      t1["type"] = "web_url"
-                      t1["title"] = "查看詳細記錄"
-                      t1["url"] = "#{@project_domain}/orders/#{order.id}/detail"
-                    end
-                    buttons << t1
-                    t2 = Hash.new
-                    t2["type"] = "web_url"
-                    t2["title"] = "查看最新進度"
-                    t2["url"] = "#{@project_domain}/campaigns/#{order.goody.campaign.slug}/updates"
-                    buttons << t2
-                    text_2_c["buttons"] = buttons
-                    text_a << text_2_c
-                  end
-                end
-              else
-                result["join"] = false
-                text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-                text_1["type"] = "text"
-                text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
-                text_1["delay"] = 1
-                total = Array.new
-                proposal = Array.new
-                proposal_1 = Array.new
-                text_t = Array.new
-                text_2 = Hash.new
-                campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
-                campaigns.each_with_index do |campaign, i|
-                  i+=1
-                  remain_day = (campaign.end_date - Date.today).to_i
-                  amount_raised = campaign.amount_raised
-                  percentage = 100*(amount_raised.to_f / campaign.goal)
-                  description = campaign.description.first(40)
-                  text_c = Hash.new
-                  text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                  text_c["title"] = campaign.title
-                  text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
-                  text_c["image_url"] = campaign.campaign_image.campaign_path
-                  buttons = Array.new #[]
-                  t1 = Hash.new
-                  t1["type"] = "postback"
-                  t1["title"] = "追蹤♥"
-                  t1["payload"] = "FLW_proj_#{campaign.slug}"
-                  buttons << t1
-                  t2 = Hash.new
-                  t2["type"] = "web_url"
-                  t2["title"] = "查看內容"
-                  t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
-                  buttons << t2
-                  text_c["buttons"] = buttons
-                  proposal_1 << text_c
-                end
-              end
+        when ["v0.01","collect_data"]
+          ua = UserAnalyze.new
+          ua.uid = params[:uid] if params[:uid].present?
+          ua.pl = params[:pl] if params[:pl].present? and params[:pl] != "\"\""
+          ua.ref = params[:ref] if params[:ref].present? and params[:ref] != "\"\""
+          ua.name = params[:n] if params[:n].present? and params[:n] != "\"\""
+          ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
+          ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
+          ua.save!
+          case params[:pl]
+          when /SY_/,/TT_/,/AR_/
+            aa = Authorization.find_by_uid(params[:uid])
+            bb = UserSubscription.find_by_scoped_id(params[:uid])
+            if aa.present?
+              word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
+            elsif bb.present?
+              word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","subscribe_guest")
             else
-              result["join"] = false
-              text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-              text_1["type"] = "text"
-              text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
-              text_1["delay"] = 1
-              total = Array.new
-              proposal = Array.new
-              proposal_1 = Array.new
-              text_t = Array.new
-              text_2 = Hash.new
-              campaigns = Campaign.where(:status => 3).where("end_date > ? ", Date.today).limit(10)       
-              campaigns.each_with_index do |campaign, i|
-                i+=1
-                remain_day = (campaign.end_date - Date.today).to_i
-                amount_raised = campaign.amount_raised
-                percentage = 100*(amount_raised.to_f / campaign.goal)
-                description = campaign.description.first(40)
-                text_c = Hash.new
-                text_c["NAME"] = "ugooz.b2c.menulist.mb1.01.02.0#{i}"
-                text_c["title"] = campaign.title
-                text_c["subtitle"] = "#{description}\n\n剩餘時間: #{remain_day}天\n目前達成: #{number_to_currency(percentage,precision: 1)}%\n支持人數: #{campaign.orders.is_paid.size}人"
-                text_c["image_url"] = campaign.campaign_image.campaign_path
-                buttons = Array.new #[]
-                t1 = Hash.new
-                t1["type"] = "postback"
-                t1["title"] = "追蹤♥"
-                t1["payload"] = "FLW_proj_#{campaign.slug}"
-                buttons << t1
-                t2 = Hash.new
-                t2["type"] = "web_url"
-                t2["title"] = "查看內容"
-                t2["url"] = "#{@project_domain}/campaigns/#{campaign.slug}"
-                buttons << t2
-                text_c["buttons"] = buttons
-                proposal_1 << text_c
-              end
+              word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
             end
-          else
-            result["register"] = false
-            result["join"] = false
-            text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
-            text_1["template_type"] = "button"
-            text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
-            buttons = Array.new
-            t2 = Hash.new
-            t2["type"] = "web_url"
-            t2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
-            t2["title"] = "開始登入！"
-            buttons << t2
-            text_1["buttons"] = buttons
-          end
-          text << result
-          total << text
-          total << text_3_a if text_3_a.present?
-          text_a << text_1 if text_1 != {}
-          text_a << text_2 if text_2.present?
-          total << text_a
-          total << proposal_1 if proposal_1.present?
-          customization = YAML.load_file("config/customization.yml")
-          uri = URI.parse(customization[:user_message_post])
-          send_message(uri, params[:uid], total)
-          render json: total
-        end
-      when ["v0.01","collect_data"]
-        ua = UserAnalyze.new
-        ua.uid = params[:uid] if params[:uid].present?
-        ua.pl = params[:pl] if params[:pl].present? and params[:pl] != "\"\""
-        ua.ref = params[:ref] if params[:ref].present? and params[:ref] != "\"\""
-        ua.name = params[:n] if params[:n].present? and params[:n] != "\"\""
-        ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
-        ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
-        ua.save!
-        case params[:pl]
-        when /SY_/,/TT_/,/AR_/
-          aa = Authorization.find_by_uid(params[:uid])
-          bb = UserSubscription.find_by_scoped_id(params[:uid])
-          if aa.present?
-            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
-          elsif bb.present?
-            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","subscribe_guest")
-          else
+            cw = ParameterSet.find(word.first.parameter_set_id)
+            if cw.enabled == true
+              total = JSON.parse(word.first.json.gsub("=>", ":"))
+              customization = YAML.load_file("config/customization.yml")
+              uri = URI.parse(customization[:user_message_post])
+              send_message(uri, params[:uid], total)
+            end
+          when /SUBS_story/
             word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          end
-          cw = ParameterSet.find(word.first.parameter_set_id)
-          if cw.enabled == true
-            total = JSON.parse(word.first.json.gsub("=>", ":"))
-            customization = YAML.load_file("config/customization.yml")
-            uri = URI.parse(customization[:user_message_post])
-            send_message(uri, params[:uid], total)
-          end
-        when /SUBS_story/
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          cw = ParameterSet.find(word.first.parameter_set_id)
-          if cw.enabled == true
-            total = JSON.parse(word.first.json.gsub("=>", ":"))
-            customization = YAML.load_file("config/customization.yml")
-            uri = URI.parse(customization[:user_message_post])
-            send_message(uri, params[:uid], total)
-            us = UserSubscription.new
-            us.scoped_id = params[:uid]
-            us.full_name = params[:n]
-            us.cat = 1 #內容訂閱
-            us.save!
-          end
-        when /SUBS_test/
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          cw = ParameterSet.find(word.first.parameter_set_id)
-          if cw.enabled == true
-            total = JSON.parse(word.first.json.gsub("=>", ":"))
-            customization = YAML.load_file("config/customization.yml")
-            uri = URI.parse(customization[:user_message_post])
-            send_message(uri, params[:uid], total)
-            us = UserSubscription.new
-            us.scoped_id = params[:uid]
-            us.full_name = params[:n]
-            us.cat = 2 #測驗訂閱
-            us.save!
-          end
-        when /FLW_proj_/
-          slug = params[:pl].gsub("FLW_proj_","")
-          campaign = Campaign.find_by_slug(slug)
-          is_binding = Authorization.find_by(:uid => params[:uid])
-          if is_binding.present?
-            user = is_binding.user_id
-            track = Track.find_or_create_by(:user_id => user, :campaign_id => campaign.id)
-            fb_track = FbTrack.find_or_create_by(:scoped_id => params[:uid], :campaign_id => campaign.id)
-            total = Array.new
-            text = Array.new
-            text_1 = Hash.new
-            text_1["type"] = "text"
-            text_1["text"] = "已完成追蹤，若提案有最新消息會立即通知你唷。"
-            text_1["delay"] = 1
-            text << text_1
-            text_2 = Hash.new
-            text_2["type"] = "text"
-            text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
-            text_2["delay"] = 1
-            text << text_2
-            total << text
-          end
-          customization = YAML.load_file("config/customization.yml")
-          uri = URI.parse(customization[:user_message_post])
-          send_message(uri, params[:uid], total)
-        end
-        render json: JSON.parse("{\"result\": \"OK\"}")
-      when ["v0.02","collect_data"]
-        ua = UserAnalyze.new
-        ua.uid = params[:uid] if params[:uid].present?
-        ua.pl = params[:pl] if params[:pl].present? and params[:pl] != "\"\""
-        ua.ref = params[:ref] if params[:ref].present? and params[:ref] != "\"\""
-        ua.name = params[:n] if params[:n].present? and params[:n] != "\"\""
-        ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
-        ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
-        ua.save!
-        case params[:pl]
-        when /SY_/,/TT_/,/AR_/
-          aa = Authorization.find_by_uid(params[:uid])
-          bb = UserSubscription.find_by_scoped_id(params[:uid])
-          if aa.present?
-            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
-          elsif bb.present?
-            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","subscribe_guest")
-          else
+            cw = ParameterSet.find(word.first.parameter_set_id)
+            if cw.enabled == true
+              total = JSON.parse(word.first.json.gsub("=>", ":"))
+              customization = YAML.load_file("config/customization.yml")
+              uri = URI.parse(customization[:user_message_post])
+              send_message(uri, params[:uid], total)
+              us = UserSubscription.new
+              us.scoped_id = params[:uid]
+              us.full_name = params[:n]
+              us.cat = 1 #內容訂閱
+              us.save!
+            end
+          when /SUBS_test/
             word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          end
-          cw = ParameterSet.find(word.first.parameter_set_id)
-          if cw.enabled == true
-            total = JSON.parse(word.first.json.gsub("=>", ":"))
+            cw = ParameterSet.find(word.first.parameter_set_id)
+            if cw.enabled == true
+              total = JSON.parse(word.first.json.gsub("=>", ":"))
+              customization = YAML.load_file("config/customization.yml")
+              uri = URI.parse(customization[:user_message_post])
+              send_message(uri, params[:uid], total)
+              us = UserSubscription.new
+              us.scoped_id = params[:uid]
+              us.full_name = params[:n]
+              us.cat = 2 #測驗訂閱
+              us.save!
+            end
+          when /FLW_proj_/
+            slug = params[:pl].gsub("FLW_proj_","")
+            campaign = Campaign.find_by_slug(slug)
+            is_binding = Authorization.find_by(:uid => params[:uid])
+            if is_binding.present?
+              user = is_binding.user_id
+              track = Track.find_or_create_by(:user_id => user, :campaign_id => campaign.id)
+              fb_track = FbTrack.find_or_create_by(:scoped_id => params[:uid], :campaign_id => campaign.id)
+              total = Array.new
+              text = Array.new
+              text_1 = Hash.new
+              text_1["type"] = "text"
+              text_1["text"] = "已完成追蹤，若提案有最新消息會立即通知你唷。"
+              text_1["delay"] = 1
+              text << text_1
+              text_2 = Hash.new
+              text_2["type"] = "text"
+              text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
+              text_2["delay"] = 1
+              text << text_2
+              total << text
+            end
             customization = YAML.load_file("config/customization.yml")
             uri = URI.parse(customization[:user_message_post])
             send_message(uri, params[:uid], total)
           end
-        when /SUBS_story/
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          cw = ParameterSet.find(word.first.parameter_set_id)
-          if cw.enabled == true
-            total = JSON.parse(word.first.json.gsub("=>", ":"))
+          render json: JSON.parse("{\"result\": \"OK\"}")
+        when ["v0.02","collect_data"]
+          ua = UserAnalyze.new
+          ua.uid = params[:uid] if params[:uid].present?
+          ua.pl = params[:pl] if params[:pl].present? and params[:pl] != "\"\""
+          ua.ref = params[:ref] if params[:ref].present? and params[:ref] != "\"\""
+          ua.name = params[:n] if params[:n].present? and params[:n] != "\"\""
+          ua.watermarks = params[:watermarks] if params[:watermarks].present? and params[:watermarks] != "\"\""
+          ua.status = params[:status] if params[:status].present? and params[:status] != "\"\""
+          ua.save!
+          case params[:pl]
+          when /SY_/,/TT_/,/AR_/
+            aa = Authorization.find_by_uid(params[:uid])
+            bb = UserSubscription.find_by_scoped_id(params[:uid])
+            if aa.present?
+              word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","user")
+            elsif bb.present?
+              word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","subscribe_guest")
+            else
+              word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
+            end
+            cw = ParameterSet.find(word.first.parameter_set_id)
+            if cw.enabled == true
+              total = JSON.parse(word.first.json.gsub("=>", ":"))
+              customization = YAML.load_file("config/customization.yml")
+              uri = URI.parse(customization[:user_message_post])
+              send_message(uri, params[:uid], total)
+            end
+          when /SUBS_story/
+            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
+            cw = ParameterSet.find(word.first.parameter_set_id)
+            if cw.enabled == true
+              total = JSON.parse(word.first.json.gsub("=>", ":"))
+              customization = YAML.load_file("config/customization.yml")
+              uri = URI.parse(customization[:user_message_post])
+              send_message(uri, params[:uid], total)
+              us = UserSubscription.new
+              us.scoped_id = params[:uid]
+              us.full_name = params[:n]
+              us.cat = 1 #內容訂閱
+              us.save!
+            end
+          when /SUBS_test/
+            word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
+            cw = ParameterSet.find(word.first.parameter_set_id)
+            if cw.enabled == true
+              total = JSON.parse(word.first.json.gsub("=>", ":"))
+              customization = YAML.load_file("config/customization.yml")
+              uri = URI.parse(customization[:user_message_post])
+              send_message(uri, params[:uid], total)
+              us = UserSubscription.new
+              us.scoped_id = params[:uid]
+              us.full_name = params[:n]
+              us.cat = 2 #測驗訂閱
+              us.save!
+            end
+          when /FLW_proj_/
+            slug = params[:pl].gsub("FLW_proj_","")
+            campaign = Campaign.find_by_slug(slug)
+            is_binding = Authorization.find_by(:uid => params[:uid])
+            if is_binding.present?
+              user = is_binding.user_id
+              track = Track.find_or_create_by(:user_id => user, :campaign_id => campaign.id)
+              fb_track = FbTrack.find_or_create_by(:scoped_id => params[:uid], :campaign_id => campaign.id)
+              total = Array.new
+              text = Array.new
+              text_1 = Hash.new
+              text_1["type"] = "text"
+              text_1["text"] = "已完成追蹤，若提案有最新消息會立即通知你唷。"
+              text_1["delay"] = 1
+              text << text_1
+              text_2 = Hash.new
+              text_2["type"] = "text"
+              text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
+              text_2["delay"] = 1
+              text << text_2
+              total << text
+            end
             customization = YAML.load_file("config/customization.yml")
             uri = URI.parse(customization[:user_message_post])
             send_message(uri, params[:uid], total)
-            us = UserSubscription.new
-            us.scoped_id = params[:uid]
-            us.full_name = params[:n]
-            us.cat = 1 #內容訂閱
-            us.save!
           end
-        when /SUBS_test/
-          word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
-          cw = ParameterSet.find(word.first.parameter_set_id)
-          if cw.enabled == true
-            total = JSON.parse(word.first.json.gsub("=>", ":"))
-            customization = YAML.load_file("config/customization.yml")
-            uri = URI.parse(customization[:user_message_post])
-            send_message(uri, params[:uid], total)
-            us = UserSubscription.new
-            us.scoped_id = params[:uid]
-            us.full_name = params[:n]
-            us.cat = 2 #測驗訂閱
-            us.save!
+          render json: JSON.parse("{\"result\": \"OK\"}")
+        when ["v0.01","stactic_all"]
+          js = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
+          wording = ""
+          js.each do |j|
+            aa = JSON.parse(j.content).to_s
+            j.id != js.last.id ? wording << aa[1..aa.size-2] + "," : wording << aa[1..aa.size-2]
           end
-        when /FLW_proj_/
-          slug = params[:pl].gsub("FLW_proj_","")
-          campaign = Campaign.find_by_slug(slug)
-          is_binding = Authorization.find_by(:uid => params[:uid])
-          if is_binding.present?
-            user = is_binding.user_id
-            track = Track.find_or_create_by(:user_id => user, :campaign_id => campaign.id)
-            fb_track = FbTrack.find_or_create_by(:scoped_id => params[:uid], :campaign_id => campaign.id)
-            total = Array.new
-            text = Array.new
-            text_1 = Hash.new
-            text_1["type"] = "text"
-            text_1["text"] = "已完成追蹤，若提案有最新消息會立即通知你唷。"
-            text_1["delay"] = 1
-            text << text_1
-            text_2 = Hash.new
-            text_2["type"] = "text"
-            text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
-            text_2["delay"] = 1
-            text << text_2
-            total << text
+          wording << ","
+          farmer_groups = PsGroup.normal_state.to_a
+          # farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
+          farmer_group = Array.new
+          fg_text_h = Array.new
+          fg_text = Hash.new
+          fg_text["NAME"] = "ugooz.b2c.menulist.ab1.01.01"
+          fg_text["type"] = "text"
+          fg_text["text"] = "請先幫我選擇產銷班！"
+          fg_text["delay"] = "1"
+          fg_text_h << fg_text
+          farmer_group << fg_text_h
+          fg_card_t = Array.new
+          farmer_groups.each_with_index do |fg, i|
+            i+=1
+            fg_card = Hash.new
+            fg_card["NAME"] = "ugooz.b2c.menulist.ab1.01.02.0#{i}"
+            fg_card["title"] = fg.name
+            fg_card["subtitle"] = fg.subtitle.to_s
+            fg_card["image_url"] = fg.image_url.to_s
+            fg_card["buttons"] = []
+            fg_card_b = Hash.new
+            fg_card_b["type"] = "postback"
+            fg_card_b["title"] = "查看成員"
+            fg_card_b["payload"] = "BB.0#{i}"
+            fg_card["buttons"] << fg_card_b
+            fg_card_t << fg_card
           end
-          customization = YAML.load_file("config/customization.yml")
-          uri = URI.parse(customization[:user_message_post])
-          send_message(uri, params[:uid], total)
-        end
-        render json: JSON.parse("{\"result\": \"OK\"}")
-      when ["v0.01","stactic_all"]
-        js = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
-        wording = ""
-        js.each do |j|
-          aa = JSON.parse(j.content).to_s
-          j.id != js.last.id ? wording << aa[1..aa.size-2] + "," : wording << aa[1..aa.size-2]
-        end
-        wording << ","
-        farmer_groups = PsGroup.normal_state.to_a
-        # farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
-        farmer_group = Array.new
-        fg_text_h = Array.new
-        fg_text = Hash.new
-        fg_text["NAME"] = "ugooz.b2c.menulist.ab1.01.01"
-        fg_text["type"] = "text"
-        fg_text["text"] = "請先幫我選擇產銷班！"
-        fg_text["delay"] = "1"
-        fg_text_h << fg_text
-        farmer_group << fg_text_h
-        fg_card_t = Array.new
-        farmer_groups.each_with_index do |fg, i|
-          i+=1
-          fg_card = Hash.new
-          fg_card["NAME"] = "ugooz.b2c.menulist.ab1.01.02.0#{i}"
-          fg_card["title"] = fg.name
-          fg_card["subtitle"] = fg.subtitle.to_s
-          fg_card["image_url"] = fg.image_url.to_s
-          fg_card["buttons"] = []
-          fg_card_b = Hash.new
-          fg_card_b["type"] = "postback"
-          fg_card_b["title"] = "查看成員"
-          fg_card_b["payload"] = "BB.0#{i}"
-          fg_card["buttons"] << fg_card_b
-          fg_card_t << fg_card
-        end
-        farmer_group << fg_card_t
-        fgl_t = Array.new
-        farmer_groups.each_with_index do |fg, i|
-          i+=1
-          list_talk = Array.new
-          fg_list_talk = Hash.new
-          fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.01"
-          fg_list_talk["type"] = "text"
-          fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
-          fg_list_talk["delay"] = "1"
-          list_talk << fg_list_talk
-          farmer_group << list_talk
-          farmer_group_lists = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").where(:ps_group_id => fg.id)
-          fgl = Array.new
-          farmer_group_lists.each_with_index do |f_list, x|
-            x+=1
-            fl_card = Hash.new
-            fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
-            fl_card["title"] = f_list.front_name
-            fl_card["subtitle"] = f_list.farm_name
-            fl_card["image_url"] = f_list.user_pic_url
-            fl_card["buttons"] = []
-            fl_card_b = Hash.new
-            fl_card_b["type"] = "web_url"
-            fl_card_b["title"] = "我想進一步認識"
-            fl_card_b["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
-            fl_card_c = Hash.new
-            fl_card_c["type"] = "web_url"
-            fl_card_c["title"] = "查看生產紀錄"
-            fl_card_c["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
-            fl_card["buttons"] << fl_card_b
-            fl_card["buttons"] << fl_card_c
-            fgl << fl_card
+          farmer_group << fg_card_t
+          fgl_t = Array.new
+          farmer_groups.each_with_index do |fg, i|
+            i+=1
+            list_talk = Array.new
+            fg_list_talk = Hash.new
+            fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.01"
+            fg_list_talk["type"] = "text"
+            fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
+            fg_list_talk["delay"] = "1"
+            list_talk << fg_list_talk
+            farmer_group << list_talk
+            farmer_group_lists = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").where(:ps_group_id => fg.id)
+            fgl = Array.new
+            farmer_group_lists.each_with_index do |f_list, x|
+              x+=1
+              fl_card = Hash.new
+              fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
+              fl_card["title"] = f_list.front_name
+              fl_card["subtitle"] = f_list.farm_name
+              fl_card["image_url"] = f_list.user_pic_url
+              fl_card["buttons"] = []
+              fl_card_b = Hash.new
+              fl_card_b["type"] = "web_url"
+              fl_card_b["title"] = "我想進一步認識"
+              fl_card_b["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
+              fl_card_c = Hash.new
+              fl_card_c["type"] = "web_url"
+              fl_card_c["title"] = "查看生產紀錄"
+              fl_card_c["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
+              fl_card["buttons"] << fl_card_b
+              fl_card["buttons"] << fl_card_c
+              fgl << fl_card
+            end
+            farmer_group << fgl
           end
-          farmer_group << fgl
-        end
-        wording << farmer_group.to_s[1..farmer_group.to_s.size-2 ]
-        render json: JSON.parse("[" + wording.gsub("=>",":") + "]")
-      when ["v0.02","stactic_all"]
-        js = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
-        wording = ""
-        js.each do |j|
-          aa = JSON.parse(j.content).to_s
-          j.id != js.last.id ? wording << aa[1..aa.size-2] + "," : wording << aa[1..aa.size-2]
-        end
-        wording << ","
-        farmer_groups = PsGroup.normal_state.to_a
-        # farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
-        farmer_group = Array.new
-        fg_text_h = Array.new
-        fg_text = Hash.new
-        fg_text["NAME"] = "ugooz.b2c.menulist.ab1.01.01"
-        fg_text["type"] = "text"
-        fg_text["text"] = "請先幫我選擇產銷班！"
-        fg_text["delay"] = "1"
-        fg_text_h << fg_text
-        farmer_group << fg_text_h
-        fg_card_t = Array.new
-        farmer_groups.each_with_index do |fg, i|
-          i+=1
-          fg_card = Hash.new
-          fg_card["NAME"] = "ugooz.b2c.menulist.ab1.01.02.0#{i}"
-          fg_card["title"] = fg.name
-          fg_card["subtitle"] = fg.subtitle.to_s
-          fg_card["image_url"] = fg.image_url.to_s
-          fg_card["buttons"] = []
-          fg_card_b = Hash.new
-          fg_card_b["type"] = "postback"
-          fg_card_b["title"] = "查看成員"
-          fg_card_b["payload"] = "BB.0#{i}"
-          fg_card["buttons"] << fg_card_b
-          fg_card_t << fg_card
-        end
-        farmer_group << fg_card_t
-        fgl_t = Array.new
-        farmer_groups.each_with_index do |fg, i|
-          i+=1
-          list_talk = Array.new
-          fg_list_talk = Hash.new
-          fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.01"
-          fg_list_talk["type"] = "text"
-          fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
-          fg_list_talk["delay"] = "1"
-          list_talk << fg_list_talk
-          farmer_group << list_talk
-          farmer_group_lists = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").where(:ps_group_id => fg.id)
-          fgl = Array.new
-          farmer_group_lists.each_with_index do |f_list, x|
-            x+=1
-            fl_card = Hash.new
-            fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
-            fl_card["title"] = f_list.front_name
-            fl_card["subtitle"] = f_list.farm_name
-            fl_card["image_url"] = f_list.user_pic_url
-            fl_card["buttons"] = []
-            fl_card_b = Hash.new
-            fl_card_b["type"] = "web_url"
-            fl_card_b["title"] = "我想進一步認識"
-            fl_card_b["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
-            fl_card_c = Hash.new
-            fl_card_c["type"] = "web_url"
-            fl_card_c["title"] = "查看生產紀錄"
-            fl_card_c["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
-            fl_card["buttons"] << fl_card_b
-            fl_card["buttons"] << fl_card_c
-            fgl << fl_card
+          wording << farmer_group.to_s[1..farmer_group.to_s.size-2 ]
+          render json: JSON.parse("[" + wording.gsub("=>",":") + "]")
+        when ["v0.02","stactic_all"]
+          js = Wording.where(:enabled => true).where.not(:wording_cat_id => nil)
+          wording = ""
+          js.each do |j|
+            aa = JSON.parse(j.content).to_s
+            j.id != js.last.id ? wording << aa[1..aa.size-2] + "," : wording << aa[1..aa.size-2]
           end
-          farmer_group << fgl
+          wording << ","
+          farmer_groups = PsGroup.normal_state.to_a
+          # farmer_groups = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").group(:ps_group).map{|ps|ps.ps_group}
+          farmer_group = Array.new
+          fg_text_h = Array.new
+          fg_text = Hash.new
+          fg_text["NAME"] = "ugooz.b2c.menulist.ab1.01.01"
+          fg_text["type"] = "text"
+          fg_text["text"] = "請先幫我選擇產銷班！"
+          fg_text["delay"] = "1"
+          fg_text_h << fg_text
+          farmer_group << fg_text_h
+          fg_card_t = Array.new
+          farmer_groups.each_with_index do |fg, i|
+            i+=1
+            fg_card = Hash.new
+            fg_card["NAME"] = "ugooz.b2c.menulist.ab1.01.02.0#{i}"
+            fg_card["title"] = fg.name
+            fg_card["subtitle"] = fg.subtitle.to_s
+            fg_card["image_url"] = fg.image_url.to_s
+            fg_card["buttons"] = []
+            fg_card_b = Hash.new
+            fg_card_b["type"] = "postback"
+            fg_card_b["title"] = "查看成員"
+            fg_card_b["payload"] = "BB.0#{i}"
+            fg_card["buttons"] << fg_card_b
+            fg_card_t << fg_card
+          end
+          farmer_group << fg_card_t
+          fgl_t = Array.new
+          farmer_groups.each_with_index do |fg, i|
+            i+=1
+            list_talk = Array.new
+            fg_list_talk = Hash.new
+            fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.01"
+            fg_list_talk["type"] = "text"
+            fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
+            fg_list_talk["delay"] = "1"
+            list_talk << fg_list_talk
+            farmer_group << list_talk
+            farmer_group_lists = FarmerProfile.joins(:user).where("users.is_farmer = true and users.is_check_farmer = true").where(:ps_group_id => fg.id)
+            fgl = Array.new
+            farmer_group_lists.each_with_index do |f_list, x|
+              x+=1
+              fl_card = Hash.new
+              fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
+              fl_card["title"] = f_list.front_name
+              fl_card["subtitle"] = f_list.farm_name
+              fl_card["image_url"] = f_list.user_pic_url
+              fl_card["buttons"] = []
+              fl_card_b = Hash.new
+              fl_card_b["type"] = "web_url"
+              fl_card_b["title"] = "我想進一步認識"
+              fl_card_b["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
+              fl_card_c = Hash.new
+              fl_card_c["type"] = "web_url"
+              fl_card_c["title"] = "查看生產紀錄"
+              fl_card_c["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
+              fl_card["buttons"] << fl_card_b
+              fl_card["buttons"] << fl_card_c
+              fgl << fl_card
+            end
+            farmer_group << fgl
+          end
+          wording << farmer_group.to_s[1..farmer_group.to_s.size-2 ]
+          render json: JSON.parse("[" + wording.gsub("=>",":") + "]")
         end
-        wording << farmer_group.to_s[1..farmer_group.to_s.size-2 ]
-        render json: JSON.parse("[" + wording.gsub("=>",":") + "]")
+      when "topboss"
+        u =  request.url.split("?")
+        uri = URI("https://wfusr.top-boss.com/data_connects/v0.02/story?" + u[1])
+        res = Net::HTTP.get_response(uri)
+        render json: JSON.parse(res.body)
       end
     end
 	end
