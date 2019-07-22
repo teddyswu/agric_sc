@@ -988,7 +988,7 @@ class DataConnectsController < ApplicationController
       end
 		else
       case params[:d]
-      when "ugooz"
+      when /ugooz/
         case [params[:v],params[:m]]
         when ["v0.01","return_data"]
           case params[:arg]
