@@ -1,0 +1,421 @@
+<script type="text/javascript" src="https://loopj.com/jquery-tokeninput/src/jquery.tokeninput.js"></script>
+<link rel="stylesheet" href="https://loopj.com/jquery-tokeninput/styles/token-input-facebook.css" type="text/css" />
+<style>
+ul.token-input-list-facebook {
+  border :0px;
+  color: transparent;
+  width: 200px;
+}
+</style>
+
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">臉書自動回覆</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+          	<%= form_for @auto_reply, :url => auto_reply_path(@auto_reply), :method => :PATCH do |f| %>
+          		<div class="card-header"><strong>編輯</strong></div>
+              <div class="card-body card-block" id="reply_group">
+                <div class="row form-group">
+                  <div class="col col-md-6">
+                    <%= f.label("自訂名稱", :class => 'form-control-label') %><%= f.text_field(:name, :class => "form-control", placeholder: "輸入名稱")%>
+                  </div>
+                  <div class="col col-md-6">
+                    <%= f.label("貼文連結", :class => 'form-control-label') %><%= f.text_field(:url, :class => "form-control", placeholder: "輸入連結")%>
+                  </div>
+                  <div class="col col-md-6">
+                    <label class="form-control-label">預設公開/私訊回覆組合</label>
+                    <select name="auto_reply[default_pair]" class="form-control"><option value ="random"<%= "selected" if @auto_reply.default_pair == "random"%>>隨機</option><option value ="pair"<%= "selected" if @auto_reply.default_pair == "pair"%>>配對</option></select>
+                  </div>
+                  <div class="col col-md-6">
+                    <label class="form-control-label">指定公開/私訊回覆組合</label>
+                    <select name="auto_reply[triggering_pair]" class="form-control"><option value ="random"<%= "selected" if @auto_reply.triggering_pair == "random"%>>隨機</option><option value ="pair"<%= "selected" if @auto_reply.triggering_pair == "pair"%>>配對</option></select>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="col col-md-12" id="rule_button">
+                    <hr >
+                    <input type="hidden" id="rule_butt_num" value="<%= @rule_btn.size + 1%>" disabled>
+                    <button type="button" class="btn btn-warning btn-sm" id="dr_but" onclick="drBut()" disabled>預設回覆</button>
+                    <button type="button" class="btn btn-info btn-sm" id="rr_but" onclick="apBut()">新增條件回覆</button>
+                    <% @rule_btn.each_with_index do |r,i| %>
+                    	<button type="button" class="btn btn-primary btn-sm" id="rr_but<%= i+1%>" onclick="rrBut(<%= i+1%>)">條件回覆<%= i+1%></button>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="row form-group" id="default_reply" style="border-style:double;">
+                  <input type="hidden" id="default_reply_num" value="<%= @def_reply.size + 1%>" disabled>
+                  <input type="hidden" id="default_message_num" value="<%= @def_message.size + 1%>" disabled>
+                  <div class="col col-md-12">
+                    預設回覆
+                  </div>
+                  <div class="col col-md-12">
+                    <button type="button" class="btn btn-warning btn-sm" onclick="prBut()">新增公開回覆</button>
+                    <button type="button" class="btn btn-info btn-sm" onclick="arBut()">新增私訊回覆</button>
+                  </div>
+                  <hr >
+                  <div class="col col-md-6">
+                    <label class="form-control-label">公開回覆訊息</label>
+                    <div id="default_public_reply">
+                    	<% @def_reply.each_with_index do |dr, i|%>
+                    		<div id="auto_reply_reply<%= i+1 %>">
+                    			<div class="row">
+		                        <div class="col col-sm-1">
+		                          <label class="form-control-label"><%= i+1 %></label>
+		                        </div>
+		                        <div class="col col-sm-3">
+		                          <select name="auto_reply[default][auto_reply_reply<%= i+1 %>][cat]" class="form-control"><option value="text" <%= "selected" if dr.cat == "text"%>>文字</option><option value="url" <%= "selected" if dr.cat == "url"%>>圖片</option></select>
+		                        </div>
+		                        <div class="col col-sm-7">
+		                          <input class="form-control" placeholder="公開回覆訊息<%= i+1 %>" type="text" name="auto_reply[default][auto_reply_reply<%= i+1 %>][content]" id="auto_reply_name" value="<%= dr.content %>">
+		                          <input class="form-control" placeholder="公開回覆訊息<%= i+1 %>" type="hidden" name="auto_reply[default][auto_reply_reply<%= i+1 %>][is_default]" value="true">
+		                        </div>
+		                        <div class="col col-md-1">
+		                        	<button type="button" class="btn btn-danger btn-sm" onclick="del('auto_reply_reply<%= i+1%>')">X</button>
+		                        </div>
+		                      </div>
+                    		</div>
+                    	<% end %>
+                    </div>
+                  </div>
+                  <div class="col col-md-6">
+                    <label class="form-control-label">私訊回覆訊息</label>
+                    <div id="default_private_reply">
+                    	<% @def_message.each_with_index do |dm, i|%>
+                    		<div id="auto_reply_message<%= i+1%>">
+                    			<div class="row">
+		                        <div class="col col-md-1">
+		                          <label class="form-control-label"><%= i+1%></label>
+		                        </div>
+		                        <div class="col col-md-3">
+		                          <select name="auto_reply[default][auto_reply_message1][cat]" class="form-control"><option value ="text"<%= "selected" if dm.cat == "text"%>>文字</option></select>
+		                        </div>
+		                        <div class="col col-md-7">
+		                          <input class="form-control" placeholder="私訊回覆訊息<%= i+1%>" type="text" name="auto_reply[default][auto_reply_message<%= i+1%>][content]" id="auto_reply_name" value="<%= dm.content %>">
+		                          <input class="form-control" type="hidden" name="auto_reply[default][auto_reply_message<%= i+1%>][is_default]" value="true">
+		                        </div>
+		                        <div class="col col-md-1">
+		                        	<button type="button" class="btn btn-danger btn-sm" onclick="del('auto_reply_message<%= i+1%>')">X</button>
+		                        </div>
+		                      </div>
+                    		</div>
+                    	<% end %>
+                    </div>
+                  </div>
+                </div>
+                <% @rule_btn.each_with_index do |r,i|%>
+                	<div class="row form-group" id="rule_reply<%= i + 1%>" style="border-style:double;display: none;">
+                		<div id="rule_reply<%= i + 1%>_head" style="display: block;">
+                			<div class="col col-md-12">條件回覆<%= i + 1%>
+                				<button type="button" class="btn btn-warning btn-sm" onclick="atcB(1)">新增觸發條件</button>
+                				<button type="button" class="btn btn-danger btn-sm" onclick="reo('<%= i + 1%>')">刪除</button>
+                				<input type="hidden" id="rule<%= i + 1%>_group" value="<%= r.children.size + 2%>" disabled="">
+                				<input type="hidden" id="rule<%= i + 1%>_keyin" value="<%= r.children.size + 2%>" disabled="">
+                			</div>
+                			<script type="text/javascript" src="https://loopj.com/jquery-tokeninput/src/jquery.tokeninput.js"></script>
+                			<link rel="stylesheet" href="https://loopj.com/jquery-tokeninput/styles/token-input-facebook.css" type="text/css">
+                			<style>
+												ul.token-input-list-facebook {
+												  border :0px;
+												  color: transparent;
+												  width: 200px;
+												}
+											</style>
+                			<div class="col col-md-12" id="rule<%= i + 1%>_group1">
+											  <div class="col-12 col-md-3">
+											    <select id="rule1_group1_select_type" class="form-control">
+											      <option value="1" <%= "selected" if r.rule_cat.to_i < 5 %>>留言內容</option>
+											      <option value="2" <%= "selected" if r.rule_cat.to_i == 5 %>>標註朋友個數</option>
+											    </select>
+											  </div>
+											  <div class="col-12 col-md-3">
+											    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group1][rule_cat]" id="rule1_group1_select_content" class="form-control">
+											    	<% if r.rule_cat.to_i < 5  %>
+												      <option value="1"<%= "selected" if r.rule_cat.to_i == 1 %>>含任一關鍵字</option>
+												      <option value="2"<%= "selected" if r.rule_cat.to_i == 2 %>>含所有關鍵字</option>
+												      <option value="3"<%= "selected" if r.rule_cat.to_i == 3 %>>完全相符</option>
+												      <option value="4"<%= "selected" if r.rule_cat.to_i == 4 %>>含有照片</option>
+											      <% else %>
+											      	<option value="5" selected>≥</option>
+											      <% end %>
+											    </select>
+											  </div>
+											  <div class="col-12 col-md-3">
+											    <input type="text" id="rule<%= i + 1%>_group1_keyin1" class="form-control" placeholder="新增關鍵字">
+											  </div>
+											  <div class="col-12 col-md-2">
+											    <input type="text" name="auto_reply[auto_reply_rule<%= i + 1%>][group1][rule]" id="auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_cat" style="display: none;">
+											  </div>
+											  <div class="col-12 col-md-1">
+											    <button type="button" class="btn btn-danger btn-sm" onclick="del('rule<%= i + 1%>_group1')">X</button></div>
+											</div>
+											<script>
+												$("#rule<% i + 1%>_group1_select_type").change(function() {
+											    switch($("#rule<%= i + 1%>_group1_select_type").val()){
+											      case "1":
+											        $( "#rule<%= i + 1%>_group1_select_content" ).html("<option value=\"1\">含任一關鍵字</option><option value=\"2\">含所有關鍵字</option><option value=\"3\">完全相符</option><option value=\"4\">含有照片</option>");
+											        break;
+											      case "2":
+											        $( "#rule<%= i + 1%>_group1_select_content" ).html("<option value=\"5\">≥</option>");
+											        break;
+											    }
+											  });
+											  $(document).ready(function() {
+											    $("#auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_cat").tokenInput([],{
+											      prePopulate: <%= raw r.rule.split(",").map {|ru| {"id"=>ru, "name"=>ru} }.to_s.gsub("=>",":") %>,
+											      hintText: "",
+											      noResultsText: "",
+											      searchingText: "",
+											      theme: 'facebook'
+											    });
+											    $("#rule<%= i + 1%>_group1_keyin1").on('keypress',function(e) {
+											      if(e.which == 13) {
+											        var word = $("#rule<%= i + 1%>_group1_keyin1").val();
+											        $( "#auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_cat" ).tokenInput("add", {id: word, name: word});
+											        $("#rule<%= i + 1%>_group1_keyin1").val("");
+											        return false;
+											      }
+											    });
+											  });
+											</script>
+											<% r.children.each_with_index do |rc, v|%>
+		                		<script type="text/javascript" src="https://loopj.com/jquery-tokeninput/src/jquery.tokeninput.js"></script>
+	                			<link rel="stylesheet" href="https://loopj.com/jquery-tokeninput/styles/token-input-facebook.css" type="text/css">
+	                			<style>
+													ul.token-input-list-facebook {
+													  border :0px;
+													  color: transparent;
+													  width: 200px;
+													}
+												</style>
+	                			<div class="col col-md-12" id="rule<%= i + 1%>_group<%= v + 2%>">
+												  <div class="col-12 col-md-3">
+												    <select id="rule1_group1_select_type" class="form-control">
+												      <option value="1" <%= "selected" if rc.rule_cat.to_i < 5 %>>留言內容</option>
+												      <option value="2" <%= "selected" if rc.rule_cat.to_i == 5 %>>標註朋友個數</option>
+												    </select>
+												  </div>
+												  <div class="col-12 col-md-3">
+												    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule_cat]" id="rule1_group1_select_content" class="form-control">
+												    	<% if r.rule_cat.to_i < 5  %>
+													      <option value="1"<%= "selected" if rc.rule_cat.to_i == 1 %>>含任一關鍵字</option>
+													      <option value="2"<%= "selected" if rc.rule_cat.to_i == 2 %>>含所有關鍵字</option>
+													      <option value="3"<%= "selected" if rc.rule_cat.to_i == 3 %>>完全相符</option>
+													      <option value="4"<%= "selected" if rc.rule_cat.to_i == 4 %>>含有照片</option>
+												      <% else %>
+												      	<option value="5" selected>≥</option>
+												      <% end %>
+												    </select>
+												  </div>
+												  <div class="col-12 col-md-3">
+												    <input type="text" id="rule<%= i + 1%>_group<%= v + 2%>_keyin<%= v + 2%>" class="form-control" placeholder="新增關鍵字">
+												  </div>
+												  <div class="col-12 col-md-2">
+												    <input type="text" name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule]" id="auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_cat" style="display: none;">
+												  </div>
+												  <div class="col-12 col-md-1">
+												    <button type="button" class="btn btn-danger btn-sm" onclick="del('rule<%= i + 1%>_group<%= v + 2%>')">X</button></div>
+												</div>
+												<script>
+													$("#rule<% i + 1%>_group<%= v + 2%>_select_type").change(function() {
+												    switch($("#rule<%= i + 1%>_group<%= v + 2%>_select_type").val()){
+												      case "1":
+												        $( "#rule<%= i + 1%>_group<%= v + 2%>_select_content" ).html("<option value=\"1\">含任一關鍵字</option><option value=\"2\">含所有關鍵字</option><option value=\"3\">完全相符</option><option value=\"4\">含有照片</option>");
+												        break;
+												      case "2":
+												        $( "#rule<%= i + 1%>_group<%= v + 2%>_select_content" ).html("<option value=\"5\">≥</option>");
+												        break;
+												    }
+												  });
+												  $(document).ready(function() {
+												    $("#auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_cat").tokenInput([],{
+												      prePopulate: <%= raw rc.rule.split(",").map {|ru| {"id"=>ru, "name"=>ru} }.to_s.gsub("=>",":") %>,
+												      hintText: "",
+												      noResultsText: "",
+												      searchingText: "",
+												      theme: 'facebook'
+												    });
+												    $("#rule<%= i + 1%>_group<%= v + 2%>_keyin<%= v + 2%>").on('keypress',function(e) {
+												      if(e.which == 13) {
+												        var word = $("#rule<%= i + 1%>_group<%= v + 2%>_keyin<%= v + 2%>").val();
+												        $( "#auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_cat" ).tokenInput("add", {id: word, name: word});
+												        $("#rule<%= i + 1%>_group1_keyin1").val("");
+												        return false;
+												      }
+												    });
+												  });
+												</script>
+		                	<% end %>	
+                		</div>
+                		<% @ru = AutoReplyReply.where(:auto_reply_id => params[:id],:group_id => i+1).where.not(:is_default => true)%>
+                		<% @mu = AutoReplyMessage.where(:auto_reply_id => params[:id],:group_id => i+1).where.not(:is_default => true)%>
+	                	<input type="hidden" id="reply<%= i + 1%>_group_num" value="<%= @ru.size %>" disabled="">
+	                	<input type="hidden" id="message<%= i + 1%>_group_num" value="<%= @mu.size %>" disabled="">
+          					<div class="col col-md-12">預設回覆</div>
+          					<div class="col col-md-12">
+          						<button type="button" class="btn btn-warning btn-sm" onclick="rprBut(<%= i + 1%>)">新增公開回覆</button>
+          						<button type="button" class="btn btn-info btn-sm" onclick="rarBut(<%= i + 1%>)">新增私訊回覆</button>
+          					</div>
+          					<div class="col col-md-6">
+          						<label class="form-control-label">公開回覆訊息</label>
+          						<div id="reply<%= i + 1%>_public_reply">
+          							<% @ru.each_with_index do |ru,a|%>
+	          							<div class="row" id="reply<%= i+1%>group<%= a+1%>">
+	          								<div class="col col-md-1">
+	          									<label class="form-control-label"><%= a+1%></label>
+	          								</div>
+	          								<div class="col col-md-3">
+	          									<select name="auto_reply[auto_reply_reply<%= i + 1%>][group<%= a+1%>][cat]" class="form-control">
+	          										<option value="text"<%= "selected" if ru.cat == "text"%>>文字</option>
+	          										<option value="url"<%= "selected" if ru.cat == "url"%>>圖片</option>
+	          									</select>
+	          								</div>
+	          								<div class="col col-md-7">
+	          									<input class="form-control" placeholder="公開回覆訊息<%= a+1%>" type="text" name="auto_reply[auto_reply_reply<%= i + 1%>][group<%= a+1%>][content]" id="auto_reply_name" value="<%= ru.content%>">
+	          									<input class="form-control" type="hidden" name="auto_reply[auto_reply_reply<%= i + 1%>][group<%= a+1%>][group_id]" value="<%= i + 1%>">
+	          								</div>
+	          								<div class="col col-md-1">
+		                        	<button type="button" class="btn btn-danger btn-sm" onclick="del('del('reply<%= i + 1%>group<%= a + 1%>')')">X</button>
+		                        </div>
+	          							</div>
+	          						<% end %>
+	          					</div>
+	          				</div>
+	          				<div class="col col-md-6">
+	          					<label class="form-control-label">私訊回覆訊息</label>
+	          					<div id="reply<%= i + 1%>_private_reply">
+	          						<% @mu.each_with_index do |mu,a|%>
+	          							<div class="row" id="message<%= i+1%>group<%= a+1%>">
+	          								<div class="col col-md-1">
+	          									<label class="form-control-label"><%= a+1%></label>
+	          								</div>
+	          								<div class="col col-md-3">
+	          									<select name="auto_reply[auto_reply_message<%= i + 1%>][group<%= a+1%>][cat]" class="form-control">
+	          										<option value="text"<%= "selected" if mu.cat == "text"%>>文字</option>
+	          									</select>
+	          								</div>
+	          								<div class="col col-md-7">
+	          									<input class="form-control" placeholder="公開回覆訊息<%= a+1%>" type="text" name="auto_reply[auto_reply_message<%= i + 1%>][group<%= a+1%>][content]" id="auto_reply_name" value="<%= mu.content%>">
+	          									<input class="form-control" type="hidden" name="auto_reply[auto_reply_message<%= i + 1%>][group<%= a+1%>][group_id]" value="<%= i + 1%>">
+	          								</div>
+	          								<div class="col col-md-1">
+		                        	<button type="button" class="btn btn-danger btn-sm" onclick="del('del('message<%= i + 1%>group<%= a + 1%>')')">X</button>
+		                        </div>
+	          							</div>
+	          						<% end %>
+          						</div>
+          					</div>
+          				</div>
+                <% end %>
+
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-sm">
+                  <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                  <i class="fa fa-ban"></i> Reset
+                </button>
+              </div>
+          	<% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  function drBut() {
+    document.getElementById("rr_but").disabled = false;
+    document.getElementById("dr_but").disabled = true;
+    $("#default_reply").show();
+    $("div[id^='rule_reply']").hide();
+  };
+  function apBut() {
+    var sn = $("#rule_butt_num").val();
+    $("#rule_button").append("<button type=\"button\" class=\"btn btn-primary btn-sm\" id=\"rr_but" + sn + "\" onclick=\"rrBut(" + sn + ")\">條件回覆" + sn + "</button>");
+    $("#rule_butt_num").val(parseInt(sn)+1);
+    $("#reply_group").append("<div class=\"row form-group\" id=\"rule_reply" + sn + "\" style=\"border-style:double;display:none\"><div id=\"rule_reply" + sn + "_head\"><div class=\"col col-md-12\">條件回覆" + sn + "<button type=\"button\" class=\"btn btn-warning btn-sm\" onclick=\"atcB(" + sn + ")\">新增觸發條件</button><button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"reo(" + sn + ")\">刪除</button><input type=\"hidden\" id=\"rule" + sn + "_group\" value=\"1\" disabled><input type=\"hidden\" id=\"rule" + sn + "_keyin\" value=\"1\" disabled></div></div><input type=\"hidden\" id=\"reply" + sn + "_group_num\" value=\"2\" disabled><input type=\"hidden\" id=\"message" + sn + "_group_num\" value=\"2\" disabled><div class=\"col col-md-12\">預設回覆</div><div class=\"col col-md-12\"><button type=\"button\" class=\"btn btn-warning btn-sm\" onclick=\"rprBut(" + sn + ")\">新增公開回覆</button><button type=\"button\" class=\"btn btn-info btn-sm\" onclick=\"rarBut(" + sn + ")\">新增私訊回覆</button></div><hr ><div class=\"col col-md-6\"><label class=\"form-control-label\">公開回覆訊息</label><div id=\"reply" + sn + "_public_reply\"><div class=\"row\"><div class=\"col col-md-1\"><label class=\"form-control-label\">1</label></div><div class=\"col col-md-3\"><select name=\"auto_reply[auto_reply_reply" + sn + "][group1][cat]\" class=\"form-control\"><option value=\"text\">文字</option><option value=\"url\">圖片</option></select></div><div class=\"col col-md-7\"><input class=\"form-control\" placeholder=\"公開回覆訊息1\" type=\"text\" name=\"auto_reply[auto_reply_reply" + sn + "][group1][content]\" id=\"auto_reply_name\"></div></div></div></div><div class=\"col col-md-6\"><label class=\"form-control-label\">私訊回覆訊息</label><div id=\"reply" + sn + "_private_reply\"><div class=\"row\"><div class=\"col col-md-1\"><label class=\"form-control-label\">1</label></div><div class=\"col col-md-3\"><select name=\"auto_reply[auto_reply_message" + sn + "][group1][cat]\" class=\"form-control\"><option value=\"text\">文字</option></select></div><div class=\"col col-md-7\"><input class=\"form-control\" placeholder=\"私訊回覆訊息1\" type=\"text\" name=\"auto_reply[auto_reply_message" + sn + "][group1][content]\" id=\"auto_reply_name\"></div></div></div></div></div>");
+  };
+  function rrBut(num){
+    document.getElementById("dr_but").disabled = false;
+    $("div[id^='rule_reply']").hide();
+    $("#default_reply").hide();
+    $("#rule_reply" + num + "").show();
+    $("#rule_reply" + num + "_head").show();
+  };
+  function prBut() {
+    var sn = $("#default_reply_num").val();
+    $("#default_public_reply").append("<div id=\"auto_reply_reply" + sn + "\"><div class=\"row\"><div class=\"col col-md-1\"><label class=\"form-control-label\">" + sn + "</label></div><div class=\"col col-md-3\"><select name=\"auto_reply[default][auto_reply_reply"+ sn + "][cat]\" class=\"form-control\"><option value=\"text\">文字</option><option value=\"url\">圖片</option></select></div><div class=\"col col-md-7\"><input class=\"form-control\" placeholder=\"公開回覆訊息" + sn + "\" type=\"text\" name=\"auto_reply[default][auto_reply_reply" + sn + "][content]\" id=\"auto_reply_name\"><input class=\"form-control\" placeholder=\"公開回覆訊息" + sn + "\" type=\"hidden\" name=\"auto_reply[default][auto_reply_reply" + sn + "][is_default]\" value=\"true\"></div><div class=\"col col-md-1\"><button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"del('auto_reply_reply" + sn + "')\">X</button></div></div></div>");
+    $("#default_reply_num").val(parseInt(sn)+1);
+  };
+  function del(oo){
+    $("#" + oo).remove();
+  };
+  function reo(oo){
+    $("#rr_but" + oo).remove();
+    $("#rule_reply" + oo).remove();
+  };
+  function rprBut(num){
+    var sn = $("#reply" + num + "_group_num").val();
+    $("#reply" + num + "_public_reply").append("<div class=\"row\" id=\"reply"+ num + "group" + sn + "\"><div class=\"col col-md-1\"><label class=\"form-control-label\">" + sn + "</label></div><div class=\"col col-md-3\"><select name=\"auto_reply[auto_reply_reply"+ num + "][group" + sn + "][cat]\" class=\"form-control\"><option value=\"text\">文字</option><option value=\"url\">圖片</option></select></div><div class=\"col col-md-7\"><input class=\"form-control\" placeholder=\"公開回覆訊息" + sn + "\" type=\"text\" name=\"auto_reply[auto_reply_reply"+ num + "][group" + sn + "][content]\" id=\"auto_reply_name\"><input class=\"form-control\" type=\"hidden\" name=\"auto_reply[auto_reply_reply" + num + "][group" + sn + "][group_id]\" value=\"" + num + "\"></div><div class=\"col col-md-1\"><button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"del('reply"+ num + "group" + sn + "')\">X</button></div></div>");
+    $("#reply" + num + "_group_num").val(parseInt(sn)+1);
+  }
+  function arBut() {
+    var sn = $("#default_message_num").val();
+    $("#default_private_reply").append("<div id=\"auto_reply_message" + sn + "\"><div class=\"row\"><div class=\"col col-md-1\"><label class=\"form-control-label\">" + sn + "</label></div><div class=\"col col-md-3\"><select name=\"auto_reply[default][auto_reply_message"+ sn + "][cat]\" class=\"form-control\"><option value=\"text\">文字</option></select></div><div class=\"col col-md-7\"><input class=\"form-control\" placeholder=\"私訊回覆訊息" + sn + "\" type=\"text\" name=\"auto_reply[default][auto_reply_message" + sn + "][content]\" id=\"auto_reply_name\"><input class=\"form-control\" placeholder=\"私訊回覆訊息" + sn + "\" type=\"hidden\" name=\"auto_reply[default][auto_reply_message" + sn + "][is_default]\" value=\"true\"></div><div class=\"col col-md-1\"><button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"del('auto_reply_message" + sn + "')\">X</button></div></div></div>");
+    $("#default_message_num").val(parseInt(sn)+1);
+  };
+  function rarBut(num) {
+    var sn = $("#message" + num + "_group_num").val();
+    $("#reply" + num + "_private_reply").append("<div class=\"row\" id=\"reply"+ num + "message" + sn + "\"><div class=\"col col-md-1\"><label class=\"form-control-label\">" + sn + "</label></div><div class=\"col col-md-3\"><select name=\"auto_reply[auto_reply_message" + num + "][group" + sn + "][cat]\" class=\"form-control\"><option value=\"text\">文字</option></select></div><div class=\"col col-md-7\"><input class=\"form-control\" placeholder=\"私訊回覆訊息" + sn + "\" type=\"text\" name=\"auto_reply[auto_reply_message" + num + "][group" + sn + "][content]\" id=\"auto_reply_name\"><input class=\"form-control\" type=\"hidden\" name=\"auto_reply[auto_reply_message" + num + "][group" + sn + "][group_id]\" value=\"" + num + "\"></div><div class=\"col col-md-1\"><button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"del('reply"+ num + "message" + sn + "')\">X</button></div></div>");
+    $("#message" + num + "_group_num").val(parseInt(sn)+1);
+  }
+  //相同條件，同一個group
+  function atcB(rule){
+    var group = $("#rule"+ rule + "_group").val();
+    var keyin = $("#rule"+ rule + "_keyin").val();
+    url = "/auto_replies/temp_select?rule=" + rule + "&group=" + group + "&keyin=" + keyin;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false );
+    xmlHttp.send( null );
+    content = xmlHttp.responseText;
+    $("#rule_reply" + rule + "_head").append(content);
+    $("#rule"+ rule + "_group").val(parseInt(group)+1);
+    $("#rule"+ rule + "_keyin").val(parseInt(keyin)+1);
+  };
+  $("#rule1_group1_select_type").change(function() {
+    switch($("#rule1_group1_select_type").val()){
+      case "1":
+        $( "#rule1_group1_select_content" ).html("<option value=\"1\">含任一關鍵字</option><option value=\"2\">含所有關鍵字</option><option value=\"3\">完全相符</option><option value=\"4\">含有照片</option>");
+        break;
+      case "2":
+        $( "#rule1_group1_select_content" ).html("<option value=\"5\">≥</option>");
+        break;
+    }
+  });
+  $(document).ready(function() {
+  });
+</script>

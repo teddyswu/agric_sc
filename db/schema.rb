@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190716110506) do
+ActiveRecord::Schema.define(version: 20190726094327) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -19,6 +19,45 @@ ActiveRecord::Schema.define(version: 20190716110506) do
     t.integer  "user_id",    limit: 4
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "auto_replies", force: :cascade do |t|
+    t.string   "name",            limit: 255
+    t.text     "url",             limit: 65535
+    t.string   "default_pair",    limit: 255
+    t.string   "triggering_pair", limit: 255
+    t.boolean  "enabled"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  create_table "auto_reply_messages", force: :cascade do |t|
+    t.integer  "auto_reply_id", limit: 4
+    t.string   "cat",           limit: 255
+    t.text     "content",       limit: 65535
+    t.integer  "group_id",      limit: 4
+    t.boolean  "is_default"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  create_table "auto_reply_replies", force: :cascade do |t|
+    t.integer  "auto_reply_id", limit: 4
+    t.string   "cat",           limit: 255
+    t.text     "content",       limit: 65535
+    t.integer  "group_id",      limit: 4
+    t.boolean  "is_default"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  create_table "auto_reply_rules", force: :cascade do |t|
+    t.integer  "auto_reply_id", limit: 4
+    t.string   "rule_cat",      limit: 255
+    t.string   "rule",          limit: 255
+    t.integer  "parent_id",     limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "category_work_ships", force: :cascade do |t|

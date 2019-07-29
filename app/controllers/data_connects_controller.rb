@@ -2401,6 +2401,195 @@ class DataConnectsController < ApplicationController
             farmer_group << fgl
           end
           wording << farmer_group.to_s[1..farmer_group.to_s.size-2 ]
+          wording << ","
+          auto_reply_total = Array.new
+          auto_replies = AutoReply.where(:enabled => true)
+          auto_replies.each_with_index do |auto_reply,i|
+            auto_reply_single = Hash.new
+            auto_reply_single["NAME"] = "ugooz.b2c.fbpost.#{i+1}"
+            auto_reply_single["url"] = auto_reply.url
+            ar_def = Hash.new #default{}
+            ar_def_reply = Array.new #replies[]
+            ar_reply_defs = AutoReplyReply.where(:auto_reply_id => auto_reply.id, :is_default => true)
+            ar_reply_defs.each do |ard|
+              ar_def_reply_h = Hash.new
+              ard.cat == "text" ? ar_def_reply_h["type"] = "text" : ar_def_reply_h["type"] = "image"
+              ar_def_reply_h["#{ard.cat}"] = ard.content
+              ar_def_reply << ar_def_reply_h
+            end
+            ar_def["replies"] = ar_def_reply
+            ar_def_message = Array.new
+            ar_message_defs = AutoReplyMessage.where(:auto_reply_id => auto_reply.id, :is_default => true)
+            ar_message_defs.each do |amd|
+              am_def_message_h = Hash.new
+              am_def_message_h["type"] = "text" 
+              am_def_message_h["text"] = amd.content
+              ar_def_message << am_def_message_h
+            end
+            ar_def["messages"] = ar_def_message
+            ar_def["pair"] = auto_reply.default_pair
+            ar_triggering = Hash.new #triggering{}
+            ar_conditions = Array.new #conditions[]
+            ar_reply_rules = AutoReplyRule.where(:auto_reply_id => auto_reply.id, :parent_id => 0)
+            ar_reply_rules.each do |arr|
+              conditions_id = Array.new #[]
+              rule = Hash.new #{}
+              case arr.rule_cat
+              when "1"
+                rule["rule_cat"] = "text_contains"
+                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
+                conditions_id << rule
+                arr.children.each do |ac|
+                  rule_ac = Hash.new
+                  case ac.rule_cat
+                  when "1"
+                    rule_ac["rule_cat"] = "text_contains"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "2"
+                    rule_ac["rule_cat"] = "text_contains_all"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "3"
+                    rule_ac["rule_cat"] = "text_exactly_match"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "4"
+                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule"] = ">= 1"
+                  when "5"
+                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule"] = ">= #{ac.rule}"
+                  end
+                  conditions_id << rule_ac
+                end
+              when "2"
+                rule["rule_cat"] = "text_contains_all"
+                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
+                conditions_id << rule
+                arr.children.each do |ac|
+                  rule_ac = Hash.new
+                  case ac.rule_cat
+                  when "1"
+                    rule_ac["rule_cat"] = "text_contains"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "2"
+                    rule_ac["rule_cat"] = "text_contains_all"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "3"
+                    rule_ac["rule_cat"] = "text_exactly_match"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "4"
+                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule"] = ">= 1"
+                  when "5"
+                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule"] = ">= #{ac.rule}"
+                  end
+                  conditions_id << rule_ac
+                end
+              when "3"
+                rule["rule_cat"] = "text_exactly_match"
+                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
+                conditions_id << rule
+                arr.children.each do |ac|
+                  rule_ac = Hash.new
+                  case ac.rule_cat
+                  when "1"
+                    rule_ac["rule_cat"] = "text_contains"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "2"
+                    rule_ac["rule_cat"] = "text_contains_all"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "3"
+                    rule_ac["rule_cat"] = "text_exactly_match"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "4"
+                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule"] = ">= 1"
+                  when "5"
+                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule"] = ">= #{ac.rule}"
+                  end
+                  conditions_id << rule_ac
+                end
+              when "4"
+                rule["rule_cat"] = "has_photo"
+                rule["rule"] = ">= 1"
+                conditions_id << rule
+                arr.children.each do |ac|
+                  rule_ac = Hash.new
+                  case ac.rule_cat
+                  when "1"
+                    rule_ac["rule_cat"] = "text_contains"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "2"
+                    rule_ac["rule_cat"] = "text_contains_all"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "3"
+                    rule_ac["rule_cat"] = "text_exactly_match"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "4"
+                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac_ac["rule"] = ">= 1"
+                  when "5"
+                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule"] = ">= #{ac.rule}"
+                  end
+                  conditions_id << rule_ac
+                end
+              when "5"
+                rule["rule_cat"] = "tag_friend"
+                rule["rule"] = ">= #{arr.rule}"
+                conditions_id << rule
+                arr.children.each do |ac|
+                  rule_ac = Hash.new
+                  case ac.rule_cat
+                  when "1"
+                    rule_ac["rule_cat"] = "text_contains"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "2"
+                    rule_ac["rule_cat"] = "text_contains_all"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "3"
+                    rule_ac["rule_cat"] = "text_exactly_match"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                  when "4"
+                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule"] = ">= 1"
+                  when "5"
+                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule"] = ">= #{ac.rule}"
+                  end
+                  conditions_id << rule_ac
+                end
+              end
+              ar_conditions << conditions_id
+            end
+            auto_reply_single["default"] = ar_def
+            ar_triggering["conditions"] = ar_conditions
+            ar_reply_replies = AutoReplyReply.where(:auto_reply_id => auto_reply.id).where.not(:is_default => true)
+            arr_h = Array.new
+            ar_reply_replies.each do |arr|
+              arr_single = Hash.new
+              arr.cat == "text" ? arr_single["type"] = "text" : arr_single["type"] = "image"
+              arr_single["#{arr.cat}"] = arr.content
+              arr_h << arr_single
+            end
+            ar_triggering["replies"] = arr_h
+            ar_reply_messages = AutoReplyMessage.where(:auto_reply_id => auto_reply.id).where.not(:is_default => true)
+            arm_h = Array.new
+            ar_reply_messages.each do |arm|
+              arm_single = Hash.new
+              arm_single["type"] = "text"
+              arm_single["text"] = arm.content
+              arm_h << arm_single
+            end
+            ar_triggering["messages"] = arm_h
+            ar_triggering["pair"] = auto_reply.triggering_pair
+            auto_reply_single["triggering"] = ar_triggering
+            auto_reply_total << auto_reply_single
+          end
+          # render json: JSON.parse(auto_reply_total.to_s.gsub("=>",":"))
+          wording << auto_reply_total.to_s
+
           render json: JSON.parse("[" + wording.gsub("=>",":") + "]")
         end
       when "topboss"

@@ -1,0 +1,63 @@
+<script type="text/javascript" src="https://loopj.com/jquery-tokeninput/src/jquery.tokeninput.js"></script>
+<link rel="stylesheet" href="https://loopj.com/jquery-tokeninput/styles/token-input-facebook.css" type="text/css" />
+<style>
+ul.token-input-list-facebook {
+  border :0px;
+  color: transparent;
+  width: 200px;
+}
+</style>
+
+<div class="col col-md-12" id="rule<%=params[:rule]%>_group<%=params[:group]%>">
+  <div class="col-12 col-md-3">
+    <select id="rule<%=params[:rule]%>_group<%=params[:group]%>_select_type" class="form-control">
+      <option value="1">留言內容</option>
+      <option value="2">標註朋友個數</option>
+    </select>
+  </div>
+  <div class="col-12 col-md-3">
+    <select name="auto_reply[auto_reply_rule<%=params[:rule]%>][group<%=params[:group]%>][rule_cat]" id="rule<%=params[:rule]%>_group<%=params[:group]%>_select_content" class="form-control">
+      <option value="1">含任一關鍵字</option>
+      <option value="2">含所有關鍵字</option>
+      <option value="3">完全相符</option>
+      <option value="4">含有照片</option>
+    </select>
+  </div>
+  <div class="col-12 col-md-3">
+    <input type="text" id="rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>" class="form-control"  placeholder="新增關鍵字">
+  </div>
+  <div class="col-12 col-md-2">
+    <input type="text" name="auto_reply[auto_reply_rule<%=params[:rule]%>][group<%=params[:group]%>][rule]" id="auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_cat" style="display: none;">
+  </div>
+  <div class="col-12 col-md-1">
+    <button type="button" class="btn btn-danger btn-sm" onclick="del('rule<%=params[:rule]%>_group<%=params[:group]%>')">X</button></div>
+</div>
+
+<script>
+	$("#rule<%=params[:rule]%>_group<%=params[:group]%>_select_type").change(function() {
+    switch($("#rule<%=params[:rule]%>_group<%=params[:group]%>_select_type").val()){
+      case "1":
+        $( "#rule<%=params[:rule]%>_group<%=params[:group]%>_select_content" ).html("<option value=\"1\">含任一關鍵字</option><option value=\"2\">含所有關鍵字</option><option value=\"3\">完全相符</option><option value=\"4\">含有照片</option>");
+        break;
+      case "2":
+        $( "#rule<%=params[:rule]%>_group<%=params[:group]%>_select_content" ).html("<option value=\"5\">≥</option>");
+        break;
+    }
+  });
+  $(document).ready(function() {
+    $("#auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_cat").tokenInput([],{
+      hintText: "",
+      noResultsText: "",
+      searchingText: "",
+      theme: 'facebook'
+    });
+    $("#rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>").on('keypress',function(e) {
+      if(e.which == 13) {
+        var word = $("#rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>").val();
+        $( "#auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_cat" ).tokenInput("add", {id: word, name: word});
+        $("#rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>").val("");
+        return false;
+      }
+    });
+  });
+</script>

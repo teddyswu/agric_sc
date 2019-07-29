@@ -67,6 +67,10 @@ Rails.application.routes.draw do
 
   resources :ps_groups
 
+  resources :auto_replies do
+    get "temp_select", on: :collection
+  end
+
   resources :wordings do
     get "json", on: :collection
   end
