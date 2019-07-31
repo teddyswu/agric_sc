@@ -28,7 +28,7 @@ module AgricSc
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
     config.time_zone = 'Asia/Taipei'
-
+    config.i18n.default_locale = "zh-TW"
     config.active_support.escape_html_entities_in_json = false
     config.active_job.queue_adapter = :delayed_job
 

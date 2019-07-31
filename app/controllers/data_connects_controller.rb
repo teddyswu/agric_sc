@@ -880,7 +880,7 @@ class DataConnectsController < ApplicationController
           fg_text = Hash.new
           fg_text[:NAME] = "TEAFU.MENU.B2C.10.01"
           fg_text[:type] = "text"
-          fg_text[:text] = "請先幫我選擇產銷班！"
+          fg_text[:text] = I18n.t("proposal.select_option")
           fg_text[:delay] = "1"
           fg_text_h << fg_text
           farmer_group << fg_text_h
@@ -907,7 +907,7 @@ class DataConnectsController < ApplicationController
             fg_list_talk = Hash.new
             fg_list_talk[:Name] = "TEAFU.MENU.B2C.TF.10.0#{i}.01"
             fg_list_talk[:type] = "text"
-            fg_list_talk[:title] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
+            fg_list_talk[:title] = I18n.t("proposal.option_intro")
             fg_list_talk[:delay] = "1"
             list_talk << fg_list_talk
             farmer_group << list_talk
@@ -1038,13 +1038,13 @@ class DataConnectsController < ApplicationController
                 if u > 10
                   inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                   inter_ta["type"] = "text"
-                  inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
+                  inter_ta["text"] = I18n.t("startup.back_again")
                   inter_ta["delay"] = "1"
                   next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
                 else
                   inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                   inter_ta["type"] = "text"
-                  inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
+                  inter_ta["text"] = I18n.t("startup.new_visitor")
                   inter_ta["delay"] = "1"
                   next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
                 end
@@ -1127,7 +1127,7 @@ class DataConnectsController < ApplicationController
                   result["join"] = false
                   text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
                   text_1["type"] = "text"
-                  text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                  text_1["text"] = I18n.t("proposal.no_upport_proposal")
                   text_1["delay"] = 1
                   total = Array.new
                   proposal = Array.new
@@ -1165,7 +1165,7 @@ class DataConnectsController < ApplicationController
                 result["join"] = false
                 text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
                 text_1["type"] = "text"
-                text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                text_1["text"] = I18n.t("proposal.no_upport_proposal")
                 text_1["delay"] = 1
                 total = Array.new
                 proposal = Array.new
@@ -1204,7 +1204,7 @@ class DataConnectsController < ApplicationController
               result["join"] = false
               text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
               text_1["template_type"] = "button"
-              text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
+              text_1["text"] = I18n.t("login.need_login")
               buttons = Array.new
               t2 = Hash.new
               t2["type"] = "web_url"
@@ -1731,13 +1731,13 @@ class DataConnectsController < ApplicationController
                 if u > 10
                   inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                   inter_ta["type"] = "text"
-                  inter_ta["text"] = "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
+                  inter_ta["text"] = I18n.t("startup.back_again")
                   inter_ta["delay"] = "1"
                   next_inter = JSON.parse(PersonalInterplay.second.start_model).to_s[2..JSON.parse(PersonalInterplay.second.start_model).to_s.size]
                 else
                   inter_ta["NAME"] = "ugooz.b2c.startup.01.01"
                   inter_ta["type"] = "text"
-                  inter_ta["text"] = "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
+                  inter_ta["text"] = I18n.t("startup.new_visitor")
                   inter_ta["delay"] = "1"
                   next_inter = JSON.parse(PersonalInterplay.first.start_model).to_s[2..JSON.parse(PersonalInterplay.first.start_model).to_s.size]
                 end
@@ -1823,7 +1823,7 @@ class DataConnectsController < ApplicationController
                   result["join"] = false
                   text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
                   text_1["type"] = "text"
-                  text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                  text_1["text"] = I18n.t("proposal.no_upport_proposal")
                   text_1["delay"] = 1
                   total = Array.new
                   proposal = Array.new
@@ -1861,7 +1861,7 @@ class DataConnectsController < ApplicationController
                 result["join"] = false
                 text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
                 text_1["type"] = "text"
-                text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                text_1["text"] = I18n.t("proposal.no_upport_proposal")
                 text_1["delay"] = 1
                 total = Array.new
                 proposal = Array.new
@@ -1900,7 +1900,7 @@ class DataConnectsController < ApplicationController
               result["join"] = false
               text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
               text_1["template_type"] = "button"
-              text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
+              text_1["text"] = I18n.t("login.need_login")
               buttons = Array.new
               t2 = Hash.new
               t2["type"] = "web_url"
@@ -1994,7 +1994,7 @@ class DataConnectsController < ApplicationController
                   result["join"] = false
                   text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
                   text_1["type"] = "text"
-                  text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                  text_1["text"] = I18n.t("proposal.no_upport_proposal")
                   text_1["delay"] = 1
                   total = Array.new
                   proposal = Array.new
@@ -2032,7 +2032,7 @@ class DataConnectsController < ApplicationController
                 result["join"] = false
                 text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
                 text_1["type"] = "text"
-                text_1["text"] = "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！"
+                text_1["text"] = I18n.t("proposal.no_upport_proposal")
                 text_1["delay"] = 1
                 total = Array.new
                 proposal = Array.new
@@ -2071,7 +2071,7 @@ class DataConnectsController < ApplicationController
               result["join"] = false
               text_1["NAME"] = "ugooz.b2c.menulist.mb1.01.01"
               text_1["template_type"] = "button"
-              text_1["text"] = "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"
+              text_1["text"] = I18n.t("login.need_login")
               buttons = Array.new
               t2 = Hash.new
               t2["type"] = "web_url"
@@ -2159,12 +2159,12 @@ class DataConnectsController < ApplicationController
               text = Array.new
               text_1 = Hash.new
               text_1["type"] = "text"
-              text_1["text"] = "已完成追蹤，若提案有最新消息會立即通知你唷。"
+              text_1["text"] = I18n.t("proposal.tracking_completed")
               text_1["delay"] = 1
               text << text_1
               text_2 = Hash.new
               text_2["type"] = "text"
-              text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
+              text_2["text"] = I18n.t("proposal.other_attention")
               text_2["delay"] = 1
               text << text_2
               total << text
@@ -2241,12 +2241,12 @@ class DataConnectsController < ApplicationController
               text = Array.new
               text_1 = Hash.new
               text_1["type"] = "text"
-              text_1["text"] = "已完成追蹤，若提案有最新消息會立即通知你唷。"
+              text_1["text"] = I18n.t("proposal.tracking_completed")
               text_1["delay"] = 1
               text << text_1
               text_2 = Hash.new
               text_2["type"] = "text"
-              text_2["text"] = "還有～還有～其他提案也很精彩值得你關注喔。"
+              text_2["text"] = I18n.t("proposal.other_attention")
               text_2["delay"] = 1
               text << text_2
               total << text
@@ -2271,7 +2271,7 @@ class DataConnectsController < ApplicationController
           fg_text = Hash.new
           fg_text["NAME"] = "ugooz.b2c.menulist.ab1.01.01"
           fg_text["type"] = "text"
-          fg_text["text"] = "請先幫我選擇產銷班！"
+          fg_text["text"] = I18n.t("proposal.select_option")
           fg_text["delay"] = "1"
           fg_text_h << fg_text
           farmer_group << fg_text_h
@@ -2299,7 +2299,7 @@ class DataConnectsController < ApplicationController
             fg_list_talk = Hash.new
             fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.01"
             fg_list_talk["type"] = "text"
-            fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
+            fg_list_talk["title"] = I18n.t("proposal.option_intro")
             fg_list_talk["delay"] = "1"
             list_talk << fg_list_talk
             farmer_group << list_talk
@@ -2344,7 +2344,7 @@ class DataConnectsController < ApplicationController
           fg_text = Hash.new
           fg_text["NAME"] = "ugooz.b2c.menulist.ab1.01.01"
           fg_text["type"] = "text"
-          fg_text["text"] = "請先幫我選擇產銷班！"
+          fg_text["text"] = I18n.t("proposal.select_option")
           fg_text["delay"] = "1"
           fg_text_h << fg_text
           farmer_group << fg_text_h
@@ -2372,7 +2372,7 @@ class DataConnectsController < ApplicationController
             fg_list_talk = Hash.new
             fg_list_talk["Name"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.01"
             fg_list_talk["type"] = "text"
-            fg_list_talk["title"] = "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
+            fg_list_talk["title"] = I18n.t("proposal.option_intro")
             fg_list_talk["delay"] = "1"
             list_talk << fg_list_talk
             farmer_group << list_talk

@@ -12,74 +12,34 @@
         <li class="active">
         	<%= link_to " <i class='menu-icon fa fa-dashboard'></i>Dashboard ".html_safe, agris_path %>
         </li>
-        <h3 class="menu-title">聊天內容</h3><!-- /.menu-title -->
-        <li <%= "class='active'".html_safe if request.url.include?("gif") %>>
-          <%= link_to " <i class='menu-icon fa fa-picture-o'></i>動圖 ".html_safe,  gif_agris_path %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("wording") %>>
-          <%= link_to " <i class='menu-icon fa fa-pencil'></i>文案 ".html_safe,  wording_list_path %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("message") %>>
-          <%= link_to " <i class='menu-icon fa fa-comment'></i>訊息推送 ".html_safe, message_pushes_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("group") %>>
-          <%= link_to " <i class='menu-icon fa fa-object-ungroup'></i>用戶群組 ".html_safe, user_groups_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("user_list") %>>
-          <%= link_to " <i class='menu-icon fa fa-users'></i>用戶列表 ".html_safe, user_list_agris_path %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("parameter") %>>
-          <%= link_to " <i class='menu-icon fa fa-cogs'></i>ref參數設定 ".html_safe, parameter_sets_path  %>
-        </li>
-        <li <%#= "class='active'".html_safe if request.url.include?("set") %>>
-          <%= link_to " <i class='menu-icon fa fa-user-circle-o'></i>會員參數設定 ".html_safe, ""  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("interplay") %>>
-          <%= link_to " <i class='menu-icon fa fa-american-sign-language-interpreting'></i>啟動互動 ".html_safe, personal_interplays_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("input") %>>
-          <%= link_to " <i class='menu-icon fa fa-keyboard-o'></i>用戶輸入 ".html_safe, user_inputs_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("auto") %> >
-          <%= link_to " <i class='menu-icon fa fa-mail-reply'></i>貼文留言自動回覆 ".html_safe, auto_replies_path%>
-        </li>
-        <li>
-          <%= link_to " <i class='menu-icon fa fa-briefcase'></i>JSON產生器 ".html_safe, new_wording_path, :target => "_blank"  %>
-        </li>
-        
-        <h3 class="menu-title">網頁內容</h3><!-- /.menu-title -->
-        <li <%= "class='active'".html_safe if request.url.include?("stories") %>>
-          <%= link_to " <i class='menu-icon fa fa-briefcase'></i>網頁內容 ".html_safe, stories_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("interactive") %>>
-          <%= link_to " <i class='menu-icon fa fa-font '></i>回饋報告 ".html_safe, interactive_admin_index_work_records_path  %>
-        </li>
-        <h3 class="menu-title">友善農友</h3><!-- /.menu-title -->
-        <li <%= "class='active'".html_safe if request.url.include?("record") %>>
-          <%= link_to " <i class='menu-icon fa fa-briefcase'></i>工作紀錄 ".html_safe, work_records_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("diaries") %>>
-          <%= link_to " <i class='menu-icon fa fa-leaf'></i>農場日誌 ".html_safe, work_diaries_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("farmer") %>>
-          <%= link_to " <i class='menu-icon fa fa-check'></i>茶農管理 ".html_safe, farmer_user_manages_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("farming") %>>
-          <%= link_to " <i class='menu-icon fa fa-wrench'></i>作物管理 ".html_safe, farming_categories_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("project") %>>
-          <%= link_to " <i class='menu-icon fa fa-list-ul'></i>工作事項 ".html_safe, work_projects_path  %>
-        </li>
-        <li <%= "class='active'".html_safe if request.url.include?("reply") %>>
-          <%= link_to " <i class='menu-icon fa fa-comment'></i>回覆管理 ".html_safe, reply_words_path  %>
-        </li>
+        <h3 class="menu-title"><%= I18n.t("word.chat_content") %></h3><!-- /.menu-title -->
+        <% chat_contents = I18n.t("chat_content")  %>
+        <% chat_contents.each_with_index do |cc, i|%>
+          <li <%= "class='active'".html_safe if request.url.include?("#{cc[0]}") %>>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{cc[1]} ".html_safe,  "../#{cc[0]}" %>
+          </li>
+        <% end %>
+        <h3 class="menu-title"><%= I18n.t("word.html_content") %></h3><!-- /.menu-title -->
+        <% html_contents = I18n.t("html_content")  %>
+        <% html_contents.each_with_index do |hc, i|%>
+          <li <%= "class='active'".html_safe if request.url.include?("#{hc[0]}") %>>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{hc[1]} ".html_safe,  "../#{hc[0]}" %>
+          </li>
+        <% end %>
+        <h3 class="menu-title"><%= I18n.t("word.friendly_farmer") %></h3><!-- /.menu-title -->
+        <% friendly_farmers = I18n.t("friendly_farmer")  %>
+        <% friendly_farmers.each_with_index do |ff, i|%>
+          <li <%= "class='active'".html_safe if request.url.include?("#{ff[0]}") %>>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{ff[1]} ".html_safe,  "../#{ff[0]}" %>
+          </li>
+        <% end %>
         <h3 class="menu-title"></h3>
-        <li>
-          <%= link_to(" <i class='menu-icon fa fa-cog'></i>會員管理 ".html_safe, user_manages_path) %>
-        </li>
-        <li>
-          <%= link_to(" <i class='menu-icon fa fa-edit'></i>修改密碼 ".html_safe, edit_user_registration_path) %>
-        </li>
+        <% others = I18n.t("other")  %>
+        <% others.each_with_index do |o, i|%>
+          <li <%= "class='active'".html_safe if request.url.include?("#{o[0]}") %>>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{o[1]} ".html_safe,  "../#{o[0]}" %>
+          </li>
+        <% end %>
         <li>
           <%= link_to(" <i class='menu-icon fa fa-building'></i>提案管理 ".html_safe, "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/admin/campaigns", :target => "_blank") %>
         </li>

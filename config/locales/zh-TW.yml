@@ -1,0 +1,42 @@
+zh-TW:
+  word:
+    chat_content: "聊天內容"
+    html_content: "網頁內容"
+    friendly_farmer: "友善農友"
+  chat_content:
+    agris/gif: "動圖"
+    agris/wording_list: "文案"
+    message_pushes:	"訊息推送"
+    user_groups: "用戶群組"
+    agris/user_list: "用戶列表"
+    parameter_sets: "ref參數設定"
+    _: "會員參數設定"
+    personal_interplays: "啟動互動"
+    user_inputs: "用戶輸入"
+    auto_replies: "貼文留言自動回覆"
+    wordings/new: "JSON產生器"
+  html_content:
+    stories: "網頁內容"
+    work_records/interactive_admin_index: "回饋報告"
+  friendly_farmer:
+    work_records: "工作記錄"
+    work_diaries: "農場日誌"
+    user_manages/farmer: "茶農管理"
+    farming_categories: "作物管理"
+    work_projects: "工作事項"
+    reply_words: "回覆管理"
+  other:
+    user_manages: "會員管理"
+    users/edit: "修改密碼"
+  startup:
+    back_again: "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
+    new_visitor: "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"
+  proposal:
+    no_upport_proposal: "咦！目前你尚未支持任何提案喔~這些是目前最受關注的友善提案，喜歡記得加入追蹤 ❤，我會通知你第一手消息！" 
+    thanks_for_subscription: "茶福感謝您訂閱。"
+    tracking_completed: "已完成追蹤，若提案有最新消息會立即通知你唷。"
+    other_attention: "還有～還有～其他提案也很精彩值得你關注喔。"
+    select_option: "請先幫我選擇產銷班！"
+    option_intro: "這裡都是致力推動友善耕作，投入心力保護土地和環境的友善小農，快來看看他們的田園生活吧！"
+  login:
+    need_login: "請先登入後才能使用會員服務哦~請點擊下方連結進行FB登入~"

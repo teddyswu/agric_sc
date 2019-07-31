@@ -109,13 +109,13 @@ class User::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       else
         text_1["name"] = "TEAFU.MENU.B2C.05.01"
         text_1["type"] = "text"
-        text_1["text"] = "茶福感謝您訂閱。"
+        text_1["text"] = I18n.t("proposal.thanks_for_subscription")
         text_1["delay"] = 1
         text << text_1
         text_2 = Hash.new
         text_2["name"] = "TEAFU.MENU.B2C.05.02"
         text_2["type"] = "text"
-        text_2["text"] = "咦！目前您尚未有紀錄喔。這是最新最熱門的提案，若有喜歡記得加入愛心，我會通知第一手的訊息給您。"
+        text_2["text"] = I18n.t("proposal.no_upport_proposal")
         text_2["delay"] = 1
         text << text_2
         total << text
