@@ -41,7 +41,7 @@
           </li>
         <% end %>
         <li>
-          <%= link_to(" <i class='menu-icon fa fa-building'></i>提案管理 ".html_safe, "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/admin/campaigns", :target => "_blank") %>
+          <%= link_to(" <i class='menu-icon fa fa-building'></i>#{I18n.t('word.proposal_man')} ".html_safe, "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/admin/campaigns", :target => "_blank") %>
         </li>
         <li>
         	<%= link_to(" <i class='menu-icon ti-shift-right'></i>登出 ".html_safe, destroy_user_session_path, :method => :delete) %>

@@ -3,6 +3,7 @@ zh-TW:
     chat_content: "聊天內容"
     html_content: "網頁內容"
     friendly_farmer: "友善農友"
+    proposal_man: "提案管理"
   chat_content:
     agris/gif: "動圖"
     agris/wording_list: "文案"
