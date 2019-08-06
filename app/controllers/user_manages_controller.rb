@@ -18,7 +18,7 @@ class UserManagesController < ApplicationController
 	def update
 		@user = User.find(params[:id])
 		@user.update(user_params)
-
+		f = FarmerProfile.create(:user_id => params[:id])
 		redirect_to :action => :index
 	end
 
