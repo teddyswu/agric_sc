@@ -16,28 +16,28 @@
         <% chat_contents = I18n.t("chat_content")  %>
         <% chat_contents.each_with_index do |cc, i|%>
           <li <%= "class='active'".html_safe if request.url.include?("#{cc[0]}") %>>
-            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{cc[1]} ".html_safe,  "../#{cc[0]}" %>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{cc[1]} ".html_safe,  "/#{cc[0]}" %>
           </li>
         <% end %>
         <h3 class="menu-title"><%= I18n.t("word.html_content") %></h3><!-- /.menu-title -->
         <% html_contents = I18n.t("html_content")  %>
         <% html_contents.each_with_index do |hc, i|%>
           <li <%= "class='active'".html_safe if request.url.include?("#{hc[0]}") %>>
-            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{hc[1]} ".html_safe,  "../#{hc[0]}" %>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{hc[1]} ".html_safe,  "/#{hc[0]}" %>
           </li>
         <% end %>
         <h3 class="menu-title"><%= I18n.t("word.friendly_farmer") %></h3><!-- /.menu-title -->
         <% friendly_farmers = I18n.t("friendly_farmer")  %>
         <% friendly_farmers.each_with_index do |ff, i|%>
           <li <%= "class='active'".html_safe if request.url.include?("#{ff[0]}") %>>
-            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{ff[1]} ".html_safe,  "../#{ff[0]}" %>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{ff[1]} ".html_safe,  "/#{ff[0]}" %>
           </li>
         <% end %>
         <h3 class="menu-title"></h3>
         <% others = I18n.t("other")  %>
         <% others.each_with_index do |o, i|%>
           <li <%= "class='active'".html_safe if request.url.include?("#{o[0]}") %>>
-            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{o[1]} ".html_safe,  "../#{o[0]}" %>
+            <%= link_to " <i class='menu-icon fa fa-leaf'></i> #{o[1]} ".html_safe,  "/#{o[0]}" %>
           </li>
         <% end %>
         <li>
