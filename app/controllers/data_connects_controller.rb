@@ -2581,7 +2581,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_type"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friends"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
@@ -2606,7 +2606,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_type"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friends"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
@@ -2631,7 +2631,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_type"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friends"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
@@ -2656,7 +2656,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_type"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friends"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
