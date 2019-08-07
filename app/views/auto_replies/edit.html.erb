@@ -212,14 +212,14 @@ ul.token-input-list-facebook {
 												</style>
 	                			<div class="col col-md-12" id="rule<%= i + 1%>_group<%= v + 2%>">
 												  <div class="col-12 col-md-3">
-												    <select id="rule1_group1_select_type" class="form-control">
+												    <select id="rule<%= i + 1%>_group<%= v + 2%>_select_type" class="form-control">
 												      <option value="1" <%= "selected" if rc.rule_type.to_i < 5 %>>留言內容</option>
 												      <option value="2" <%= "selected" if rc.rule_type.to_i == 5 %>>標註朋友個數</option>
 												    </select>
 												  </div>
 												  <div class="col-12 col-md-3">
-												    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule_type]" id="rule1_group1_select_content" class="form-control">
-												    	<% if r.rule_type.to_i < 5  %>
+												    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule_type]" id="rule<%= i + 1%>_group<%= v + 2%>_select_content" class="form-control">
+												    	<% if rc.rule_type.to_i < 5  %>
 													      <option value="1"<%= "selected" if rc.rule_type.to_i == 1 %>>含任一關鍵字</option>
 													      <option value="2"<%= "selected" if rc.rule_type.to_i == 2 %>>含所有關鍵字</option>
 													      <option value="3"<%= "selected" if rc.rule_type.to_i == 3 %>>完全相符</option>
@@ -239,7 +239,7 @@ ul.token-input-list-facebook {
 												    <button type="button" class="btn btn-danger btn-sm" onclick="del('rule<%= i + 1%>_group<%= v + 2%>')">X</button></div>
 												</div>
 												<script>
-													$("#rule<% i + 1%>_group<%= v + 2%>_select_type").change(function() {
+													$("#rule<%= i + 1%>_group<%= v + 2%>_select_type").change(function() {
 												    switch($("#rule<%= i + 1%>_group<%= v + 2%>_select_type").val()){
 												      case "1":
 												        $( "#rule<%= i + 1%>_group<%= v + 2%>_select_content" ).html("<option value=\"1\">含任一關鍵字</option><option value=\"2\">含所有關鍵字</option><option value=\"3\">完全相符</option><option value=\"4\">含有照片</option>");
