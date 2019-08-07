@@ -74,7 +74,7 @@ class AutoRepliesController < ApplicationController
 				v.each do |a, b|
 					rule = AutoReplyRule.new
 					rule.auto_reply_id = @auto_reply.id
-					rule.rule_cat = b[:rule_cat]
+					rule.rule_type = b[:rule_type]
 					rule.rule = b[:rule]
 					rule.parent_id = parent_id
 					rule.save!
@@ -147,7 +147,7 @@ class AutoRepliesController < ApplicationController
 				v.each do |a, b|
 					rule = AutoReplyRule.new
 					rule.auto_reply_id = @auto_reply.id
-					rule.rule_cat = b[:rule_cat]
+					rule.rule_type = b[:rule_type]
 					rule.rule = b[:rule]
 					rule.parent_id = parent_id
 					rule.save!

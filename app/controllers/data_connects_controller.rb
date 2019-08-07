@@ -1247,157 +1247,284 @@ class DataConnectsController < ApplicationController
               case params[:start]
               when "", "\"\"" #個人化問候語
                 case params[:type]
-                  when "", "\"\"", nil
-                    gg = Greeting.find_or_initialize_by(:uid => params[:uid])
-                    n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
-                    name = (n.present? ? n.last.name : "匿名訪客")
-                    gg.name = name
-                    gg.start = (params[:start] == "1" ? true : false)
-                    word_t = Array.new
-                    word_a = Array.new
-                    word = Hash.new
-                    say_hi = true if gg.new_record?
-                    gg.save!
-                    if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
-                      case Time.now.strftime('%H').to_i
-                      when 0..4
-                        sta = "晚安！"
-                      when 5..10
-                        sta = "早安！"
-                      when 11..13
-                        sta = "午安！"
-                      when 14..17
-                        sta = "下午好~"
-                      when 18..23
-                        sta = "晚安！"
-                      end
-                      word["type"] = "text"
-                      word["text"] = "Hi #{name} #{sta}"
-                      word["delay"] = "1"
-                      gg.updated_at = Time.now
+                when "", "\"\"", nil
+                  gg = Greeting.find_or_initialize_by(:uid => params[:uid])
+                  n = UserAnalyze.where(:uid => params[:uid]).where.not(:name => nil)
+                  name = (n.present? ? n.last.name : "匿名訪客")
+                  gg.name = name
+                  gg.start = (params[:start] == "1" ? true : false)
+                  word_t = Array.new
+                  word_a = Array.new
+                  word = Hash.new
+                  say_hi = true if gg.new_record?
+                  gg.save!
+                  if (Time.now - gg.updated_at) > 43200 or say_hi == true #12小時問候一次
+                    case Time.now.strftime('%H').to_i
+                    when 0..4
+                      sta = "晚安！"
+                    when 5..10
+                      sta = "早安！"
+                    when 11..13
+                      sta = "午安！"
+                    when 14..17
+                      sta = "下午好~"
+                    when 18..23
+                      sta = "晚安！"
                     end
-                    word_a << word
-                    gg.save!
-                    word_t << word_a
-                    render json: word_t
-                  when "text"
-                    is_send = 0
-                    user_text = params[:text]
-                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                    aa = Authorization.find_by_uid(uid)
-                    bb = UserSubscription.find_by_scoped_id(uid)
-                    if aa.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "user").order(keyword_type: :asc)
-                    elsif bb.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "subscribe_guest").order(keyword_type: :asc)
-                    else
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "guest").order(keyword_type: :asc)
-                      if word.blank?
-                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%").order(keyword_type: :asc)
+                    word["type"] = "text"
+                    word["text"] = "Hi #{name} #{sta}"
+                    word["delay"] = "1"
+                    gg.updated_at = Time.now
+                  end
+                  word_a << word
+                  gg.save!
+                  word_t << word_a
+                  render json: word_t
+                when "text"
+                  is_send = 0
+                  user_text = params[:text]
+                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                  aa = Authorization.find_by_uid(uid)
+                  bb = UserSubscription.find_by_scoped_id(uid)
+                  if aa.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "user").order(keyword_type: :asc)
+                  elsif bb.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "subscribe_guest").order(keyword_type: :asc)
+                  else
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "guest").order(keyword_type: :asc)
+                    if word.blank?
+                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%").order(keyword_type: :asc)
+                    end
+                  end
+                  word.each do |w|
+                    if is_send == 0
+                      case w.keyword_type
+                      when 1 #輸入內容 含任一關鍵字
+                        ch_word = w.keyword.split(",").size
+                        t_word = 0
+                        w.keyword.split(",").each do |wk|
+                          t_word +=1 if user_text.include? wk
+                        end
+                        if t_word > 0
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
+                      when 2 #輸入內容 含所有關鍵字
+                        ch_word = w.keyword.split(",").size
+                        t_word = 0
+                        w.keyword.split(",").each do |wk|
+                          t_word +=1 if user_text.include? wk
+                        end
+                        if t_word == ch_word
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
+                      when 3 #輸入內容 完全相符
+                        if user_text == w.keyword
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
+                      when 9 #電話號碼
+                        a = /^09\d{8}$/.match(user_text)
+                        if a.present?
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
+                      when 10 #Email
+                        a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
+                        if a.present?
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
+                      when 11 #數字
+                        a = /[0-9]/.match(user_text)
+                        if a.present?
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
+                      when 4 #純文字
+                        a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
+                        if a.present?
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
+                      when 12
+                        if user_text != "" || user_text != "\"\""
+                          case w.specify_json.cat
+                          when 1
+                            total = w.specify_json.json
+                          when 2
+                            total = WordingJson.find(w.specify_json.wording_json_id).json
+                          end
+                          customization = YAML.load_file("config/customization.yml")
+                          uri = URI.parse(customization[:user_message_post])
+                          send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                          is_send = 1
+                        end
                       end
                     end
-                    word.each do |w|
+                  end
+                  if is_send == 0
+                    global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)").order(keyword_type: :asc)
+                    global_keyword.each do |gk|
                       if is_send == 0
-                        case w.keyword_type
-                        when 1 #輸入內容 含任一關鍵字
-                          ch_word = w.keyword.split(",").size
+                        p gk.keyword_type
+                        case gk.keyword_type
+                        when 1
+                          ch_word = gk.keyword.split(",").size
                           t_word = 0
-                          w.keyword.split(",").each do |wk|
+                          gk.keyword.split(",").each do |wk|
                             t_word +=1 if user_text.include? wk
                           end
                           if t_word > 0
-                            case w.specify_json.cat
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 2 #輸入內容 含所有關鍵字
-                          ch_word = w.keyword.split(",").size
+                        when 2
+                          ch_word = gk.keyword.split(",").size
                           t_word = 0
-                          w.keyword.split(",").each do |wk|
+                          gk.keyword.split(",").each do |wk|
                             t_word +=1 if user_text.include? wk
                           end
                           if t_word == ch_word
-                            case w.specify_json.cat
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 3 #輸入內容 完全相符
-                          if user_text == w.keyword
-                            case w.specify_json.cat
+                        when 3
+                          if user_text == gk.keyword
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 9 #電話號碼
+                        when 9
                           a = /^09\d{8}$/.match(user_text)
                           if a.present?
-                            case w.specify_json.cat
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 10 #Email
+                        when 10
                           a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
                           if a.present?
-                            case w.specify_json.cat
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 11 #數字
+                        when 11
                           a = /[0-9]/.match(user_text)
                           if a.present?
-                            case w.specify_json.cat
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
                             send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
-                        when 4 #純文字
+                        when 4
                           a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
                           if a.present?
-                            case w.specify_json.cat
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
@@ -1406,11 +1533,11 @@ class DataConnectsController < ApplicationController
                           end
                         when 12
                           if user_text != "" || user_text != "\"\""
-                            case w.specify_json.cat
+                            case gk.generic_json.cat
                             when 1
-                              total = w.specify_json.json
+                              total = gk.generic_json.json
                             when 2
-                              total = WordingJson.find(w.specify_json.wording_json_id).json
+                              total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
                             customization = YAML.load_file("config/customization.yml")
                             uri = URI.parse(customization[:user_message_post])
@@ -1420,308 +1547,181 @@ class DataConnectsController < ApplicationController
                         end
                       end
                     end
-                    if is_send == 0
-                      global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)").order(keyword_type: :asc)
-                      global_keyword.each do |gk|
-                        if is_send == 0
-                          p gk.keyword_type
-                          case gk.keyword_type
-                          when 1
-                            ch_word = gk.keyword.split(",").size
-                            t_word = 0
-                            gk.keyword.split(",").each do |wk|
-                              t_word +=1 if user_text.include? wk
-                            end
-                            if t_word > 0
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          when 2
-                            ch_word = gk.keyword.split(",").size
-                            t_word = 0
-                            gk.keyword.split(",").each do |wk|
-                              t_word +=1 if user_text.include? wk
-                            end
-                            if t_word == ch_word
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          when 3
-                            if user_text == gk.keyword
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          when 9
-                            a = /^09\d{8}$/.match(user_text)
-                            if a.present?
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          when 10
-                            a = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/.match(user_text)
-                            if a.present?
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          when 11
-                            a = /[0-9]/.match(user_text)
-                            if a.present?
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          when 4
-                            a = /[\u4e00-\u9fa5_a-zA-Z0-9]/.match(user_text)
-                            if a.present?
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          when 12
-                            if user_text != "" || user_text != "\"\""
-                              case gk.generic_json.cat
-                              when 1
-                                total = gk.generic_json.json
-                              when 2
-                                total = WordingJson.find(gk.generic_json.wording_json_id).json
-                              end
-                              customization = YAML.load_file("config/customization.yml")
-                              uri = URI.parse(customization[:user_message_post])
-                              send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                              is_send = 1
-                            end
-                          end
-                        end
-                      end
-                    end
-                    render json: JSON.parse("{\"result\": \"OK\"}")
-                  when "image"
-                    user_text = params[:url]
-                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                    aa = Authorization.find_by_uid(uid)
-                    bb = UserSubscription.find_by_scoped_id(uid)
-                    if aa.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "5")
-                    elsif bb.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "5")
-                    else
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "5")
-                      if word.blank?
-                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "5")
-                      end
-                    end
-                    word.each do |w|
-                      case w.specify_json.cat
-                      when 1
-                        total = w.specify_json.json
-                      when 2
-                        total = WordingJson.find(w.specify_json.wording_json_id).json
-                      end
-                      customization = YAML.load_file("config/customization.yml")
-                      uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                    end
-                    if word.blank?
-                      global_keyword = GenericKeyword.where("keyword_type in (?)", "5")
-                      global_keyword.each do |gk|
-                        case gk.generic_json.cat
-                        when 1
-                          total = gk.generic_json.json
-                        when 2
-                          total = WordingJson.find(gk.generic_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                      end
-                    end
-                    render json: JSON.parse("{\"result\": \"OK\"}")
-                  when "audio"
-                    user_text = params[:url]
-                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                    aa = Authorization.find_by_uid(uid)
-                    bb = UserSubscription.find_by_scoped_id(uid)
-                    if aa.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "7")
-                    elsif bb.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "7")
-                    else
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "7")
-                      if word.blank?
-                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "7")
-                      end
-                    end
-                    word.each do |w|
-                      case w.specify_json.cat
-                      when 1
-                        total = w.specify_json.json
-                      when 2
-                        total = WordingJson.find(w.specify_json.wording_json_id).json
-                      end
-                      customization = YAML.load_file("config/customization.yml")
-                      uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                    end
-                    if word.blank?
-                      global_keyword = GenericKeyword.where("keyword_type in (?)", "7")
-                      global_keyword.each do |gk|
-                        case gk.generic_json.cat
-                        when 1
-                          total = gk.generic_json.json
-                        when 2
-                          total = WordingJson.find(gk.generic_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                      end
-                    end
-                    render json: JSON.parse("{\"result\": \"OK\"}")
-                  when "video"
-                    user_text = params[:url]
-                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                    aa = Authorization.find_by_uid(uid)
-                    bb = UserSubscription.find_by_scoped_id(uid)
-                    if aa.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "6")
-                    elsif bb.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "6")
-                    else
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "6")
-                      if word.blank?
-                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "6")
-                      end
-                    end
-                    word.each do |w|
-                      case w.specify_json.cat
-                      when 1
-                        total = w.specify_json.json
-                      when 2
-                        total = WordingJson.find(w.specify_json.wording_json_id).json
-                      end
-                      customization = YAML.load_file("config/customization.yml")
-                      uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                    end
-                    if word.blank?
-                      global_keyword = GenericKeyword.where("keyword_type in (?)", "6")
-                      global_keyword.each do |gk|
-                        case gk.generic_json.cat
-                        when 1
-                          total = gk.generic_json.json
-                        when 2
-                          total = WordingJson.find(gk.generic_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                      end
-                    end
-                    render json: JSON.parse("{\"result\": \"OK\"}")
-                  when "location"
-                    user_text = params[:url]
-                    user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                    aa = Authorization.find_by_uid(uid)
-                    bb = UserSubscription.find_by_scoped_id(uid)
-                    if aa.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "8")
-                    elsif bb.present?
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "8")
-                    else
-                      word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "8")
-                      if word.blank?
-                        word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "8")
-                      end
-                    end
-                    word.each do |w|
-                      case w.specify_json.cat
-                      when 1
-                        total = w.specify_json.json
-                      when 2
-                        total = WordingJson.find(w.specify_json.wording_json_id).json
-                      end
-                      customization = YAML.load_file("config/customization.yml")
-                      uri = URI.parse(customization[:user_message_post])
-                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                    end
-                    if word.blank?
-                      global_keyword = GenericKeyword.where("keyword_type in (?)", "8")
-                      global_keyword.each do |gk|
-                        case gk.generic_json.cat
-                        when 1
-                          total = gk.generic_json.json
-                        when 2
-                          total = WordingJson.find(gk.generic_json.wording_json_id).json
-                        end
-                        customization = YAML.load_file("config/customization.yml")
-                        uri = URI.parse(customization[:user_message_post])
-                        send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
-                      end
-                    end
-                    render json: JSON.parse("{\"result\": \"OK\"}")
-                  else
-                    ua = UserAnalyze.new
-                    ua.uid = params[:uid] if params[:uid].present?
-                    ua.type = params[:type] if params[:type].present? and params[:type] != "\"\""
-                    ua.url = params[:url] if params[:url].present? and params[:url] != "\"\""
-                    ua.text = params[:text] if params[:text].present? and params[:text] != "\"\""
-                    ua.save!
-                    render json: JSON.parse("{\"result\": \"OK\"}")
                   end
+                  render json: JSON.parse("{\"result\": \"OK\"}")
+                when "image"
+                  user_text = params[:url]
+                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                  aa = Authorization.find_by_uid(uid)
+                  bb = UserSubscription.find_by_scoped_id(uid)
+                  if aa.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "5")
+                  elsif bb.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "5")
+                  else
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "5")
+                    if word.blank?
+                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "5")
+                    end
+                  end
+                  word.each do |w|
+                    case w.specify_json.cat
+                    when 1
+                      total = w.specify_json.json
+                    when 2
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    end
+                    customization = YAML.load_file("config/customization.yml")
+                    uri = URI.parse(customization[:user_message_post])
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                  end
+                  if word.blank?
+                    global_keyword = GenericKeyword.where("keyword_type in (?)", "5")
+                    global_keyword.each do |gk|
+                      case gk.generic_json.cat
+                      when 1
+                        total = gk.generic_json.json
+                      when 2
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                      end
+                      customization = YAML.load_file("config/customization.yml")
+                      uri = URI.parse(customization[:user_message_post])
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                    end
+                  end
+                  render json: JSON.parse("{\"result\": \"OK\"}")
+                when "audio"
+                  user_text = params[:url]
+                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                  aa = Authorization.find_by_uid(uid)
+                  bb = UserSubscription.find_by_scoped_id(uid)
+                  if aa.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "7")
+                  elsif bb.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "7")
+                  else
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "7")
+                    if word.blank?
+                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "7")
+                    end
+                  end
+                  word.each do |w|
+                    case w.specify_json.cat
+                    when 1
+                      total = w.specify_json.json
+                    when 2
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    end
+                    customization = YAML.load_file("config/customization.yml")
+                    uri = URI.parse(customization[:user_message_post])
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                  end
+                  if word.blank?
+                    global_keyword = GenericKeyword.where("keyword_type in (?)", "7")
+                    global_keyword.each do |gk|
+                      case gk.generic_json.cat
+                      when 1
+                        total = gk.generic_json.json
+                      when 2
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                      end
+                      customization = YAML.load_file("config/customization.yml")
+                      uri = URI.parse(customization[:user_message_post])
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                    end
+                  end
+                  render json: JSON.parse("{\"result\": \"OK\"}")
+                when "video"
+                  user_text = params[:url]
+                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                  aa = Authorization.find_by_uid(uid)
+                  bb = UserSubscription.find_by_scoped_id(uid)
+                  if aa.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "6")
+                  elsif bb.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "6")
+                  else
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "6")
+                    if word.blank?
+                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "6")
+                    end
+                  end
+                  word.each do |w|
+                    case w.specify_json.cat
+                    when 1
+                      total = w.specify_json.json
+                    when 2
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    end
+                    customization = YAML.load_file("config/customization.yml")
+                    uri = URI.parse(customization[:user_message_post])
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                  end
+                  if word.blank?
+                    global_keyword = GenericKeyword.where("keyword_type in (?)", "6")
+                    global_keyword.each do |gk|
+                      case gk.generic_json.cat
+                      when 1
+                        total = gk.generic_json.json
+                      when 2
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                      end
+                      customization = YAML.load_file("config/customization.yml")
+                      uri = URI.parse(customization[:user_message_post])
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                    end
+                  end
+                  render json: JSON.parse("{\"result\": \"OK\"}")
+                when "location"
+                  user_text = params[:url]
+                  user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
+                  aa = Authorization.find_by_uid(uid)
+                  bb = UserSubscription.find_by_scoped_id(uid)
+                  if aa.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "user", "8")
+                  elsif bb.present?
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "subscribe_guest", "8")
+                  else
+                    word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (?)", "%#{user_last_re.pl}%", "guest", "8")
+                    if word.blank?
+                      word = SpecifyKeyword.where("pl_name like ? and keyword_type in (?)", "%#{user_last_re.pl}%", "8")
+                    end
+                  end
+                  word.each do |w|
+                    case w.specify_json.cat
+                    when 1
+                      total = w.specify_json.json
+                    when 2
+                      total = WordingJson.find(w.specify_json.wording_json_id).json
+                    end
+                    customization = YAML.load_file("config/customization.yml")
+                    uri = URI.parse(customization[:user_message_post])
+                    send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                  end
+                  if word.blank?
+                    global_keyword = GenericKeyword.where("keyword_type in (?)", "8")
+                    global_keyword.each do |gk|
+                      case gk.generic_json.cat
+                      when 1
+                        total = gk.generic_json.json
+                      when 2
+                        total = WordingJson.find(gk.generic_json.wording_json_id).json
+                      end
+                      customization = YAML.load_file("config/customization.yml")
+                      uri = URI.parse(customization[:user_message_post])
+                      send_message(uri, params[:uid], JSON.parse(total.gsub("=>",":")))
+                    end
+                  end
+                  render json: JSON.parse("{\"result\": \"OK\"}")
+                else
+                  ua = UserAnalyze.new
+                  ua.uid = params[:uid] if params[:uid].present?
+                  ua.type = params[:type] if params[:type].present? and params[:type] != "\"\""
+                  ua.url = params[:url] if params[:url].present? and params[:url] != "\"\""
+                  ua.text = params[:text] if params[:text].present? and params[:text] != "\"\""
+                  ua.save!
+                  render json: JSON.parse("{\"result\": \"OK\"}")
+                end
               when "1" #B2C 個人化啟動互動
                 u = UserAnalyze.where(:uid => params[:uid]).size
                 inter_t = Array.new
@@ -1744,6 +1744,76 @@ class DataConnectsController < ApplicationController
                 inter_to << inter_ta
                 inter_t << inter_to
                 render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
+              end
+            when /u_/
+              u = Authorization.find_by_uid(params[:uid])
+              up = u.user.user_profile if u.present?
+              if up.gender.present? and up.birthday.present?
+                total_text = Array.new
+                text = Array.new
+                text_1 = Hash.new
+                text_1["NAME"] = "ugooz.b2c.adviser.01.01"
+                text_1["type"] = "text"
+                text_1["text"] = "餐點與茶搭配的好，吃美食的時候不但可以帶領味蕾前往另一種美味層次，還可以幫助消化，減輕身體負擔唷！"
+                text_1["delay"] = 1
+                text << text_1
+                text_2 = Hash.new
+                text_2["NAME"] = "ugooz.b2c.adviser.01.02"
+                text_2["type"] = "text"
+                text_2["text"] = "現在差不多是「午餐時間」了，讓我告訴你吃什麼可以搭配什麼茶！"
+                text_2["delay"] = 1
+                text << text_2
+                text_3 = Hash.new
+                text_3["NAME"] = "ugooz.b2c.adviser.01.03"
+                text_3["type"] = "text"
+                text_3["text"] = "請由以下圖卡選擇一項餐點，如果選單中沒有你想選擇的餐點，可於下方輸入文字喔！(如：烤雞)"
+                text_3["delay"] = 1
+                text << text_3
+                total_text << text
+                card_t = Array.new
+                cons = Consultation.find(1)
+                cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
+                  card_s = Hash.new
+                  card_s["NAME"] = "ugooz.b2c.adviser.01.04.0#{i}"
+                  card_s["title"] = ccat.name
+                  card_s["image_url"] = ccat.pic
+                  button_t = Array.new
+                  ccat.consultation_options.limit(3).order(:sort).each do |copt|
+                    button_si = Hash.new
+                    button_si["type"] = "postback"
+                    button_si["title"] = copt.name
+                    button_si["payload"] = "u_#{cons.id}_#{copt.id}"
+                    button_t << button_si
+                  end
+                  card_s["buttons"] = button_t
+                  card_t << card_s
+                end
+                total_text << card_t
+
+                # customization = YAML.load_file("config/customization.yml")
+                # uri = URI.parse(customization[:user_message_post])
+                # send_message(uri, params[:uid], total_text)
+                render json: total_text
+              else
+                total_text = Array.new
+                text = Array.new
+                text_1 = Hash.new
+                text_1["NAME"] = "ugooz.b2c.adviser.01.01"
+                text_1["template_type"] = "button"
+                text_1["text"] = "我們發現還缺少一些您的資料，茶諮詢服務需要有您的協助才能為您服務~請幫我點擊下方連結快速填寫，完成後記得告訴我哦~"
+                buttons = Array.new
+                text_2 = Hash.new
+                text_2["type"] = "web_url"
+                text_2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
+                text_2["title"] = "開始登入！"
+                buttons << text_2
+                text_1["buttons"] = buttons
+                text << text_1
+                total_text << text
+                customization = YAML.load_file("config/customization.yml")
+                uri = URI.parse(customization[:user_message_post])
+                send_message(uri, params[:uid], total_text)
+                render json: total_text
               end
             else
               ref = params[:ref]
@@ -2254,6 +2324,37 @@ class DataConnectsController < ApplicationController
             customization = YAML.load_file("config/customization.yml")
             uri = URI.parse(customization[:user_message_post])
             send_message(uri, params[:uid], total)
+          when /u_/
+            pl = params[:pl].split("_")
+            cons = Consultation.find(pl[1])
+            con_option = ConsultationOption.find(pl[2])
+            auth = Authorization.find_by_uid(params[:uid])
+            auth.user.user_profile.age_range > 4 ? current_age = 4 : current_age = 3
+            con_content = ConsultationContent.where(:consultation_option_id => pl[2], :age_range => current_age )
+            text_t = Array.new
+            total_text = Array.new
+            text_1 = Hash.new
+            text_1["Name"] = "ugooz.b2c.adviser.01.01"
+            text_1["type"] = "text"
+            text_1["text"] = "[[FULLNAME]]大大～根據你提供的會員資料，中午吃#{con_option.name}，我推薦你喝「#{con_content[0].intro}」最佳！"
+            text_1["delay"] = "1"
+            text_t << text_1
+            text_2 = Hash.new
+            text_2["Name"] = "ugooz.b2c.adviser.01.02"
+            text_2["type"] = "image"
+            text_2["url"] = con_content[0].pic
+            text_2["delay"] = "5"
+            text_t << text_2
+            text_3 = Hash.new
+            text_3["Name"] = "ugooz.b2c.adviser.01.03"
+            text_3["type"] = "text"
+            text_3["text"] = con_content[0].content
+            text_3["delay"] = "1"
+            text_t << text_3
+            total_text << text_t
+            customization = YAML.load_file("config/customization.yml")
+            uri = URI.parse(customization[:user_message_post])
+            send_message(uri, params[:uid], total_text)
           end
           render json: JSON.parse("{\"result\": \"OK\"}")
         when ["v0.01","stactic_all"]
@@ -2434,128 +2535,128 @@ class DataConnectsController < ApplicationController
             ar_reply_rules.each do |arr|
               conditions_id = Array.new #[]
               rule = Hash.new #{}
-              case arr.rule_cat
+              case arr.rule_type
               when "1"
-                rule["rule_cat"] = "text_contains"
-                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
+                rule["rule_type"] = "text_contains"
+                rule["rule"] = "#{arr.rule.split(",").to_s.gsub("\"","'")}"
                 conditions_id << rule
                 arr.children.each do |ac|
                   rule_ac = Hash.new
-                  case ac.rule_cat
+                  case ac.rule_type
                   when "1"
-                    rule_ac["rule_cat"] = "text_contains"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "2"
-                    rule_ac["rule_cat"] = "text_contains_all"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains_all"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
-                    rule_ac["rule_cat"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_exactly_match"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
-                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friends"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
                 end
               when "2"
-                rule["rule_cat"] = "text_contains_all"
-                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
+                rule["rule_type"] = "text_contains_all"
+                rule["rule"] = "#{arr.rule.split(",").to_s.gsub("\"","'")}"
                 conditions_id << rule
                 arr.children.each do |ac|
                   rule_ac = Hash.new
-                  case ac.rule_cat
+                  case ac.rule_type
                   when "1"
-                    rule_ac["rule_cat"] = "text_contains"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "2"
-                    rule_ac["rule_cat"] = "text_contains_all"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains_all"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
-                    rule_ac["rule_cat"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_exactly_match"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
-                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friend"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
                 end
               when "3"
-                rule["rule_cat"] = "text_exactly_match"
-                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
+                rule["rule_type"] = "text_exactly_match"
+                rule["rule"] = "#{arr.rule.split(",").to_s.gsub("\"","'")}"
                 conditions_id << rule
                 arr.children.each do |ac|
                   rule_ac = Hash.new
-                  case ac.rule_cat
+                  case ac.rule_type
                   when "1"
-                    rule_ac["rule_cat"] = "text_contains"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "2"
-                    rule_ac["rule_cat"] = "text_contains_all"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains_all"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
-                    rule_ac["rule_cat"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_exactly_match"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
-                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friend"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
                 end
               when "4"
-                rule["rule_cat"] = "has_photo"
+                rule["rule_type"] = "has_photo"
                 rule["rule"] = ">= 1"
                 conditions_id << rule
                 arr.children.each do |ac|
                   rule_ac = Hash.new
-                  case ac.rule_cat
+                  case ac.rule_type
                   when "1"
-                    rule_ac["rule_cat"] = "text_contains"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "2"
-                    rule_ac["rule_cat"] = "text_contains_all"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains_all"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
-                    rule_ac["rule_cat"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_exactly_match"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
-                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule_type"] = "has_photo"
                     rule_ac_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friend"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac
                 end
               when "5"
-                rule["rule_cat"] = "tag_friend"
+                rule["rule_type"] = "tag_friend"
                 rule["rule"] = ">= #{arr.rule}"
                 conditions_id << rule
                 arr.children.each do |ac|
                   rule_ac = Hash.new
-                  case ac.rule_cat
+                  case ac.rule_type
                   when "1"
-                    rule_ac["rule_cat"] = "text_contains"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "2"
-                    rule_ac["rule_cat"] = "text_contains_all"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_contains_all"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
-                    rule_ac["rule_cat"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule_type"] = "text_exactly_match"
+                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
-                    rule_ac["rule_cat"] = "has_photo"
+                    rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
                   when "5"
-                    rule_ac["rule_cat"] = "tag_friend"
+                    rule_ac["rule_type"] = "tag_friend"
                     rule_ac["rule"] = ">= #{ac.rule}"
                   end
                   conditions_id << rule_ac

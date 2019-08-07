@@ -16,7 +16,7 @@ ul.token-input-list-facebook {
     </select>
   </div>
   <div class="col-12 col-md-3">
-    <select name="auto_reply[auto_reply_rule<%=params[:rule]%>][group<%=params[:group]%>][rule_cat]" id="rule<%=params[:rule]%>_group<%=params[:group]%>_select_content" class="form-control">
+    <select name="auto_reply[auto_reply_rule<%=params[:rule]%>][group<%=params[:group]%>][rule_type]" id="rule<%=params[:rule]%>_group<%=params[:group]%>_select_content" class="form-control">
       <option value="1">含任一關鍵字</option>
       <option value="2">含所有關鍵字</option>
       <option value="3">完全相符</option>
@@ -27,7 +27,7 @@ ul.token-input-list-facebook {
     <input type="text" id="rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>" class="form-control"  placeholder="新增關鍵字">
   </div>
   <div class="col-12 col-md-2">
-    <input type="text" name="auto_reply[auto_reply_rule<%=params[:rule]%>][group<%=params[:group]%>][rule]" id="auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_cat" style="display: none;">
+    <input type="text" name="auto_reply[auto_reply_rule<%=params[:rule]%>][group<%=params[:group]%>][rule]" id="auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_type" style="display: none;">
   </div>
   <div class="col-12 col-md-1">
     <button type="button" class="btn btn-danger btn-sm" onclick="del('rule<%=params[:rule]%>_group<%=params[:group]%>')">X</button></div>
@@ -45,7 +45,7 @@ ul.token-input-list-facebook {
     }
   });
   $(document).ready(function() {
-    $("#auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_cat").tokenInput([],{
+    $("#auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_type").tokenInput([],{
       hintText: "",
       noResultsText: "",
       searchingText: "",
@@ -54,7 +54,7 @@ ul.token-input-list-facebook {
     $("#rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>").on('keypress',function(e) {
       if(e.which == 13) {
         var word = $("#rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>").val();
-        $( "#auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_cat" ).tokenInput("add", {id: word, name: word});
+        $( "#auto_reply_auto_reply_rule<%=params[:rule]%>_group<%=params[:group]%>_rule_type" ).tokenInput("add", {id: word, name: word});
         $("#rule<%=params[:rule]%>_group<%=params[:group]%>_keyin<%=params[:keyin]%>").val("");
         return false;
       }

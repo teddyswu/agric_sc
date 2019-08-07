@@ -194,7 +194,7 @@ ul.token-input-list-facebook {
     }
   });
   $(document).ready(function() {
-    $("#auto_reply_auto_reply_rule1_group1_rule_cat").tokenInput([],{
+    $("#auto_reply_auto_reply_rule1_group1_rule_type").tokenInput([],{
       hintText: "",
       noResultsText: "",
       searchingText: "",
@@ -203,7 +203,7 @@ ul.token-input-list-facebook {
     $("#rule1_group1_keyin1").on('keypress',function(e) {
       if(e.which == 13) {
         var word = $("#rule1_group1_keyin1").val();
-        $( "#auto_reply_auto_reply_rule1_group1_rule_cat" ).tokenInput("add", {id: word, name: word});
+        $( "#auto_reply_auto_reply_rule1_group1_rule_type" ).tokenInput("add", {id: word, name: word});
         $("#rule1_group1_keyin1").val("");
         return false;
       }

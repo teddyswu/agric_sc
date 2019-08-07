@@ -146,17 +146,17 @@ ul.token-input-list-facebook {
                 			<div class="col col-md-12" id="rule<%= i + 1%>_group1">
 											  <div class="col-12 col-md-3">
 											    <select id="rule1_group1_select_type" class="form-control">
-											      <option value="1" <%= "selected" if r.rule_cat.to_i < 5 %>>留言內容</option>
-											      <option value="2" <%= "selected" if r.rule_cat.to_i == 5 %>>標註朋友個數</option>
+											      <option value="1" <%= "selected" if r.rule_type.to_i < 5 %>>留言內容</option>
+											      <option value="2" <%= "selected" if r.rule_type.to_i == 5 %>>標註朋友個數</option>
 											    </select>
 											  </div>
 											  <div class="col-12 col-md-3">
-											    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group1][rule_cat]" id="rule1_group1_select_content" class="form-control">
-											    	<% if r.rule_cat.to_i < 5  %>
-												      <option value="1"<%= "selected" if r.rule_cat.to_i == 1 %>>含任一關鍵字</option>
-												      <option value="2"<%= "selected" if r.rule_cat.to_i == 2 %>>含所有關鍵字</option>
-												      <option value="3"<%= "selected" if r.rule_cat.to_i == 3 %>>完全相符</option>
-												      <option value="4"<%= "selected" if r.rule_cat.to_i == 4 %>>含有照片</option>
+											    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group1][rule_type]" id="rule1_group1_select_content" class="form-control">
+											    	<% if r.rule_type.to_i < 5  %>
+												      <option value="1"<%= "selected" if r.rule_type.to_i == 1 %>>含任一關鍵字</option>
+												      <option value="2"<%= "selected" if r.rule_type.to_i == 2 %>>含所有關鍵字</option>
+												      <option value="3"<%= "selected" if r.rule_type.to_i == 3 %>>完全相符</option>
+												      <option value="4"<%= "selected" if r.rule_type.to_i == 4 %>>含有照片</option>
 											      <% else %>
 											      	<option value="5" selected>≥</option>
 											      <% end %>
@@ -166,7 +166,7 @@ ul.token-input-list-facebook {
 											    <input type="text" id="rule<%= i + 1%>_group1_keyin1" class="form-control" placeholder="新增關鍵字">
 											  </div>
 											  <div class="col-12 col-md-2">
-											    <input type="text" name="auto_reply[auto_reply_rule<%= i + 1%>][group1][rule]" id="auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_cat" style="display: none;">
+											    <input type="text" name="auto_reply[auto_reply_rule<%= i + 1%>][group1][rule]" id="auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_type" style="display: none;">
 											  </div>
 											  <div class="col-12 col-md-1">
 											    <button type="button" class="btn btn-danger btn-sm" onclick="del('rule<%= i + 1%>_group1')">X</button></div>
@@ -183,7 +183,7 @@ ul.token-input-list-facebook {
 											    }
 											  });
 											  $(document).ready(function() {
-											    $("#auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_cat").tokenInput([],{
+											    $("#auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_type").tokenInput([],{
 											      prePopulate: <%= raw r.rule.split(",").map {|ru| {"id"=>ru, "name"=>ru} }.to_s.gsub("=>",":") %>,
 											      hintText: "",
 											      noResultsText: "",
@@ -193,7 +193,7 @@ ul.token-input-list-facebook {
 											    $("#rule<%= i + 1%>_group1_keyin1").on('keypress',function(e) {
 											      if(e.which == 13) {
 											        var word = $("#rule<%= i + 1%>_group1_keyin1").val();
-											        $( "#auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_cat" ).tokenInput("add", {id: word, name: word});
+											        $( "#auto_reply_auto_reply_rule<%= i + 1%>_group1_rule_type" ).tokenInput("add", {id: word, name: word});
 											        $("#rule<%= i + 1%>_group1_keyin1").val("");
 											        return false;
 											      }
@@ -213,17 +213,17 @@ ul.token-input-list-facebook {
 	                			<div class="col col-md-12" id="rule<%= i + 1%>_group<%= v + 2%>">
 												  <div class="col-12 col-md-3">
 												    <select id="rule1_group1_select_type" class="form-control">
-												      <option value="1" <%= "selected" if rc.rule_cat.to_i < 5 %>>留言內容</option>
-												      <option value="2" <%= "selected" if rc.rule_cat.to_i == 5 %>>標註朋友個數</option>
+												      <option value="1" <%= "selected" if rc.rule_type.to_i < 5 %>>留言內容</option>
+												      <option value="2" <%= "selected" if rc.rule_type.to_i == 5 %>>標註朋友個數</option>
 												    </select>
 												  </div>
 												  <div class="col-12 col-md-3">
-												    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule_cat]" id="rule1_group1_select_content" class="form-control">
-												    	<% if r.rule_cat.to_i < 5  %>
-													      <option value="1"<%= "selected" if rc.rule_cat.to_i == 1 %>>含任一關鍵字</option>
-													      <option value="2"<%= "selected" if rc.rule_cat.to_i == 2 %>>含所有關鍵字</option>
-													      <option value="3"<%= "selected" if rc.rule_cat.to_i == 3 %>>完全相符</option>
-													      <option value="4"<%= "selected" if rc.rule_cat.to_i == 4 %>>含有照片</option>
+												    <select name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule_type]" id="rule1_group1_select_content" class="form-control">
+												    	<% if r.rule_type.to_i < 5  %>
+													      <option value="1"<%= "selected" if rc.rule_type.to_i == 1 %>>含任一關鍵字</option>
+													      <option value="2"<%= "selected" if rc.rule_type.to_i == 2 %>>含所有關鍵字</option>
+													      <option value="3"<%= "selected" if rc.rule_type.to_i == 3 %>>完全相符</option>
+													      <option value="4"<%= "selected" if rc.rule_type.to_i == 4 %>>含有照片</option>
 												      <% else %>
 												      	<option value="5" selected>≥</option>
 												      <% end %>
@@ -233,7 +233,7 @@ ul.token-input-list-facebook {
 												    <input type="text" id="rule<%= i + 1%>_group<%= v + 2%>_keyin<%= v + 2%>" class="form-control" placeholder="新增關鍵字">
 												  </div>
 												  <div class="col-12 col-md-2">
-												    <input type="text" name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule]" id="auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_cat" style="display: none;">
+												    <input type="text" name="auto_reply[auto_reply_rule<%= i + 1%>][group<%= v + 2%>][rule]" id="auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_type" style="display: none;">
 												  </div>
 												  <div class="col-12 col-md-1">
 												    <button type="button" class="btn btn-danger btn-sm" onclick="del('rule<%= i + 1%>_group<%= v + 2%>')">X</button></div>
@@ -250,7 +250,7 @@ ul.token-input-list-facebook {
 												    }
 												  });
 												  $(document).ready(function() {
-												    $("#auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_cat").tokenInput([],{
+												    $("#auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_type").tokenInput([],{
 												      prePopulate: <%= raw rc.rule.split(",").map {|ru| {"id"=>ru, "name"=>ru} }.to_s.gsub("=>",":") %>,
 												      hintText: "",
 												      noResultsText: "",
@@ -260,7 +260,7 @@ ul.token-input-list-facebook {
 												    $("#rule<%= i + 1%>_group<%= v + 2%>_keyin<%= v + 2%>").on('keypress',function(e) {
 												      if(e.which == 13) {
 												        var word = $("#rule<%= i + 1%>_group<%= v + 2%>_keyin<%= v + 2%>").val();
-												        $( "#auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_cat" ).tokenInput("add", {id: word, name: word});
+												        $( "#auto_reply_auto_reply_rule<%= i + 1%>_group<%= v + 2%>_rule_type" ).tokenInput("add", {id: word, name: word});
 												        $("#rule<%= i + 1%>_group1_keyin1").val("");
 												        return false;
 												      }

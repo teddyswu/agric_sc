@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190726094327) do
+ActiveRecord::Schema.define(version: 20190807022649) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20190726094327) do
 
   create_table "auto_reply_rules", force: :cascade do |t|
     t.integer  "auto_reply_id", limit: 4
-    t.string   "rule_cat",      limit: 255
+    t.string   "rule_type",     limit: 255
     t.string   "rule",          limit: 255
     t.integer  "parent_id",     limit: 4
     t.datetime "created_at",                null: false
@@ -79,6 +79,41 @@ ActiveRecord::Schema.define(version: 20190726094327) do
   end
 
   add_index "ckeditor_assets", ["type"], name: "index_ckeditor_assets_on_type", using: :btree
+
+  create_table "consultation_cates", force: :cascade do |t|
+    t.integer  "consultation_id", limit: 4
+    t.string   "name",            limit: 255
+    t.text     "intro",           limit: 65535
+    t.text     "pic",             limit: 65535
+    t.integer  "sort",            limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  create_table "consultation_contents", force: :cascade do |t|
+    t.integer  "consultation_option_id", limit: 4
+    t.integer  "gender",                 limit: 4
+    t.integer  "age_range",              limit: 4
+    t.text     "intro",                  limit: 65535
+    t.text     "pic",                    limit: 65535
+    t.text     "content",                limit: 65535
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  create_table "consultation_options", force: :cascade do |t|
+    t.integer  "consultation_cate_id", limit: 4
+    t.string   "name",                 limit: 255
+    t.integer  "sort",                 limit: 4
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  create_table "consultations", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   limit: 4,     default: 0, null: false
