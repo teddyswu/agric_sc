@@ -2551,7 +2551,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
@@ -2576,7 +2576,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
@@ -2588,7 +2588,7 @@ class DataConnectsController < ApplicationController
                 end
               when "3"
                 rule["rule_type"] = "text_exactly_match"
-                rule["rule"] = "#{arr.rule.split(",").to_s.gsub("\"","'")}"
+                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
                 conditions_id << rule
                 arr.children.each do |ac|
                   rule_ac = Hash.new
@@ -2601,7 +2601,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
@@ -2626,7 +2626,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac_ac["rule"] = ">= 1"
@@ -2651,7 +2651,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
