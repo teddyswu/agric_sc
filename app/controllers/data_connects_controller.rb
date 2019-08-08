@@ -1246,6 +1246,12 @@ class DataConnectsController < ApplicationController
             when "", "\"\""
               case params[:start]
               when "", "\"\"" #個人化問候語
+                ua = UserAnalyze.new
+                ua.uid = params[:uid] if params[:uid].present?
+                ua.type = params[:type] if params[:type].present? and params[:type] != "\"\""
+                ua.url = params[:url] if params[:url].present? and params[:url] != "\"\""
+                ua.text = params[:text] if params[:text].present? and params[:text] != "\"\""
+                ua.save!
                 case params[:type]
                 when "", "\"\"", nil
                   gg = Greeting.find_or_initialize_by(:uid => params[:uid])
@@ -1284,9 +1290,48 @@ class DataConnectsController < ApplicationController
                   is_send = 0
                   user_text = params[:text]
                   user_last_re = UserAnalyze.where(:uid => params[:uid]).where.not(:pl => nil).last
-                  aa = Authorization.find_by_uid(uid)
-                  bb = UserSubscription.find_by_scoped_id(uid)
+                  aa = Authorization.find_by_uid(params[:uid])
+                  bb = UserSubscription.find_by_scoped_id(params[:uid])
                   if aa.present?
+                    if user_last_re.pl.include?("adviser")
+                      auth = Authorization.find_by_uid(params[:uid])
+                      con_option = ConsultationOption.find_by(:name => params[:text])
+                      text_t = Array.new
+                      total_text = Array.new
+                      text_1 = Hash.new
+                      if con_option.present?
+                        auth.user.user_profile.age_range > 4 ? current_age = 4 : current_age = 3
+                        con_content = ConsultationContent.where(:consultation_option_id => con_option.id , :age_range => current_age, :gender => auth.user.user_profile.gender )
+                        text_1["Name"] = "ugooz.b2c.adviser.01.01"
+                        text_1["type"] = "text"
+                        text_1["text"] = "[[FULLNAME]]大大～根據你提供的會員資料，中午吃#{con_option.name}，我推薦你喝「#{con_content[0].intro}」最佳！"
+                        text_1["delay"] = "1"
+                        text_t << text_1
+                        text_2 = Hash.new
+                        text_2["Name"] = "ugooz.b2c.adviser.01.02"
+                        text_2["type"] = "image"
+                        text_2["url"] = con_content[0].pic
+                        text_2["delay"] = "5"
+                        text_t << text_2
+                        text_3 = Hash.new
+                        text_3["Name"] = "ugooz.b2c.adviser.01.03"
+                        text_3["type"] = "text"
+                        text_3["text"] = con_content[0].content
+                        text_3["delay"] = "1"
+                        text_t << text_3
+                      else
+                        text_1["Name"] = "ugooz.b2c.adviser.01.01"
+                        text_1["type"] = "text"
+                        text_1["text"] = "[[FULLNAME]]大大～根據你提供的會員資料，中午吃#{con_option.name}，我們資料庫目前還沒有耶！"
+                        text_1["delay"] = "1"
+                        text_t << text_1
+                      end
+                      total_text << text_t
+                      customization = YAML.load_file("config/customization.yml")
+                      uri = URI.parse(customization[:user_message_post])
+                      send_message(uri, params[:uid], total_text)
+                      is_send = 1
+                    end
                     word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "user").order(keyword_type: :asc)
                   elsif bb.present?
                     word = SpecifyKeyword.where("pl_name like ? and role = ? and keyword_type in (1,2,3,4,9,10,11,12)", "%#{user_last_re.pl}%", "subscribe_guest").order(keyword_type: :asc)
@@ -1424,7 +1469,6 @@ class DataConnectsController < ApplicationController
                     global_keyword = GenericKeyword.where("keyword_type in (1,2,3,4,9,10,11,12)").order(keyword_type: :asc)
                     global_keyword.each do |gk|
                       if is_send == 0
-                        p gk.keyword_type
                         case gk.keyword_type
                         when 1
                           ch_word = gk.keyword.split(",").size
@@ -1713,14 +1757,6 @@ class DataConnectsController < ApplicationController
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
-                else
-                  ua = UserAnalyze.new
-                  ua.uid = params[:uid] if params[:uid].present?
-                  ua.type = params[:type] if params[:type].present? and params[:type] != "\"\""
-                  ua.url = params[:url] if params[:url].present? and params[:url] != "\"\""
-                  ua.text = params[:text] if params[:text].present? and params[:text] != "\"\""
-                  ua.save!
-                  render json: JSON.parse("{\"result\": \"OK\"}")
                 end
               when "1" #B2C 個人化啟動互動
                 u = UserAnalyze.where(:uid => params[:uid]).size
@@ -1746,6 +1782,10 @@ class DataConnectsController < ApplicationController
                 render json: JSON.parse(inter_t.to_s[0..inter_t.to_s.size-3].gsub("=>",":") + "," + next_inter.gsub("=>",":"))
               end
             when /u_/
+              ua = UserAnalyze.new
+              ua.uid = params[:uid] if params[:uid].present?
+              ua.pl = "ugooz.b2c.adviser.01"
+              ua.save!
               u = Authorization.find_by_uid(params[:uid])
               up = u.user.user_profile if u.present?
               if up.gender.present? and up.birthday.present?
@@ -1789,11 +1829,9 @@ class DataConnectsController < ApplicationController
                   card_t << card_s
                 end
                 total_text << card_t
-
-                # customization = YAML.load_file("config/customization.yml")
-                # uri = URI.parse(customization[:user_message_post])
-                # send_message(uri, params[:uid], total_text)
-                render json: total_text
+                customization = YAML.load_file("config/customization.yml")
+                uri = URI.parse(customization[:user_message_post])
+                send_message(uri, params[:uid], total_text)
               else
                 total_text = Array.new
                 text = Array.new
@@ -1804,8 +1842,8 @@ class DataConnectsController < ApplicationController
                 buttons = Array.new
                 text_2 = Hash.new
                 text_2["type"] = "web_url"
-                text_2["url"] = "#{@root_domain}/users/fb_binding?scoped_id=[[RECIPIENT_ID]]"
-                text_2["title"] = "開始登入！"
+                text_2["url"] = "#{@project_domain}/users/edit?s=adviser.01"
+                text_2["title"] = "填寫資料！"
                 buttons << text_2
                 text_1["buttons"] = buttons
                 text << text_1
@@ -2326,11 +2364,11 @@ class DataConnectsController < ApplicationController
             send_message(uri, params[:uid], total)
           when /u_/
             pl = params[:pl].split("_")
-            cons = Consultation.find(pl[1])
+            # cons = Consultation.find(pl[1])
             con_option = ConsultationOption.find(pl[2])
             auth = Authorization.find_by_uid(params[:uid])
             auth.user.user_profile.age_range > 4 ? current_age = 4 : current_age = 3
-            con_content = ConsultationContent.where(:consultation_option_id => pl[2], :age_range => current_age )
+            con_content = ConsultationContent.where(:consultation_option_id => pl[2], :age_range => current_age, :gender => auth.user.user_profile.gender )
             text_t = Array.new
             total_text = Array.new
             text_1 = Hash.new
