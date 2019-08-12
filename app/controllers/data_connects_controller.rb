@@ -1784,7 +1784,7 @@ class DataConnectsController < ApplicationController
             when /u_/
               ua = UserAnalyze.new
               ua.uid = params[:uid] if params[:uid].present?
-              ua.pl = "ugooz.b2c.adviser.01"
+              ua.pl = "adviser.01"
               ua.save!
               u = Authorization.find_by_uid(params[:uid])
               up = u.user.user_profile if u.present?
