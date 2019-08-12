@@ -1,4 +1,5 @@
 class AutoRepliesController < ApplicationController
+	before_action :is_admin, only: [:index]
 
 	def index
 		@auto_replies = AutoReply.all.order(id: :DESC).paginate(:page => params[:page], per_page: 10)
