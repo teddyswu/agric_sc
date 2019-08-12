@@ -1832,6 +1832,7 @@ class DataConnectsController < ApplicationController
                 customization = YAML.load_file("config/customization.yml")
                 uri = URI.parse(customization[:user_message_post])
                 send_message(uri, params[:uid], total_text)
+                render json: JSON.parse("{\"result\": \"OK\"}")
               else
                 total_text = Array.new
                 text = Array.new
@@ -2381,7 +2382,7 @@ class DataConnectsController < ApplicationController
             text_2["Name"] = "ugooz.b2c.adviser.01.02"
             text_2["type"] = "image"
             text_2["url"] = con_content[0].pic
-            text_2["delay"] = "5"
+            text_2["delay"] = "1"
             text_t << text_2
             text_3 = Hash.new
             text_3["Name"] = "ugooz.b2c.adviser.01.03"
