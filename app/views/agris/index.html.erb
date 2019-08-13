@@ -31,7 +31,9 @@
 										<i class="fa fa-users text-light"></i>
 									</div>
 									<div class="h4 mb-0 text-light">
-										<span class="count">10287</span>
+										<% cache :talk_user, :expires_in => 1.hours do %>
+											<span class="count"><%= @talk_user.size %></span>
+										<% end %>
 									</div>
 									<small class="text-uppercase font-weight-bold text-light">聊天人數</small>
 									<div class="progress progress-xs mt-3 mb-0 bg-light" style="width: 40%; height: 5px;"></div>
@@ -43,7 +45,7 @@
 										<i class="fa fa-user-plus text-light"></i>
 									</div>
 									<div class="h4 mb-0 text-light">
-										<span class="count">3215</span>
+										<span class="count">3364</span>
 									</div>
 									<small class="text-uppercase font-weight-bold text-light">會員人數</small>
 									<div class="progress progress-xs mt-3 mb-0 bg-light" style="width: 40%; height: 5px;"></div>
@@ -55,7 +57,7 @@
 										<i class="fa fa-comments-o"></i>
 									</div>
 									<div class="h4 mb-0 text-light">
-										<span class="count">1068092</span>
+										<span class="count">1077006</span>
 									</div>
 									<small class="text-light text-uppercase font-weight-bold">互動資料</small>
 									<div class="progress progress-xs mt-3 mb-0 bg-light" style="width: 40%; height: 5px;"></div>
@@ -67,10 +69,7 @@
 			</div>
 		</div>
   	登入帳號：<%= current_user.email %><br >
-  	以下資訊每小時更新<br>
-  	<% cache :talk_user, :expires_in => 1.hours do %>
-  		不重複聊天人數：<%= @talk_user.size %>
-  	<% end %>
+  	以上資訊每小時更新<br>
   </div>
 </body>
 
