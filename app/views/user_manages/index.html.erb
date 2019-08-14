@@ -33,6 +33,7 @@
                   <table class="table">
                     <thead class="thead-dark">
                       <tr>
+                        <th scope="col">#</th>
                         <th scope="col"></th>
                         <th scope="col">暱稱</th>
                         <th scope="col">建立時間</th>
@@ -43,6 +44,7 @@
                     <tbody>
                       <% @users.each do |user|%>
                         <tr>
+                          <th scope="row"><%= user.id %></th>
                           <td><img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= user.authorizations[0].try(:uid) %>/picture" alt="" style="width: 30px"></td>
                           <td><%= user.user_profile.try(:nickname) %></td>
                           <td><%= user.created_at.strftime("%F %T") %></td>
