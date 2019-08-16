@@ -1840,7 +1840,7 @@ class DataConnectsController < ApplicationController
                 ps = ParameterJson.find_by(:parameter_set_id => ww.id, :parameter_set_type => "guest")
                 user_rec = UserAnalyze.create(:uid => params[:uid], :pl => ps.name)
               end
-              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], ps.json.gsub("=>", ":"))
+              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(ps.json.gsub("=>", ":")))
               render json: JSON.parse(ps.json.gsub("=>", ":"))
             end
           when "my_proposal"
