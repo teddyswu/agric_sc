@@ -483,7 +483,8 @@ class DataConnectsController < ApplicationController
           text << text_2
           total << text
         end
-        send_message(params[:scoped_id], total)
+        SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+        # send_message(params[:scoped_id], total)
         render partial: "shared/fb"
       when "subscription"
         subscription = UserSubscription.find_or_create_by(:scoped_id => params[:scoped_id], :full_name => params[:full_name])
@@ -805,7 +806,8 @@ class DataConnectsController < ApplicationController
         quick_replies << t1
         card_text["quick_replies"] = quick_replies
         card << card_text
-        send_message(params[:scoped_id], card)
+        SendMessageJob.set(wait: 0.seconds).perform_later(params[:scoped_id], card)
+        # send_message(params[:scoped_id], card)
         render text: "ok"
       when "active_ivg"
         mo = Wording.where("name like '%TEAFU.CSI%' or name like '%TEAFU.TEST%'").order(:name)
@@ -1369,7 +1371,8 @@ class DataConnectsController < ApplicationController
                           when 2
                             total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
-                          send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 3 #輸入內容 完全相符
@@ -1380,7 +1383,8 @@ class DataConnectsController < ApplicationController
                           when 2
                             total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
-                          send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 9 #電話號碼
@@ -1392,7 +1396,8 @@ class DataConnectsController < ApplicationController
                           when 2
                             total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
-                          send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 10 #Email
@@ -1404,7 +1409,8 @@ class DataConnectsController < ApplicationController
                           when 2
                             total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
-                          send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 11 #數字
@@ -1416,7 +1422,8 @@ class DataConnectsController < ApplicationController
                           when 2
                             total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
-                          send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 4 #純文字
@@ -1428,7 +1435,8 @@ class DataConnectsController < ApplicationController
                           when 2
                             total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
-                          send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       when 12
@@ -1439,7 +1447,8 @@ class DataConnectsController < ApplicationController
                           when 2
                             total = WordingJson.find(w.specify_json.wording_json_id).json
                           end
-                          send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                          # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                           is_send = 1
                         end
                       end
@@ -1463,7 +1472,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         when 2
@@ -1479,7 +1489,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         when 3
@@ -1490,7 +1501,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         when 9
@@ -1502,7 +1514,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         when 10
@@ -1514,7 +1527,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         when 11
@@ -1526,7 +1540,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         when 4
@@ -1538,7 +1553,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         when 12
@@ -1549,7 +1565,8 @@ class DataConnectsController < ApplicationController
                             when 2
                               total = WordingJson.find(gk.generic_json.wording_json_id).json
                             end
-                            send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                            # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                             is_send = 1
                           end
                         end
@@ -1579,7 +1596,8 @@ class DataConnectsController < ApplicationController
                     when 2
                       total = WordingJson.find(w.specify_json.wording_json_id).json
                     end
-                    send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "5")
@@ -1590,7 +1608,8 @@ class DataConnectsController < ApplicationController
                       when 2
                         total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
-                      send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
@@ -1616,7 +1635,8 @@ class DataConnectsController < ApplicationController
                     when 2
                       total = WordingJson.find(w.specify_json.wording_json_id).json
                     end
-                    send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "7")
@@ -1627,7 +1647,8 @@ class DataConnectsController < ApplicationController
                       when 2
                         total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
-                      send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
@@ -1653,7 +1674,8 @@ class DataConnectsController < ApplicationController
                     when 2
                       total = WordingJson.find(w.specify_json.wording_json_id).json
                     end
-                    send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "6")
@@ -1664,7 +1686,8 @@ class DataConnectsController < ApplicationController
                       when 2
                         total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
-                      send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
@@ -1690,7 +1713,8 @@ class DataConnectsController < ApplicationController
                     when 2
                       total = WordingJson.find(w.specify_json.wording_json_id).json
                     end
-                    send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                    # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                   end
                   if word.blank?
                     global_keyword = GenericKeyword.where("keyword_type in (?)", "8")
@@ -1701,7 +1725,8 @@ class DataConnectsController < ApplicationController
                       when 2
                         total = WordingJson.find(gk.generic_json.wording_json_id).json
                       end
-                      send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], JSON.parse(total.gsub("=>",":")))
+                      # send_message(params[:uid], JSON.parse(total.gsub("=>",":")))
                     end
                   end
                   render json: JSON.parse("{\"result\": \"OK\"}")
@@ -2141,7 +2166,8 @@ class DataConnectsController < ApplicationController
             text_a << text_2 if text_2.present?
             total << text_a
             total << proposal_1 if proposal_1.present?
-            send_message(params[:uid], total)
+            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+            # send_message(params[:uid], total)
             render json: total
           end
         when ["v0.01","collect_data"]
@@ -2167,14 +2193,16 @@ class DataConnectsController < ApplicationController
             cw = ParameterSet.find(word.first.parameter_set_id)
             if cw.enabled == true
               total = JSON.parse(word.first.json.gsub("=>", ":"))
-              send_message(params[:uid], total)
+              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+              # send_message(params[:uid], total)
             end
           when /SUBS_story/
             word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
             cw = ParameterSet.find(word.first.parameter_set_id)
             if cw.enabled == true
               total = JSON.parse(word.first.json.gsub("=>", ":"))
-              send_message(params[:uid], total)
+              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+              # send_message(params[:uid], total)
               us = UserSubscription.new
               us.scoped_id = params[:uid]
               us.full_name = params[:n]
@@ -2186,7 +2214,8 @@ class DataConnectsController < ApplicationController
             cw = ParameterSet.find(word.first.parameter_set_id)
             if cw.enabled == true
               total = JSON.parse(word.first.json.gsub("=>", ":"))
-              send_message(params[:uid], total)
+              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+              # send_message(params[:uid], total)
               us = UserSubscription.new
               us.scoped_id = params[:uid]
               us.full_name = params[:n]
@@ -2215,7 +2244,8 @@ class DataConnectsController < ApplicationController
               text << text_2
               total << text
             end
-            send_message(params[:uid], total)
+            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+            # send_message(params[:uid], total)
           end
           render json: JSON.parse("{\"result\": \"OK\"}")
         when ["v0.02","collect_data"]
@@ -2241,14 +2271,16 @@ class DataConnectsController < ApplicationController
             cw = ParameterSet.find(word.first.parameter_set_id)
             if cw.enabled == true
               total = JSON.parse(word.first.json.gsub("=>", ":"))
-              send_message(params[:uid], total)
+              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+              # send_message(params[:uid], total)
             end
           when /SUBS_story/
             word = ParameterJson.where("name like ? and parameter_set_type = ?", "%#{params[:pl]}%","guest")
             cw = ParameterSet.find(word.first.parameter_set_id)
             if cw.enabled == true
               total = JSON.parse(word.first.json.gsub("=>", ":"))
-              send_message(params[:uid], total)
+              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+              # send_message(params[:uid], total)
               us = UserSubscription.new
               us.scoped_id = params[:uid]
               us.full_name = params[:n]
@@ -2260,7 +2292,8 @@ class DataConnectsController < ApplicationController
             cw = ParameterSet.find(word.first.parameter_set_id)
             if cw.enabled == true
               total = JSON.parse(word.first.json.gsub("=>", ":"))
-              send_message(params[:uid], total)
+              SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+              # send_message(params[:uid], total)
               us = UserSubscription.new
               us.scoped_id = params[:uid]
               us.full_name = params[:n]
@@ -2289,7 +2322,8 @@ class DataConnectsController < ApplicationController
               text << text_2
               total << text
             end
-            send_message(params[:uid], total)
+            SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
+            # send_message(params[:uid], total)
           when /u_/
             pl = params[:pl].split("_")
             # cons = Consultation.find(pl[1])
