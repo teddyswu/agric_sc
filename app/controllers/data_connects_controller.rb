@@ -2529,10 +2529,11 @@ class DataConnectsController < ApplicationController
             end
             ar_def["messages"] = ar_def_message
             ar_def["pair"] = auto_reply.default_pair
-            ar_triggering = Hash.new #triggering{}
-            ar_conditions = Array.new #conditions[]
+            auto_reply_single["default"] = ar_def
+            ar_triggering_total = Array.new #triggers[]
             ar_reply_rules = AutoReplyRule.where(:auto_reply_id => auto_reply.id, :parent_id => 0)
             ar_reply_rules.each do |arr|
+              ar_triggering = Hash.new #triggers{}
               conditions_id = Array.new #[]
               rule = Hash.new #{}
               case arr.rule_type
@@ -2551,7 +2552,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "== '#{ac.rule.to_s}'"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
@@ -2576,7 +2577,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "== '#{ac.rule.to_s}'"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
@@ -2588,7 +2589,7 @@ class DataConnectsController < ApplicationController
                 end
               when "3"
                 rule["rule_type"] = "text_exactly_match"
-                rule["rule"] = "in #{arr.rule.split(",").to_s.gsub("\"","'")}"
+                rule["rule"] = "== '#{arr.rule.to_s}'"
                 conditions_id << rule
                 arr.children.each do |ac|
                   rule_ac = Hash.new
@@ -2601,7 +2602,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "== '#{ac.rule.to_s}'"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
@@ -2626,7 +2627,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "== '#{ac.rule.to_s}'"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac_ac["rule"] = ">= 1"
@@ -2651,7 +2652,7 @@ class DataConnectsController < ApplicationController
                     rule_ac["rule"] = "#{ac.rule.split(",").to_s.gsub("\"","'")}"
                   when "3"
                     rule_ac["rule_type"] = "text_exactly_match"
-                    rule_ac["rule"] = "in #{ac.rule.split(",").to_s.gsub("\"","'")}"
+                    rule_ac["rule"] = "== '#{ac.rule.to_s}'"
                   when "4"
                     rule_ac["rule_type"] = "has_photo"
                     rule_ac["rule"] = ">= 1"
@@ -2662,33 +2663,55 @@ class DataConnectsController < ApplicationController
                   conditions_id << rule_ac
                 end
               end
-              ar_conditions << conditions_id
+              conditions_to = Array.new
+              conditions_to << conditions_id
+              ar_triggering["conditions"] = conditions_to
+              ar_triggering_total << ar_triggering
             end
-            auto_reply_single["default"] = ar_def
-            ar_triggering["conditions"] = ar_conditions
             ar_reply_replies = AutoReplyReply.where(:auto_reply_id => auto_reply.id).where.not(:is_default => true)
-            arr_h = Array.new
+            arr_total = Array.new
+            group_id = 1
+            array_num = 0
             ar_reply_replies.each do |arr|
               arr_single = Hash.new
               arr.cat == "text" ? arr_single["type"] = "text" : arr_single["type"] = "image"
               arr_single["#{arr.cat}"] = arr.content
-              arr_h << arr_single
+              if arr.group_id == group_id
+                arr_total << arr_single
+              else
+                ar_triggering_total[array_num]["replies"] = arr_total
+                array_num+=1
+                arr_total = []
+                arr_total << arr_single
+              end
+              group_id = arr.group_id
             end
-            ar_triggering["replies"] = arr_h
+            ar_triggering_total[array_num]["replies"] = arr_total if array_num != 0
             ar_reply_messages = AutoReplyMessage.where(:auto_reply_id => auto_reply.id).where.not(:is_default => true)
-            arm_h = Array.new
+            arm_total = Array.new
+            group_id = 1
+            array_num = 0
             ar_reply_messages.each do |arm|
               arm_single = Hash.new
               arm_single["type"] = "text"
               arm_single["text"] = arm.content
-              arm_h << arm_single
+              if arm.group_id == group_id
+                arm_total << arm_single
+              else
+                ar_triggering_total[array_num]["messages"] = arm_total
+                array_num+=1
+                arm_total = []
+                arm_total << arm_single
+              end
+              group_id = arm.group_id
             end
-            ar_triggering["messages"] = arm_h
-            ar_triggering["pair"] = auto_reply.triggering_pair
-            auto_reply_single["triggering"] = ar_triggering
+            ar_triggering_total[array_num]["messages"] = arm_total if array_num != 0
+            ar_reply_rules.each_with_index do |arr, i|
+              ar_triggering_total[i]["pair"] = auto_reply.triggering_pair
+            end
+            auto_reply_single["triggers"] = ar_triggering_total
             auto_reply_total << auto_reply_single
           end
-          # render json: JSON.parse(auto_reply_total.to_s.gsub("=>",":"))
           wording << auto_reply_total.to_s
 
           render json: JSON.parse("[" + wording.gsub("=>",":") + "]")

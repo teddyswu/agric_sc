@@ -129,7 +129,7 @@ ul.token-input-list-facebook {
                 	<div class="row form-group" id="rule_reply<%= i + 1%>" style="border-style:double;display: none;">
                 		<div id="rule_reply<%= i + 1%>_head" style="display: block;">
                 			<div class="col col-md-12">條件回覆<%= i + 1%>
-                				<button type="button" class="btn btn-warning btn-sm" onclick="atcB(1)">新增觸發條件</button>
+                				<button type="button" class="btn btn-warning btn-sm" onclick="atcB(<%= i + 1%>)">新增觸發條件</button>
                 				<button type="button" class="btn btn-danger btn-sm" onclick="reo('<%= i + 1%>')">刪除</button>
                 				<input type="hidden" id="rule<%= i + 1%>_group" value="<%= r.children.size + 2%>" disabled="">
                 				<input type="hidden" id="rule<%= i + 1%>_keyin" value="<%= r.children.size + 2%>" disabled="">
