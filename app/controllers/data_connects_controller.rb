@@ -2686,7 +2686,7 @@ class DataConnectsController < ApplicationController
               end
               group_id = arr.group_id
             end
-            ar_triggering_total[array_num]["replies"] = arr_total if array_num != 0
+            ar_triggering_total[array_num]["replies"] = arr_total
             ar_reply_messages = AutoReplyMessage.where(:auto_reply_id => auto_reply.id).where.not(:is_default => true)
             arm_total = Array.new
             group_id = 1
@@ -2705,7 +2705,7 @@ class DataConnectsController < ApplicationController
               end
               group_id = arm.group_id
             end
-            ar_triggering_total[array_num]["messages"] = arm_total if array_num != 0
+            ar_triggering_total[array_num]["messages"] = arm_total
             ar_reply_rules.each_with_index do |arr, i|
               ar_triggering_total[i]["pair"] = auto_reply.triggering_pair
             end
