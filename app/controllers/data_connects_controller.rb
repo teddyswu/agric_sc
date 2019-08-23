@@ -1784,7 +1784,7 @@ class DataConnectsController < ApplicationController
                 text << text_3
                 total_text << text
                 card_t = Array.new
-                cons = Consultation.find(1)
+                cons = Consultation.find_by(:parameter_name => params[:ref])
                 cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
                   card_s = Hash.new
                   card_s["NAME"] = "ugooz.b2c.adviser.01.04.0#{i}"
@@ -2638,7 +2638,7 @@ class DataConnectsController < ApplicationController
                   conditions_id << rule_ac
                 end
               when "5"
-                rule["rule_type"] = "tag_friend"
+                rule["rule_type"] = "tag_friends"
                 rule["rule"] = ">= #{arr.rule}"
                 conditions_id << rule
                 arr.children.each do |ac|
