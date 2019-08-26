@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190807022649) do
+ActiveRecord::Schema.define(version: 20190823093822) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -110,9 +110,12 @@ ActiveRecord::Schema.define(version: 20190807022649) do
   end
 
   create_table "consultations", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",           limit: 255
+    t.integer  "type",           limit: 4
+    t.text     "json",           limit: 65535
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "parameter_name", limit: 255
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
