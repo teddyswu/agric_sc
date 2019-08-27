@@ -47,6 +47,8 @@ Rails.application.routes.draw do
 
   resources :message_pushes
 
+  resources :advisories
+
   resources :parameter_sets do
     get "list", on: :member
     get "name_edit", on: :member
