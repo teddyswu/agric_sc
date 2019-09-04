@@ -1763,7 +1763,7 @@ class DataConnectsController < ApplicationController
               u = Authorization.find_by_uid(params[:uid])
               up = u.user.user_profile if u.present?
               if up.gender.present? and up.birthday.present?
-                if cons.cat = 2
+                if cons.cat == 2
                   week = ["日", "一", "二", "三", "四", "五", "六"][Date.today.wday]
                   season = ["","冬","冬","春","春","春","夏","夏","夏","秋","秋","秋","冬"][Time.now.month]
                   case Time.now.strftime('%H').to_i
