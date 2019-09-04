@@ -142,8 +142,8 @@ class AdvisoriesController < ApplicationController
         total_text << card_t
       end
     when "set"
-      pl[4] == u40 ? age_range = 3 : age_range = 4
-      pl[3] == m ? gender = 1 : gender = 0
+      pl[4] == "u40" ? age_range = 3 : age_range = 4
+      pl[3] == "m" ? gender = 1 : gender = 0
       week = ["日", "一", "二", "三", "四", "五", "六"][Date.today.wday]
       season = ["","冬","冬","春","春","春","夏","夏","夏","秋","秋","秋","冬"][Time.now.month]
       case Time.now.strftime('%H').to_i
@@ -158,7 +158,7 @@ class AdvisoriesController < ApplicationController
       end
       cate = ConsultationCate.where(:consultation_id => cons.id, :name => "#{season}天")
       option = ConsultationOption.where(:consultation_cate_id => cate, :name => sta)
-      con_content = ConsultationContent.where(:consultation_option_id => option, :age_range => current_age, :gender => auth.user.user_profile.gender )
+      con_content = ConsultationContent.where(:consultation_option_id => option, :age_range => age_range, :gender => gender )
       text_t = Array.new
       total_text = Array.new
       text_1 = Hash.new
