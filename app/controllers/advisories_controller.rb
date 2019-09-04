@@ -187,7 +187,8 @@ class AdvisoriesController < ApplicationController
       bs_bs2["title"] = "其它的茶諮詢"
       bs_b << bs_bs2
       bs["buttons"] = bs_b
-      total_text << bs
+      button_li << bs
+      total_text << button_li
     end
     render text: total_text
 	end
