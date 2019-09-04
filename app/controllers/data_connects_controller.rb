@@ -1757,51 +1757,97 @@ class DataConnectsController < ApplicationController
             when /u_/
               ua = UserAnalyze.new
               ua.uid = params[:uid] if params[:uid].present?
-              ua.pl = "adviser.01"
+              cons = Consultation.find_by(:parameter_name => params[:ref])
+              cons.id >= 10 ? ua.pl = "adviser.#{cons.id}" : ua.pl = "adviser.0#{cons.id}"
               ua.save!
               u = Authorization.find_by_uid(params[:uid])
               up = u.user.user_profile if u.present?
               if up.gender.present? and up.birthday.present?
-                total_text = Array.new
-                text = Array.new
-                text_1 = Hash.new
-                text_1["NAME"] = "ugooz.b2c.adviser.01.01"
-                text_1["type"] = "text"
-                text_1["text"] = "餐點與茶搭配的好，吃美食的時候不但可以帶領味蕾前往另一種美味層次，還可以幫助消化，減輕身體負擔唷！"
-                text_1["delay"] = 1
-                text << text_1
-                text_2 = Hash.new
-                text_2["NAME"] = "ugooz.b2c.adviser.01.02"
-                text_2["type"] = "text"
-                text_2["text"] = "現在差不多是「午餐時間」了，讓我告訴你吃什麼可以搭配什麼茶！"
-                text_2["delay"] = 1
-                text << text_2
-                text_3 = Hash.new
-                text_3["NAME"] = "ugooz.b2c.adviser.01.03"
-                text_3["type"] = "text"
-                text_3["text"] = "請由以下圖卡選擇一項餐點，如果選單中沒有你想選擇的餐點，可於下方輸入文字喔！(如：烤雞)"
-                text_3["delay"] = 1
-                text << text_3
-                total_text << text
-                card_t = Array.new
-                cons = Consultation.find_by(:parameter_name => params[:ref])
-                cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
-                  card_s = Hash.new
-                  card_s["NAME"] = "ugooz.b2c.adviser.01.04.0#{i}"
-                  card_s["title"] = ccat.name
-                  card_s["image_url"] = ccat.pic
-                  button_t = Array.new
-                  ccat.consultation_options.limit(3).order(:sort).each do |copt|
-                    button_si = Hash.new
-                    button_si["type"] = "postback"
-                    button_si["title"] = copt.name
-                    button_si["payload"] = "u_#{cons.id}_#{copt.id}"
-                    button_t << button_si
+                if cons.cat = 2
+                  week = ["日", "一", "二", "三", "四", "五", "六"][Date.today.wday]
+                  season = ["","冬","冬","春","春","春","夏","夏","夏","秋","秋","秋","冬"][Time.now.month]
+                  case Time.now.strftime('%H').to_i
+                  when 0..4
+                    sta = "晚上"
+                  when 5..12
+                    sta = "上午"
+                  when 13..18
+                    sta = "下午"
+                  when 19..23
+                    sta = "晚上"
                   end
-                  card_s["buttons"] = button_t
-                  card_t << card_s
+                  auth = Authorization.find_by_uid(params[:uid])
+                  auth.user.user_profile.age_range > 4 ? current_age = 4 : current_age = 3
+                  cate = ConsultationCate.where(:consultation_id => cons.id, :name => "#{season}天")
+                  option = ConsultationOption.where(:consultation_cate_id => cate, :name => sta)
+                  con_content = ConsultationContent.where(:consultation_option_id => option, :age_range => current_age, :gender => auth.user.user_profile.gender )
+                  text_t = Array.new
+                  total_text = Array.new
+                  text_1 = Hash.new
+                  text_1["Name"] = "ugooz.b2c.adviser.01.01"
+                  text_1["type"] = "text"
+                  text_1["text"] = "#{season}天的週#{week}#{sta}，根據你提供的會員資料，我推薦你喝「#{con_content[0].intro}」唷！"
+                  text_1["delay"] = "1"
+                  text_t << text_1
+                  text_2 = Hash.new
+                  text_2["Name"] = "ugooz.b2c.adviser.01.02"
+                  text_2["type"] = "image"
+                  text_2["url"] = con_content[0].pic
+                  text_2["delay"] = "1"
+                  text_t << text_2
+                  text_3 = Hash.new
+                  text_3["Name"] = "ugooz.b2c.adviser.01.03"
+                  text_3["type"] = "text"
+                  text_3["text"] = con_content[0].content
+                  text_3["delay"] = "5"
+                  text_t << text_3
+                  text_4 = Hash.new
+                  text_4["Name"] = "ugooz.b2c.adviser.01.03"
+                  text_4["type"] = "text"
+                  text_4["text"] = "你想知道你自己，或身邊的親朋好友，在什麼時間適合喝什麼茶嗎?"
+                  text_4["delay"] = "1"
+                  text_t << text_4
+                  total_text << text_t
+                  card_t = Array.new
+                  cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
+                    card_s = Hash.new
+                    card_s["NAME"] = "ugooz.b2c.adviser.#{cons.id}.0#{total_text[0].size+1}.0#{i+1}"
+                    card_s["title"] = ccat.name
+                    card_s["image_url"] = ccat.pic
+                    button_t = Array.new
+                    ccat.consultation_options.limit(3).order(:sort).each do |copt|
+                      button_si = Hash.new
+                      button_si["type"] = "postback"
+                      button_si["title"] = copt.name
+                      button_si["payload"] = "u_#{cons.id}_#{copt.id}"
+                      button_t << button_si
+                    end
+                    card_s["buttons"] = button_t
+                    card_t << card_s
+                  end
+                  total_text << card_t
+                else
+                  total_text = JSON.parse(cons.json.gsub("=>",":"))
+                  card_t = Array.new
+                  cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
+                    card_s = Hash.new
+                    card_s["NAME"] = "ugooz.b2c.adviser.#{cons.id}.0#{total_text[0].size+1}.0#{i+1}"
+                    card_s["title"] = ccat.name
+                    card_s["image_url"] = ccat.pic
+                    button_t = Array.new
+                    ccat.consultation_options.limit(3).order(:sort).each do |copt|
+                      button_si = Hash.new
+                      button_si["type"] = "postback"
+                      button_si["title"] = copt.name
+                      button_si["payload"] = "u_#{cons.id}_#{copt.id}"
+                      button_t << button_si
+                    end
+                    card_s["buttons"] = button_t
+                    card_t << card_s
+                  end
+                  total_text << card_t
                 end
-                total_text << card_t
+                # p total_text
                 SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total_text)
                 render json: JSON.parse("{\"result\": \"OK\"}")
               else
@@ -2326,35 +2372,10 @@ class DataConnectsController < ApplicationController
             SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total)
             # send_message(params[:uid], total)
           when /u_/
-            pl = params[:pl].split("_")
-            # cons = Consultation.find(pl[1])
-            con_option = ConsultationOption.find(pl[2])
-            auth = Authorization.find_by_uid(params[:uid])
-            auth.user.user_profile.age_range > 4 ? current_age = 4 : current_age = 3
-            con_content = ConsultationContent.where(:consultation_option_id => pl[2], :age_range => current_age, :gender => auth.user.user_profile.gender )
-            text_t = Array.new
-            total_text = Array.new
-            text_1 = Hash.new
-            text_1["Name"] = "ugooz.b2c.adviser.01.01"
-            text_1["type"] = "text"
-            text_1["text"] = "[[FULLNAME]]大大～根據你提供的會員資料，中午吃#{con_option.name}，我推薦你喝「#{con_content[0].intro}」最佳！"
-            text_1["delay"] = "1"
-            text_t << text_1
-            text_2 = Hash.new
-            text_2["Name"] = "ugooz.b2c.adviser.01.02"
-            text_2["type"] = "image"
-            text_2["url"] = con_content[0].pic
-            text_2["delay"] = "1"
-            text_t << text_2
-            text_3 = Hash.new
-            text_3["Name"] = "ugooz.b2c.adviser.01.03"
-            text_3["type"] = "text"
-            text_3["text"] = con_content[0].content
-            text_3["delay"] = "1"
-            text_t << text_3
-            total_text << text_t
+            uri = URI("#{YAML.load_file("config/customization.yml")[:root_domain]}/advisories?pl=#{params[:pl]}&uid=#{params[:uid]}")
+            res = Net::HTTP.get_response(uri)
+            total_text =  JSON.parse(res.body.gsub("=>",":"))
             SendMessageJob.set(wait: 0.seconds).perform_later(params[:uid], total_text)
-            # send_message(params[:uid], total_text)
           end
           render json: JSON.parse("{\"result\": \"OK\"}")
         when ["v0.01","stactic_all"]
@@ -2744,7 +2765,6 @@ class DataConnectsController < ApplicationController
       file.syswrite(%(#{Time.now.iso8601}: #{post_data} \n---------------------------------------------\n\n))
       file.syswrite(%(#{Time.now.iso8601}: #{res.body} \n---------------------------------------------\n\n))
     end
-    p "send #{Time.now}"
   end
 
   def split_string(cc)
