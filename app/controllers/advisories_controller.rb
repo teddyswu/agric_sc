@@ -141,6 +141,104 @@ class AdvisoriesController < ApplicationController
         end
         total_text << card_t
       end
+    when "set"
+      pl[4] == u40 ? age_range = 3 : age_range = 4
+      pl[3] == m ? gender = 1 : gender = 0
+      week = ["日", "一", "二", "三", "四", "五", "六"][Date.today.wday]
+      season = ["","冬","冬","春","春","春","夏","夏","夏","秋","秋","秋","冬"][Time.now.month]
+      case Time.now.strftime('%H').to_i
+      when 0..4
+        sta = "晚上"
+      when 5..12
+        sta = "上午"
+      when 13..18
+        sta = "下午"
+      when 19..23
+        sta = "晚上"
+      end
+      cate = ConsultationCate.where(:consultation_id => cons.id, :name => "#{season}天")
+      option = ConsultationOption.where(:consultation_cate_id => cate, :name => sta)
+      con_content = ConsultationContent.where(:consultation_option_id => option, :age_range => current_age, :gender => auth.user.user_profile.gender )
+      text_t = Array.new
+      total_text = Array.new
+      text_1 = Hash.new
+      text_1["Name"] = "ugooz.b2c.adviser.01.01"
+      text_1["type"] = "text"
+      text_1["text"] = "#{season}天的週#{week}#{sta}，茶福推薦適合喝「#{con_content[0].intro}」唷！"
+      text_1["delay"] = "1"
+      text_t << text_1
+      text_2 = Hash.new
+      text_2["Name"] = "ugooz.b2c.adviser.01.02"
+      text_2["type"] = "image"
+      text_2["url"] = con_content[0].pic
+      text_2["delay"] = "1"
+      text_t << text_2
+      text_3 = Hash.new
+      text_3["Name"] = "ugooz.b2c.adviser.01.03"
+      text_3["type"] = "text"
+      text_3["text"] = con_content[0].content
+      text_3["delay"] = "5"
+      text_t << text_3
+      text_4 = Hash.new
+      text_4["Name"] = "ugooz.b2c.adviser.01.04"
+      text_4["type"] = "text"
+      text_4["text"] = "你想知道你自己，或身邊的親朋好友，在什麼時間適合喝什麼茶嗎?"
+      text_4["delay"] = "1"
+      text_t << text_4
+      total_text << text_t
+      card_t = Array.new
+      card_si0 = Hash.new
+      card_si0["NAME"] = "ugooz.b2c.adviser.01.05.01"
+      card_si0["title"] = "我想諮詢我自己！"
+      card_si0["image_url"] = "https://i.imgur.com/bgXpwFM.png"
+      card_si0_bst = Array.new
+      card_si0_bs1 = Hash.new
+      card_si0_bs1["type"] = "postback"
+      card_si0_bs1["title"] = "其他選擇"
+      card_si0_bs1["payload"] = "u_#{cons.id}_cont"
+      card_si0_bst << card_si0_bs1
+      card_si0_bs2 = Hash.new
+      card_si0_bs2["type"] = "postback"
+      card_si0_bs2["title"] = "其它的茶諮詢"
+      card_si0_bs2["payload"] = "u_#{cons.id}_other"
+      card_si0_bst << card_si0_bs2
+      card_si0["buttons"] = card_si0_bst
+      card_t << card_si0
+      card_si1 = Hash.new
+      card_si1["NAME"] = "ugooz.b2c.adviser.01.05.01"
+      card_si1["title"] = "我想幫男性親友看看 喝什麼茶！"
+      card_si1["image_url"] = "https://i.imgur.com/DxdlLld.png"
+      card_si1_bst = Array.new
+      card_si1_bs1 = Hash.new
+      card_si1_bs1["type"] = "postback"
+      card_si1_bs1["title"] = "未滿40歲"
+      card_si1_bs1["payload"] = "u_#{cons.id}_set_m_u40"
+      card_si1_bst << card_si1_bs1
+      card_si1_bs2 = Hash.new
+      card_si1_bs2["type"] = "postback"
+      card_si1_bs2["title"] = "40歲以上"
+      card_si1_bs2["payload"] = "u_#{cons.id}_set_m_o40"
+      card_si1_bst << card_si1_bs2
+      card_si1["buttons"] = card_si1_bst
+      card_t << card_si1
+      card_si2 = Hash.new
+      card_si2["NAME"] = "ugooz.b2c.adviser.01.05.01"
+      card_si2["title"] = "我想幫男性親友看看 喝什麼茶！"
+      card_si2["image_url"] = "https://i.imgur.com/DxdlLld.png"
+      card_si2_bst = Array.new
+      card_si2_bs1 = Hash.new
+      card_si2_bs1["type"] = "postback"
+      card_si2_bs1["title"] = "未滿40歲"
+      card_si2_bs1["payload"] = "u_#{cons.id}_set_w_u40"
+      card_si2_bst << card_si2_bs1
+      card_si2_bs2 = Hash.new
+      card_si2_bs2["type"] = "postback"
+      card_si2_bs2["title"] = "40歲以上"
+      card_si2_bs2["payload"] = "u_#{cons.id}_set_w_o40"
+      card_si2_bst << card_si2_bs2
+      card_si2["buttons"] = card_si2_bst
+      card_t << card_si2
+      total_text << card_t
     else
       case Time.now.strftime('%H').to_i
       when 0..4

@@ -1801,26 +1801,66 @@ class DataConnectsController < ApplicationController
                   text_3["text"] = con_content[0].content
                   text_3["delay"] = "5"
                   text_t << text_3
+                  text_4 = Hash.new
+                  text_4["Name"] = "ugooz.b2c.adviser.01.04"
+                  text_4["type"] = "text"
+                  text_4["text"] = "你想知道你自己，或身邊的親朋好友，在什麼時間適合喝什麼茶嗎?"
+                  text_4["delay"] = "1"
+                  text_t << text_4
                   total_text << text_t
-                  button_li = Array.new
-                  bs = Hash.new
-                  bs["NAME"] = "ugooz.b2c.adviser.01.04"
-                  bs["template_type"] = "button"
-                  bs["text"] = "查看其他選擇？還是想進行其它的茶諮詢呢？"
-                  bs_b = Array.new
-                  bs_bs1 = Hash.new
-                  bs_bs1["type"] = "postback"
-                  bs_bs1["payload"] = "u_#{cons.id}_cont"
-                  bs_bs1["title"] = "其他選擇"
-                  bs_b << bs_bs1
-                  bs_bs2 = Hash.new
-                  bs_bs2["type"] = "postback"
-                  bs_bs2["payload"] = "u_#{cons.id}_other"
-                  bs_bs2["title"] = "其它的茶諮詢"
-                  bs_b << bs_bs2
-                  bs["buttons"] = bs_b
-                  button_li << bs
-                  total_text << button_li
+                  card_t = Array.new
+                  card_si0 = Hash.new
+                  card_si0["NAME"] = "ugooz.b2c.adviser.01.05.01"
+                  card_si0["title"] = "我想諮詢我自己！"
+                  card_si0["image_url"] = "https://i.imgur.com/bgXpwFM.png"
+                  card_si0_bst = Array.new
+                  card_si0_bs1 = Hash.new
+                  card_si0_bs1["type"] = "postback"
+                  card_si0_bs1["title"] = "其他選擇"
+                  card_si0_bs1["payload"] = "u_#{cons.id}_cont"
+                  card_si0_bst << card_si0_bs1
+                  card_si0_bs2 = Hash.new
+                  card_si0_bs2["type"] = "postback"
+                  card_si0_bs2["title"] = "其它的茶諮詢"
+                  card_si0_bs2["payload"] = "u_#{cons.id}_other"
+                  card_si0_bst << card_si0_bs2
+                  card_si0["buttons"] = card_si0_bst
+                  card_t << card_si0
+                  card_si1 = Hash.new
+                  card_si1["NAME"] = "ugooz.b2c.adviser.01.05.01"
+                  card_si1["title"] = "我想幫男性親友看看 喝什麼茶！"
+                  card_si1["image_url"] = "https://i.imgur.com/DxdlLld.png"
+                  card_si1_bst = Array.new
+                  card_si1_bs1 = Hash.new
+                  card_si1_bs1["type"] = "postback"
+                  card_si1_bs1["title"] = "未滿40歲"
+                  card_si1_bs1["payload"] = "u_#{cons.id}_set_m_u40"
+                  card_si1_bst << card_si1_bs1
+                  card_si1_bs2 = Hash.new
+                  card_si1_bs2["type"] = "postback"
+                  card_si1_bs2["title"] = "40歲以上"
+                  card_si1_bs2["payload"] = "u_#{cons.id}_set_m_o40"
+                  card_si1_bst << card_si1_bs2
+                  card_si1["buttons"] = card_si1_bst
+                  card_t << card_si1
+                  card_si2 = Hash.new
+                  card_si2["NAME"] = "ugooz.b2c.adviser.01.05.01"
+                  card_si2["title"] = "我想幫男性親友看看 喝什麼茶！"
+                  card_si2["image_url"] = "https://i.imgur.com/DxdlLld.png"
+                  card_si2_bst = Array.new
+                  card_si2_bs1 = Hash.new
+                  card_si2_bs1["type"] = "postback"
+                  card_si2_bs1["title"] = "未滿40歲"
+                  card_si2_bs1["payload"] = "u_#{cons.id}_set_w_u40"
+                  card_si2_bst << card_si2_bs1
+                  card_si2_bs2 = Hash.new
+                  card_si2_bs2["type"] = "postback"
+                  card_si2_bs2["title"] = "40歲以上"
+                  card_si2_bs2["payload"] = "u_#{cons.id}_set_w_o40"
+                  card_si2_bst << card_si2_bs2
+                  card_si2["buttons"] = card_si2_bst
+                  card_t << card_si2
+                  total_text << card_t
                 else
                   total_text = JSON.parse(cons.json.gsub("=>",":"))
                   card_t = Array.new
