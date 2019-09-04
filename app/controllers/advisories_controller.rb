@@ -103,22 +103,57 @@ class AdvisoriesController < ApplicationController
         text_t << text_4
         total_text << text_t
         card_t = Array.new
-        cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
-          card_s = Hash.new
-          card_s["NAME"] = "ugooz.b2c.adviser.#{cons.id}.0#{total_text[0].size+1}.0#{i+1}"
-          card_s["title"] = ccat.name
-          card_s["image_url"] = ccat.pic
-          button_t = Array.new
-          ccat.consultation_options.limit(3).order(:sort).each do |copt|
-            button_si = Hash.new
-            button_si["type"] = "postback"
-            button_si["title"] = copt.name
-            button_si["payload"] = "u_#{cons.id}_#{copt.id}"
-            button_t << button_si
-          end
-          card_s["buttons"] = button_t
-          card_t << card_s
-        end
+        card_si0 = Hash.new
+        card_si0["NAME"] = "ugooz.b2c.adviser.01.05.01"
+        card_si0["title"] = "我想諮詢我自己！"
+        card_si0["image_url"] = "https://i.imgur.com/bgXpwFM.png"
+        card_si0_bst = Array.new
+        card_si0_bs1 = Hash.new
+        card_si0_bs1["type"] = "postback"
+        card_si0_bs1["title"] = "其他選擇"
+        card_si0_bs1["payload"] = "u_#{cons.id}_cont"
+        card_si0_bst << card_si0_bs1
+        card_si0_bs2 = Hash.new
+        card_si0_bs2["type"] = "postback"
+        card_si0_bs2["title"] = "其它的茶諮詢"
+        card_si0_bs2["payload"] = "u_#{cons.id}_other"
+        card_si0_bst << card_si0_bs2
+        card_si0["buttons"] = card_si0_bst
+        card_t << card_si0
+        card_si1 = Hash.new
+        card_si1["NAME"] = "ugooz.b2c.adviser.01.05.01"
+        card_si1["title"] = "我想幫男性親友看看 喝什麼茶！"
+        card_si1["image_url"] = "https://i.imgur.com/DxdlLld.png"
+        card_si1_bst = Array.new
+        card_si1_bs1 = Hash.new
+        card_si1_bs1["type"] = "postback"
+        card_si1_bs1["title"] = "未滿40歲"
+        card_si1_bs1["payload"] = "u_#{cons.id}_set_m_u40"
+        card_si1_bst << card_si1_bs1
+        card_si1_bs2 = Hash.new
+        card_si1_bs2["type"] = "postback"
+        card_si1_bs2["title"] = "40歲以上"
+        card_si1_bs2["payload"] = "u_#{cons.id}_set_m_o40"
+        card_si1_bst << card_si1_bs2
+        card_si1["buttons"] = card_si1_bst
+        card_t << card_si1
+        card_si2 = Hash.new
+        card_si2["NAME"] = "ugooz.b2c.adviser.01.05.01"
+        card_si2["title"] = "我想幫男性親友看看 喝什麼茶！"
+        card_si2["image_url"] = "https://i.imgur.com/DxdlLld.png"
+        card_si2_bst = Array.new
+        card_si2_bs1 = Hash.new
+        card_si2_bs1["type"] = "postback"
+        card_si2_bs1["title"] = "未滿40歲"
+        card_si2_bs1["payload"] = "u_#{cons.id}_set_w_u40"
+        card_si2_bst << card_si2_bs1
+        card_si2_bs2 = Hash.new
+        card_si2_bs2["type"] = "postback"
+        card_si2_bs2["title"] = "40歲以上"
+        card_si2_bs2["payload"] = "u_#{cons.id}_set_w_o40"
+        card_si2_bst << card_si2_bs2
+        card_si2["buttons"] = card_si2_bst
+        card_t << card_si2
         total_text << card_t
       else
         total_text = JSON.parse(cons.json.gsub("=>",":"))
