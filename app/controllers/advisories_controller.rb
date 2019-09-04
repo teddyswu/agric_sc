@@ -25,11 +25,19 @@ class AdvisoriesController < ApplicationController
       end
       total_text << card_t
     when "other"
+      text_t = Array.new
+      text_1 = Hash.new
+      text_1["Name"] = "ugooz.b2c.adviser.1.01"
+      text_1["type"] = "text"
+      text_1["text"] = "您真內行！茶福還會許多有趣的諮詢呢！來來來，想先諮詢哪一個呢?！"
+      text_1["delay"] = "1"
+      text_t << text_1
+      total_text << text_t
       card_t = Array.new
       other_cons = Consultation.where(:enabled => true).where.not(:id => cons.id)
       other_cons.limit(9).each_with_index do |ccat, i|
         card_s = Hash.new
-        card_s["NAME"] = "ugooz.b2c.adviser.#{cons.id}.01.0#{i+1}"
+        card_s["NAME"] = "ugooz.b2c.adviser.#{cons.id}.02.0#{i+1}"
         card_s["title"] = ccat.title
         card_s["image_url"] = ccat.pic
         button_t = Array.new
