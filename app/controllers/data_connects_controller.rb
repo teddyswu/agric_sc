@@ -1845,8 +1845,8 @@ class DataConnectsController < ApplicationController
                   card_t << card_si1
                   card_si2 = Hash.new
                   card_si2["NAME"] = "ugooz.b2c.adviser.01.05.01"
-                  card_si2["title"] = "我想幫男性親友看看 喝什麼茶！"
-                  card_si2["image_url"] = "https://i.imgur.com/DxdlLld.png"
+                  card_si2["title"] = "我想幫女性親友看看 喝什麼茶！"
+                  card_si2["image_url"] = "https://i.imgur.com/873a4kK.png"
                   card_si2_bst = Array.new
                   card_si2_bs1 = Hash.new
                   card_si2_bs1["type"] = "postback"
