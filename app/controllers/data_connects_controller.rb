@@ -1801,6 +1801,7 @@ class DataConnectsController < ApplicationController
                   text_3["text"] = con_content[0].content
                   text_3["delay"] = "5"
                   text_t << text_3
+                  total_text << text_t
                   button_li = Array.new
                   bs = Hash.new
                   bs["NAME"] = "ugooz.b2c.adviser.01.04"
