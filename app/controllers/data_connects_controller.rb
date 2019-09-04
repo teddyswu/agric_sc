@@ -1801,31 +1801,25 @@ class DataConnectsController < ApplicationController
                   text_3["text"] = con_content[0].content
                   text_3["delay"] = "5"
                   text_t << text_3
-                  text_4 = Hash.new
-                  text_4["Name"] = "ugooz.b2c.adviser.01.03"
-                  text_4["type"] = "text"
-                  text_4["text"] = "你想知道你自己，或身邊的親朋好友，在什麼時間適合喝什麼茶嗎?"
-                  text_4["delay"] = "1"
-                  text_t << text_4
-                  total_text << text_t
-                  card_t = Array.new
-                  cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
-                    card_s = Hash.new
-                    card_s["NAME"] = "ugooz.b2c.adviser.#{cons.id}.0#{total_text[0].size+1}.0#{i+1}"
-                    card_s["title"] = ccat.name
-                    card_s["image_url"] = ccat.pic
-                    button_t = Array.new
-                    ccat.consultation_options.limit(3).order(:sort).each do |copt|
-                      button_si = Hash.new
-                      button_si["type"] = "postback"
-                      button_si["title"] = copt.name
-                      button_si["payload"] = "u_#{cons.id}_#{copt.id}"
-                      button_t << button_si
-                    end
-                    card_s["buttons"] = button_t
-                    card_t << card_s
-                  end
-                  total_text << card_t
+                  button_li = Array.new
+                  bs = Hash.new
+                  bs["NAME"] = "ugooz.b2c.adviser.01.04"
+                  bs["template_type"] = "button"
+                  bs["text"] = "查看其他選擇？還是想進行其它的茶諮詢呢？"
+                  bs_b = Array.new
+                  bs_bs1 = Hash.new
+                  bs_bs1["type"] = "postback"
+                  bs_bs1["payload"] = "u_#{cons.id}_cont"
+                  bs_bs1["title"] = "其他選擇"
+                  bs_b << bs_bs1
+                  bs_bs2 = Hash.new
+                  bs_bs2["type"] = "postback"
+                  bs_bs2["payload"] = "u_#{cons.id}_other"
+                  bs_bs2["title"] = "其它的茶諮詢"
+                  bs_b << bs_bs2
+                  bs["buttons"] = bs_b
+                  button_li << bs
+                  total_text << button_li
                 else
                   total_text = JSON.parse(cons.json.gsub("=>",":"))
                   card_t = Array.new
