@@ -228,7 +228,7 @@ class DataConnectsController < ApplicationController
     	if user_profile == nil
     		render json: "[{'status':no data}]"
     	else
-    		render json: '{"uid":"' + user_profile.fb_uid.to_s + '","name":"' + user_profile.name.to_s + '","front_name":"' + user_profile.front_name.to_s + '","cell_phone":"' + user_profile.cell_phone.to_s + '","certificate":"' + user_profile.certificate_photo.to_s + '","certificate_2":"' + user_profile.certificate_photo_2.to_s + '","profile_pic":"' + user_profile.pic_url.to_s + '","farmer_info":"' + "#{@root_domain}/farmers/#{user_profile.user_id}" + '","farmer_record":"' + "#{@root_domain}/farmers/#{user_profile.user_id}/work_record\"}"
+    		render json: '{"uid":"' + user_profile.fb_uid.to_s + '","name":"' + user_profile.name.to_s + '","front_name":"' + user_profile.front_name.to_s + '","cell_phone":"' + user_profile.cell_phone.to_s + '","certificate":"' + user_profile.certificate_photo.to_s + '","certificate_2":"' + user_profile.certificate_photo_2.to_s + '","profile_pic":"' + user_profile.pic_url.to_s + '","farmer_info":"' + "#{@root_domain}/farms/#{user_profile.user_id}" + '","farmer_record":"' + "#{@root_domain}/farms/#{user_profile.user_id}/work_record\"}"
       end
     when "edit_farmer_data"
   		user_profile = FarmerProfile.find_by_name(params[:name])
@@ -284,8 +284,8 @@ class DataConnectsController < ApplicationController
           farmer_list["front_name"] = fl.front_name
         	farmer_list["user_pic_url"] = fl.user_pic_url
         	farmer_list["introduce"] = fl.introduce
-          farmer_list["farmer_info"] = "#{@root_domain}/farmers/#{fl.user_id}"
-          farmer_list["farmer_record"] = "#{@root_domain}/farmers/#{fl.user_id}/work_record"
+          farmer_list["farmer_info"] = "#{@root_domain}/farms/#{fl.user_id}"
+          farmer_list["farmer_record"] = "#{@root_domain}/farms/#{fl.user_id}/work_record"
           farmer << farmer_list
         end
         render json: farmer
@@ -307,7 +307,7 @@ class DataConnectsController < ApplicationController
         ua = Array.new
         url = Hash.new
         url[:type] = "text"
-        url[:text] = "#{@root_domain}/farmers/#{farmer_profile.user_id}" if farmer_profile.present?
+        url[:text] = "#{@root_domain}/farms/#{farmer_profile.user_id}" if farmer_profile.present?
         ua << url if farmer_profile.present?
         total << ua if farmer_profile.present?
         render json: total
@@ -920,11 +920,11 @@ class DataConnectsController < ApplicationController
               fl_card_b = Hash.new
               fl_card_b[:type] = "web_url"
               fl_card_b[:title] = "我想進一步認識"
-              fl_card_b[:url] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
+              fl_card_b[:url] = "https://www.ugooz.cc/farms/#{f_list.user_id}"
               fl_card_c = Hash.new
               fl_card_c[:type] = "web_url"
               fl_card_c[:title] = "查看生產紀錄"
-              fl_card_c[:url] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
+              fl_card_c[:url] = "https://www.ugooz.cc/farms/#{f_list.user_id}/work_record"
               fl_card[:buttons] << fl_card_b
               fl_card[:buttons] << fl_card_c
               farmer_group << fl_card
@@ -986,7 +986,7 @@ class DataConnectsController < ApplicationController
       end
 		else
       case params[:d]
-      when "ugooz"
+      when "topboss"#"ugooz"
         case [params[:v],params[:m]]
         when ["v0.01","return_data"]
           case params[:arg]
@@ -2473,11 +2473,11 @@ class DataConnectsController < ApplicationController
               fl_card_b = Hash.new
               fl_card_b["type"] = "web_url"
               fl_card_b["title"] = "我想進一步認識"
-              fl_card_b["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
+              fl_card_b["url"] = "https://www.ugooz.cc/farms/#{f_list.user_id}"
               fl_card_c = Hash.new
               fl_card_c["type"] = "web_url"
               fl_card_c["title"] = "查看生產紀錄"
-              fl_card_c["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
+              fl_card_c["url"] = "https://www.ugooz.cc/farms/#{f_list.user_id}/work_record"
               fl_card["buttons"] << fl_card_b
               fl_card["buttons"] << fl_card_c
               fgl << fl_card
@@ -2546,11 +2546,11 @@ class DataConnectsController < ApplicationController
               fl_card_b = Hash.new
               fl_card_b["type"] = "web_url"
               fl_card_b["title"] = "我想進一步認識"
-              fl_card_b["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}"
+              fl_card_b["url"] = "https://www.ugooz.cc/farms/#{f_list.user_id}"
               fl_card_c = Hash.new
               fl_card_c["type"] = "web_url"
               fl_card_c["title"] = "查看生產紀錄"
-              fl_card_c["url"] = "https://www.ugooz.cc/farmers/#{f_list.user_id}/work_record"
+              fl_card_c["url"] = "https://www.ugooz.cc/farms/#{f_list.user_id}/work_record"
               fl_card["buttons"] << fl_card_b
               fl_card["buttons"] << fl_card_c
               fgl << fl_card
@@ -2772,7 +2772,7 @@ class DataConnectsController < ApplicationController
 
           render json: JSON.parse("[" + wording.gsub("=>",":") + "]")
         end
-      when "topboss"
+      when "ugooz"#"topboss"
         u =  request.url.split("?")
         uri = URI("https://wfusr.top-boss.com/data_connects/v0.02/story?" + u[1])
         res = Net::HTTP.get_response(uri)
