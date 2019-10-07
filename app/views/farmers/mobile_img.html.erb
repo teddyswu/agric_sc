@@ -20,7 +20,7 @@
             <div class="slider-modal">
               <%@work_diary.work_diary_images.each_with_index do |image, i| %>
                 <div>
-                  <img class="img-fluid d-block w-100" src="<%= image.show_url %>" alt="">
+                  <%= render_mobile_tag(image.show_url)%>
                 </div>
               <% end %>
             </div>

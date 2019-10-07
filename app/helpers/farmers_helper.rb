@@ -9,6 +9,16 @@ module FarmersHelper
 		end
 	end
 
+	def render_mobile_tag(url)
+		if url.downcase.include?("jp") 
+			return image_tag url , class: "img-fluid d-block w-100"
+		else
+			return "<video id=\"movie\" preload controls loop width=\"536\">
+        <source src=\"#{url}\" type=\"video/mp4\" />
+      </video>".html_safe
+		end
+	end
+
 	def render_first_image(url)
 		if url.downcase.include?("jp")
 			return image_tag url, class: "img-fluid text-center"

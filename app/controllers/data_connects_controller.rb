@@ -986,7 +986,7 @@ class DataConnectsController < ApplicationController
       end
 		else
       case params[:d]
-      when "topboss"#"ugooz"
+      when "ugooz"#"ugooz"
         case [params[:v],params[:m]]
         when ["v0.01","return_data"]
           case params[:arg]
@@ -2772,7 +2772,7 @@ class DataConnectsController < ApplicationController
 
           render json: JSON.parse("[" + wording.gsub("=>",":") + "]")
         end
-      when "ugooz"#"topboss"
+      when /topboss/#"topboss"
         u =  request.url.split("?")
         uri = URI("https://wfusr.top-boss.com/data_connects/v0.02/story?" + u[1])
         res = Net::HTTP.get_response(uri)
