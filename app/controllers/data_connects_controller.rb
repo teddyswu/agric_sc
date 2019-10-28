@@ -2468,7 +2468,7 @@ class DataConnectsController < ApplicationController
               x+=1
               fl_card = Hash.new
               fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
-              fl_card["title"] = f_list.front_name
+              fl_card["title"] = f_list.farm_name
               fl_card["subtitle"] = f_list.farm_name
               fl_card["image_url"] = f_list.user_pic_url
               fl_card["buttons"] = []
@@ -2541,7 +2541,7 @@ class DataConnectsController < ApplicationController
               x+=1
               fl_card = Hash.new
               fl_card["NAME"] = "ugooz.b2c.menulist.ab1.BB.0#{i}.02.0#{x}"
-              fl_card["title"] = f_list.front_name
+              fl_card["title"] = f_list.farm_name
               fl_card["subtitle"] = f_list.farm_name
               fl_card["image_url"] = f_list.user_pic_url
               fl_card["buttons"] = []
