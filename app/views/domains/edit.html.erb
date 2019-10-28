@@ -1,0 +1,91 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">站台設定</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header"><strong>月份對應季節</strong></div>
+            <div class="card-body card-block">
+              <%= form_for @domain, :url => domain_path(@domain), :method => :patch do |f| %>
+                <% (1..12).each do |i| %>
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <%= f.label("#{i}月", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-8">
+                      <input class="form-control" placeholder="自定義<%= i%>月名稱" type="text" name="domain[def_season(<%= i%>)]" id="domain_def_season_<%= i%>" value="<%= @season[i]%>">
+                    </div>
+                  </div>
+                <% end %>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                  </button>
+                  <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Reset
+                  </button>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header"><strong>自定義星期</strong></div>
+            <div class="card-body card-block">
+              <%= form_for @domain, :url => domain_path(@domain), :method => :patch do |f| %>
+                <% (1..6).each do |i| %>
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <%= f.label("星期#{i}", :class => 'form-control-label') %>
+                    </div>
+                    <div class="col-8">
+                      <input class="form-control" placeholder="自定義星期<%= i%>名稱" type="text" name="domain[def_week(<%= i%>)]" id="domain_def_season_<%= i%>" value="<%= @week[i]%>">
+                    </div>
+                  </div>
+                <% end %>
+                <div class="row form-group">
+                  <div class="col-4">
+                    <%= f.label("星期日", :class => 'form-control-label') %>
+                  </div>
+                  <div class="col-8">
+                    <input class="form-control" placeholder="自定義星期日名稱" type="text" name="domain[def_week(7)]" id="domain_def_season_7" value="<%= @week[0]%>">
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                  </button>
+                  <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Reset
+                  </button>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

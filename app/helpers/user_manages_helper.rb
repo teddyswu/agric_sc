@@ -49,4 +49,24 @@ module UserManagesHelper
 		end
 	end
 
+	def render_permission(permission)
+		case permission
+		when 1
+			"作業員"
+		when 2
+			"管理員"
+		when 3
+			"經理人"
+		end
+	end
+
+	def render_enabled(status)
+		case status
+		when true
+			"開啟"
+		when false
+			"關閉"
+		end
+	end
+
 end

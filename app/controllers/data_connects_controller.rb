@@ -1299,7 +1299,7 @@ class DataConnectsController < ApplicationController
                       text_1 = Hash.new
                       if con_option.present?
                         auth.user.user_profile.age_range > 4 ? current_age = 4 : current_age = 3
-                        con_content = ConsultationContent.where(:consultation_option_id => con_option.id , :age_range => current_age, :gender => auth.user.user_profile.gender )
+                        con_content = ConsultationContent.where(:consultation_option_id => con_option.id , :age_range => current_age, :gender => auth.user.user_profile.gender, :enabled => true )
                         text_1["Name"] = "ugooz.b2c.adviser.01.01"
                         text_1["type"] = "text"
                         text_1["text"] = "[[FULLNAME]]大大～根據你提供的會員資料，中午吃#{con_option.name}，我推薦你喝「#{con_content[0].intro}」最佳！"
@@ -1764,8 +1764,10 @@ class DataConnectsController < ApplicationController
               up = u.user.user_profile if u.present?
               if up.gender.present? and up.birthday.present?
                 if cons.cat == 2
-                  week = ["日", "一", "二", "三", "四", "五", "六"][Date.today.wday]
-                  season = ["","冬","冬","春","春","春","夏","夏","夏","秋","秋","秋","冬"][Time.now.month]
+                  w = Domain.first.present? ? (JSON.parse Domain.first.def_week) : ["日", "一", "二", "三", "四", "五", "六"]
+                  s = Domain.first.present? ? (JSON.parse Domain.first.def_season) : ["","冬","冬","春","春","春","夏","夏","夏","秋","秋","秋","冬"]
+                  week = w[Date.today.wday]
+                  season = s[Time.now.month]
                   case Time.now.strftime('%H').to_i
                   when 0..4
                     sta = "晚上"
@@ -1778,15 +1780,15 @@ class DataConnectsController < ApplicationController
                   end
                   auth = Authorization.find_by_uid(params[:uid])
                   auth.user.user_profile.age_range > 4 ? current_age = 4 : current_age = 3
-                  cate = ConsultationCate.where(:consultation_id => cons.id, :name => "#{season}天")
-                  option = ConsultationOption.where(:consultation_cate_id => cate, :name => sta)
-                  con_content = ConsultationContent.where(:consultation_option_id => option, :age_range => current_age, :gender => auth.user.user_profile.gender )
+                  cate = ConsultationCate.where(:consultation_id => cons.id, :name => "#{season}天", :enabled => true)
+                  option = ConsultationOption.where(:consultation_cate_id => cate, :name => sta, :enabled => true)
+                  con_content = ConsultationContent.where(:consultation_option_id => option, :age_range => current_age, :gender => auth.user.user_profile.gender, :enabled => true )
                   text_t = Array.new
                   total_text = Array.new
                   text_1 = Hash.new
                   text_1["Name"] = "ugooz.b2c.adviser.01.01"
                   text_1["type"] = "text"
-                  text_1["text"] = "#{season}天的週#{week}#{sta}，根據你提供的會員資料，我推薦你喝「#{con_content[0].intro}」唷！"
+                  text_1["text"] = "#{season}天的#{week}#{sta}，根據你提供的會員資料，我推薦你喝「#{con_content[0].intro}」唷！"
                   text_1["delay"] = "1"
                   text_t << text_1
                   text_2 = Hash.new
@@ -1864,13 +1866,13 @@ class DataConnectsController < ApplicationController
                 else
                   total_text = JSON.parse(cons.json.gsub("=>",":"))
                   card_t = Array.new
-                  cons.consultation_cates.limit(9).order(:sort).each_with_index do |ccat, i|
+                  cons.consultation_cates.normal_state.limit(9).order(:sort).each_with_index do |ccat, i|
                     card_s = Hash.new
                     card_s["NAME"] = "ugooz.b2c.adviser.#{cons.id}.0#{total_text[0].size+1}.0#{i+1}"
                     card_s["title"] = ccat.name
                     card_s["image_url"] = ccat.pic
                     button_t = Array.new
-                    ccat.consultation_options.limit(3).order(:sort).each do |copt|
+                    ccat.consultation_options.normal_state.limit(3).order(:sort).each do |copt|
                       button_si = Hash.new
                       button_si["type"] = "postback"
                       button_si["title"] = copt.name

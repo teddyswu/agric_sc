@@ -46,7 +46,7 @@
                       <% @diaries.each do |diary|%>
                         <tr>
                           <td scope="row"><%= diary.id%></td>
-                          <td><%= diary.user.farmer_profile.name %></td>
+                          <td><%= diary.user.farmer_profile.farm_name %></td>
                           <td><%= diary.comment%></td>
                           <td><%= diary.diary_time.strftime('%Y-%m-%d') %></td>
                         </tr>
@@ -73,7 +73,7 @@
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @diaries %>
+                  <%= will_paginate @diaries, :renderer => WillPaginateRenderer::WebPageRenderer %>
                 </div>
             </div>
           </div>

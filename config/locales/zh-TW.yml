@@ -4,6 +4,16 @@ zh-TW:
     html_content: "網頁內容"
     friendly_farmer: "友善農友"
     proposal_man: "提案管理"
+  date:
+    order: [ !ruby/symbol day, !ruby/symbol month, !ruby/symbol year ]
+    formats:
+      default: "%Y-%m-%d"
+      short: "%b %d"
+      long: "%B %d, %Y"
+    day_names: [星期一, 星期二, 星期三, 星期四, 星期五, 星期六, 星期日]
+    #abbr_day_names: [P, U, S, C, Pt, S, N]
+    month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    #abbr_month_names: [~, Jan, Feb, Mar, Apr, Maj, Jun, Jul, Aug, Sep, Okt, Nov, Dec]
   chat_content:
     agris/gif: "動圖"
     agris/wording_list: "文案"
@@ -11,7 +21,7 @@ zh-TW:
     user_groups: "用戶群組"
     agris/user_list: "用戶列表"
     parameter_sets: "ref參數設定"
-    _: "會員參數設定"
+    consultations: "會員參數設定"
     personal_interplays: "啟動互動"
     user_inputs: "用戶輸入"
     auto_replies: "貼文留言自動回覆"
@@ -22,13 +32,14 @@ zh-TW:
   friendly_farmer:
     work_records: "工作記錄"
     work_diaries: "農場日誌"
-    user_manages/farmer: "茶農管理"
+    user_manages/farm: "農場管理"
     farming_categories: "作物管理"
     work_projects: "工作事項"
     reply_words: "回覆管理"
   other:
     user_manages: "會員管理"
     users/edit: "修改密碼"
+    domains: "網站設定"
   startup:
     back_again: "我的好朋友~很⾼興再⾒到你！我們準備的⼩測驗與故事能幫助你增⻑對台灣茶的了解唷~"
     new_visitor: "歡迎來到友故事 ！我們是坪林友善茶推廣團隊，這裡提供的⼩測驗與故事都能讓你增⻑對台灣茶的了解唷~"

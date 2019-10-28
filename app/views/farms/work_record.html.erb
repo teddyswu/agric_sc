@@ -39,12 +39,12 @@
                 </div>
                 <ul class="nav nav-info">
                   <li class="nav-item my-1">
-                  	<%= link_to farmer_path(@farmer.id), class: "nav-link" do%>
+                  	<%= link_to farm_path(@farmer.id), class: "nav-link" do%>
                   		<u><%= @farmer.farmer_profile.farm_name%></u>
                   	<% end %>
                   </li>
                   <li class="nav-item my-1">
-                  	<%= link_to work_record_farmer_path(@farmer.id), class: "nav-link" do %>
+                  	<%= link_to work_record_farm_path(@farmer.id), class: "nav-link" do %>
                   		<u>農場工作記錄</u>
                   	<% end %>
                   </li>
@@ -69,7 +69,7 @@
 <script>
   function AddFarmer(id){
     <% if user_signed_in? %>
-    $.post( "/farmers/favo_farmers", { farmer_id: id })
+    $.post( "/farms/favo_farmers", { farmer_id: id })
       .done(function( data ) {
         $("#heart_"+id).find('.fa-fw').toggleClass('far fas')        
       });

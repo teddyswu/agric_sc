@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190903044916) do
+ActiveRecord::Schema.define(version: 20191023094004) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 20190903044916) do
     t.text     "intro",           limit: 65535
     t.text     "pic",             limit: 65535
     t.integer  "sort",            limit: 4
+    t.boolean  "enabled"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end
@@ -97,6 +98,7 @@ ActiveRecord::Schema.define(version: 20190903044916) do
     t.text     "intro",                  limit: 65535
     t.text     "pic",                    limit: 65535
     t.text     "content",                limit: 65535
+    t.boolean  "enabled"
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
@@ -105,6 +107,7 @@ ActiveRecord::Schema.define(version: 20190903044916) do
     t.integer  "consultation_cate_id", limit: 4
     t.string   "name",                 limit: 255
     t.integer  "sort",                 limit: 4
+    t.boolean  "enabled"
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
   end
@@ -149,6 +152,13 @@ ActiveRecord::Schema.define(version: 20190903044916) do
     t.datetime "updated_at",                  null: false
   end
 
+  create_table "domains", force: :cascade do |t|
+    t.text     "def_season", limit: 65535
+    t.text     "def_week",   limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
   create_table "farmer_interactive_tag_ships", force: :cascade do |t|
     t.integer  "farmer_interactive_id",     limit: 4
     t.integer  "farmer_interactive_tag_id", limit: 4
@@ -172,30 +182,42 @@ ActiveRecord::Schema.define(version: 20190903044916) do
     t.datetime "updated_at",                 null: false
   end
 
+  create_table "farmer_profile_farming_category_ships", force: :cascade do |t|
+    t.integer  "farmer_profile_id",   limit: 4
+    t.integer  "farming_category_id", limit: 4
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  create_table "farmer_profile_user_ships", force: :cascade do |t|
+    t.integer  "farmer_profile_id", limit: 4
+    t.integer  "user_id",           limit: 4
+    t.integer  "permission",        limit: 4
+    t.string   "uid",               limit: 255
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
   create_table "farmer_profiles", force: :cascade do |t|
     t.integer  "user_id",             limit: 4
     t.text     "user_pic_url",        limit: 65535
-    t.integer  "gender",              limit: 4
-    t.datetime "birthday"
+    t.string   "email",               limit: 255
     t.text     "pic_url",             limit: 65535
-    t.string   "fb_uid",              limit: 255
     t.text     "fb_url",              limit: 65535
-    t.string   "farm_name",           limit: 255
-    t.string   "ps_group",            limit: 255
     t.integer  "ps_group_id",         limit: 4
-    t.string   "front_name",          limit: 255
-    t.string   "name",                limit: 255
+    t.string   "farm_name",           limit: 255
     t.string   "tel",                 limit: 255
     t.string   "cell_phone",          limit: 255
     t.text     "address",             limit: 65535
     t.text     "certification_body",  limit: 65535
     t.string   "category",            limit: 255
+    t.integer  "verification_status", limit: 4
     t.string   "crop_name",           limit: 255
     t.text     "introduce",           limit: 65535
     t.text     "certificate_photo",   limit: 65535
-    t.text     "certificate_photo_2", limit: 65535
     t.string   "oc_num",              limit: 255
     t.datetime "validity_period"
+    t.boolean  "status"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
   end

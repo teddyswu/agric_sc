@@ -3,7 +3,7 @@ class ParameterSetsController < ApplicationController
   before_action :is_admin, only: [:index]
 
   def index
-  	@parameters = ParameterSet.all
+  	@parameters = ParameterSet.all.paginate(:page => params[:page], per_page: 10)
   end
 
   def new
@@ -154,6 +154,8 @@ class ParameterSetsController < ApplicationController
       end
     end
   end
+
+  private
 
   def parameter_set_params
 		params.require(:parameter_set).permit(:name, :cat, :wording_id, :ref, :guest, :subscribe_guest, :user)

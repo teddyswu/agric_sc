@@ -1,0 +1,70 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">聊天內容</a></li>
+              <li class="active">會員參數設定</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header"><strong>新增</strong></div>
+              <div class="card-body card-block">
+                <%= form_for @con, :url => consultations_path(@con), :method => :post do |f| %>
+                  <div class="form-group">
+                    <%= f.label("自訂名稱", :class => 'form-control-label') %><%= f.text_field(:name, :class => "form-control", placeholder: "輸入參數名稱")%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("參數名稱", :class => 'form-control-label') %><%= f.text_field(:parameter_name, :class => "form-control", placeholder: "輸入參數名稱")%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label(:cat, "類別", :class => 'form-control-label') %>
+                    <%= f.radio_button :cat , 1, :checked => true %>樣板一
+                    <%= f.radio_button :cat , 2 %>樣板二
+                  </div>
+                  <div class="form-group" id="json_text">
+                    <%= f.label("開頭JSON", :class => 'form-control-label') %>
+                    <%= f.text_area :json, :class => "md-textarea form-control", :rows => 5 %>
+                  </div>
+                  <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                      <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                    <button type="reset" class="btn btn-danger btn-sm">
+                      <i class="fa fa-ban"></i> Reset
+                    </button>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $("#consultation_cat_2").click(function(){
+      $("#json_text").hide();
+    });
+    $("#consultation_cat_1").click(function(){
+      $("#json_text").show();
+    });
+  </script>
+</body>

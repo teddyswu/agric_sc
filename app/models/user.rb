@@ -21,6 +21,8 @@ class User < ActiveRecord::Base
   has_many :campaigns
   has_many :campaign_groups
   has_many :tracks
+  has_many :farmer_profile_user_ships
+  has_many :farmer_profiles, :through => :farmer_profile_user_ships
 
   scope :farmer_status, -> { where(is_farmer: true, is_check_farmer: true) }
 

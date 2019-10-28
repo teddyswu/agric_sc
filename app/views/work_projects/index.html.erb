@@ -51,7 +51,7 @@
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @work_projects %>
+                  <%= will_paginate @work_projects, :renderer => WillPaginateRenderer::WebPageRenderer %>
                 </div>
             </div>
           </div>

@@ -27,13 +27,13 @@
             <img class="img-fluid rounded-circle" src="https://graph.facebook.com/<%= current_user.try(:authorizations)[0].try(:uid)%>/picture" alt="" style="width: 30px">
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <%= link_to "我的牆面", farmer_path(current_user.id), class: "dropdown-item" if current_user.is_check_farmer?%>
+            <%= link_to "我的牆面", farm_path(current_user.id), class: "dropdown-item" if current_user.is_check_farmer?%>
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/favo_farmers" %>">最愛小農</a>
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/orders" %>">支持紀錄</a>
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/tracks" %>">追蹤提案</a>
             <a class="dropdown-item" href="<%= "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/campaigns" %>">提案紀錄</a>
             <div class="dropdown-divider"></div>
-            <%= link_to "工作管理", outputs_work_records_path(:name => current_user.farmer_profile.name), class: "dropdown-item" if current_user.is_check_farmer?%>
+            <%#= link_to "工作管理", outputs_work_records_path(:name => current_user.farmer_profile.name), class: "dropdown-item" if current_user.is_check_farmer?%>
             <%= link_to "訂單匯入", "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/order_batch_uploads", class:"dropdown-item" if current_user.is_admin? %>
             <%= link_to "發退款信", "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/send_refund_letters", class:"dropdown-item" if current_user.is_admin? %>
             <%= link_to "帳號管理", "#{YAML.load_file("config/customization.yml")[:campaign_domain]}/users/edit", class: "dropdown-item"%>

@@ -36,18 +36,37 @@ Rails.application.routes.draw do
   delete "agris/wording_delete/:id", :to => "agris#wording_delete", :as => "wording_delete"
   
   resources :user_inputs
-  resources :farmers do 
+  resources :farms do 
     get "work_record", on: :member
     post "favo_farmers", :on => :collection
   end
-  get "farmers/:id/mobile_img/:record_id", :to => "farmers#mobile_img", :as => "farmer_mobile_img"
-  get "farmers/:id/page/:page", :to => "farmers#page", :as => "farmer_page"
+  get "farms/:id/mobile_img/:record_id", :to => "farms#mobile_img", :as => "farm_mobile_img"
+  get "farms/:id/page/:page", :to => "farms#page", :as => "farmer_page"
 
   resources :multi_image_uploads
 
   resources :message_pushes
 
   resources :advisories
+
+  resources :consultations do 
+    get "card_edit", on: :member
+    patch "card_update", on: :member
+    get "data_edit", on: :member
+    get "data_list", on: :member
+    post "data_create", on: :collection 
+    patch "data_update", on: :member
+    delete "data_destory", on: :member
+    get "option_list", on: :member
+    get "option_edit", on: :member
+    patch "option_update", on: :member
+    delete "option_destory", on: :member
+    get "cont_list", on: :member
+    get "cont_edit", on: :member
+    patch "cont_update", on: :member
+    delete "cont_destory", on: :member
+    get "into_data", on: :collection
+  end
 
   resources :parameter_sets do
     get "list", on: :member
@@ -125,7 +144,14 @@ Rails.application.routes.draw do
     post "create_binding", :on => :collection
   end
   resources :user_manages do
-    get "farmer", :on => :collection
+    get "farm", :on => :collection
+    get "user", :on => :member
+    post "post_user", :on => :collection
+    patch "update_user", :on => :collection
+    # get "edit_user", :on => :member
   end
+  get "user_manages/:id/edit_user/:ship_id", :to => "user_manages#edit_user", :as => "user_manages_edit_user"
   resources :work_record_replies
+
+  resources :domains
 end

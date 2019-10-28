@@ -1,0 +1,65 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">聊天內容</a></li>
+              <li class="active">會員參數設定</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">資料類別</strong> 
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">類別名稱</th>
+                      <th scope="col">排序</th>
+                      <th scope="col">編輯</th>
+                      <th scope="col">項目</th>
+                      <th scope="col">狀態</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @data_list.each do |data| %>
+                      <tr>
+                        <th><%= data.id %></th>
+                        <th><%= data.name %></th>
+                        <th><%= data.sort %></th>
+                        <th><%= link_to "編輯", data_edit_consultation_path(data.id) %></th>
+                        <th><%= link_to "項目", option_list_consultation_path(data.id) %></th>
+                        <th><%= link_to render_enabled(data.enabled), data_destory_consultation_path(data.id), :method => :delete %></th>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <%= will_paginate @data_list, :renderer => WillPaginateRenderer::WebPageRenderer %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

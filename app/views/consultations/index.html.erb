@@ -1,0 +1,70 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">聊天內容</a></li>
+              <li class="active">會員參數設定</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">Table List</strong> 
+                <%= link_to "[新增參數]", new_consultation_path%>
+                <%= link_to "[匯入XML]", into_data_consultations_path%>
+
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">自訂名稱</th>
+                      <th scope="col">參數名稱</th>
+                      <th scope="col">編輯</th>
+                      <th scope="col">狀態</th>
+                      <th scope="col">卡片設定</th>
+                      <th scope="col">編輯資料</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @cons.each do |con| %>
+                      <tr>
+                        <th><%= con.id %></th>
+                        <th><%= con.name %></th>
+                        <th><%= con.parameter_name %></th>
+                        <th><%= link_to "編輯", edit_consultation_path(con.id) %></th>
+                        <th><%= link_to render_enabled(con.enabled), consultation_path(con.id), :method => :delete %></th>
+                        <th><%= link_to "[set]", card_edit_consultation_path(con.id)%></th>
+                        <th><%= link_to "[編輯資料]", data_list_consultation_path(con.id)%></th>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <%= will_paginate @cons, :renderer => WillPaginateRenderer::WebPageRenderer %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

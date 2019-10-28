@@ -46,7 +46,7 @@
                       <% @records.each do |record|%>
                         <tr>
                           <td scope="row"><%= record.id%></td>
-                          <td><%= record.user.farmer_profile.name %></td>
+                          <td><%= record.user.farmer_profile.farm_name %></td>
                           <td><%= record.farming_category%></td>
                           <td><%= record.filed_code%></td>
                           <td><%= record.work_project %></td>
@@ -64,7 +64,7 @@
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @records %>
+                  <%= will_paginate @records, :renderer => WillPaginateRenderer::WebPageRenderer %>
                 </div>
             </div>
           </div>

@@ -37,12 +37,12 @@
                 </div>
                 <ul class="nav nav-info">
                   <li class="nav-item my-1">
-                  	<%= link_to farmer_path(@farmer.id), class: "nav-link" do%>
+                  	<%= link_to farm_path(@farmer.id), class: "nav-link" do%>
                   		<u><%= @farmer.farmer_profile.farm_name%></u>
                   	<% end %>
                   </li>
                   <li class="nav-item my-1">
-                  	<%= link_to work_record_farmer_path(@farmer.id), class: "nav-link" do %>
+                  	<%= link_to work_record_farm_path(@farmer.id), class: "nav-link" do %>
                   		<u>農場工作記錄</u>
                   	<% end %>
                   </li>
@@ -156,7 +156,7 @@
                       <div class="media col">
                         <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
                         <div class="media-body align-self-center ml-3">
-                          <%= link_to wd.user.farmer_profile.front_name, farmer_path(wd.user.id) %>
+                          <%= link_to wd.user.farmer_profile.front_name, farm_path(wd.user.id) %>
                         </div>
                       </div>
                       <div class="col text-right">
@@ -169,7 +169,7 @@
                               <i class="fas fa-fw fa-lg fa-share"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
-                              <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(@farmer.id, wd.id )}" + "\"" %>)">
+                              <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farm_mobile_img_path(@farmer.id, wd.id )}" + "\"" %>)">
                                 <i class="fab fa-fw fa-2x fa-facebook"></i>
                               </a>
                               <a class="text-line" href="#" style="display:none">
@@ -232,7 +232,7 @@
   <script>
     function AddFarmer(id){
       <% if user_signed_in? %>
-      $.post( "/farmers/favo_farmers", { farmer_id: id })
+      $.post( "/farms/favo_farmers", { farmer_id: id })
         .done(function( data ) {
           $("#heart_"+id).find('.fa-fw').toggleClass('far fas')        
         });

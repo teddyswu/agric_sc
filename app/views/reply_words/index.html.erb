@@ -65,7 +65,7 @@
                     <% end %>
                   </tbody>
                 </table>
-                <%= will_paginate @reply_words %>
+                <%= will_paginate @reply_words, :renderer => WillPaginateRenderer::WebPageRenderer %>
               </div>
             </div>
           </div>

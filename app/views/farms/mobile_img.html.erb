@@ -32,7 +32,7 @@
                   <div class="media">
                     <img class="img-fluid rounded-circle" src="<%= @farmer.farmer_profile.user_pic_url.present? ? @farmer.farmer_profile.user_pic_url : "https://graph.facebook.com/#{@farmer.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
                     <div class="media-body align-self-center ml-3">
-                      <%= link_to @farmer.farmer_profile.front_name, farmer_path(@farmer.id)%>
+                      <%= link_to @farmer.farmer_profile.front_name, farm_path(@farmer.id)%>
                     </div>
                   </div>
                 </div>
@@ -117,7 +117,7 @@
   fb_share_event = function() {
     FB.ui( {
       method: 'share',
-      href: '<%= "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(@farmer.id, @work_diary.id )}"%>',
+      href: '<%= "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farm_mobile_img_path(@farmer.id, @work_diary.id )}"%>',
       display: 'popup'
     }, function( response ) {
     } ) ; // FB.ui()

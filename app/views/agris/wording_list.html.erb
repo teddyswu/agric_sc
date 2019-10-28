@@ -64,7 +64,7 @@
                       <% end %>
                     </tbody>
                   </table>
-                  <%= will_paginate @wording_lists if params[:type].blank?%>
+                  <%= will_paginate @wording_lists, :renderer => WillPaginateRenderer::WebPageRenderer if params[:type].blank?%>
                 </div>
             </div>
           </div>

@@ -1,0 +1,73 @@
+<body>
+  <%= render "shared/left_panel" %>
+  <div id="right-panel" class="right-panel">
+    <div class="breadcrumbs">
+      <div class="col-sm-4">
+        <div class="page-header float-left">
+          <div class="page-title">
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <div class="page-header float-right">
+          <div class="page-title">
+            <ol class="breadcrumb text-right">
+              <li><a href="#">Dashboard</a></li>
+              <li><a href="#">聊天內容</a></li>
+              <li class="active">會員參數設定</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content mt-3">
+      <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <strong class="card-title">資料內容</strong> 
+              </div>
+              <div class="card-body">
+                <%= form_for @cont, :url => cont_update_consultation_path(@cont), :method => :patch do |f| %>
+                  <div class="form-group">
+                    <%= f.label("項目名稱", :class => 'form-control-label') %><%= f.text_field(:intro, :class => "form-control", placeholder: "輸入項目名稱")%>
+                  </div>
+                  <div class="form-group">
+                    <div class="col col-md-3"><label for="select" class="form-control-label">性別</label></div>
+                    <select name="consultation_content[gender]" id="consultation_content_gender" class="form-control">
+                      <option value="1">男</option>
+                      <option value="0">女</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <div class="col col-md-3"><label for="select" class="form-control-label">年齡</label></div>
+                    <select name="consultation_content[age_range]" id="consultation_content_gender" class="form-control">
+                      <option value="4">40歲以上</option>
+                      <option value="3">40歲以下</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("圖片路徑", :class => 'form-control-label') %><%= f.text_field(:pic, :class => "form-control", placeholder: "輸入項目名稱")%>
+                  </div>
+                  <div class="form-group">
+                    <%= f.label("內容", :class => 'form-control-label') %><%= f.text_area(:content, :class => "form-control", placeholder: "輸入項目名稱")%>
+                  </div>
+                  <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                      <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                    <button type="reset" class="btn btn-danger btn-sm">
+                      <i class="fa fa-ban"></i> Reset
+                    </button>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

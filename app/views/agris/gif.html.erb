@@ -56,7 +56,7 @@
                     <% end %>
                   </tbody>
                 </table>
-                <%= will_paginate @type_gifs %>
+                <%= will_paginate @type_gifs, :renderer => WillPaginateRenderer::WebPageRenderer %>
               </div>
             </div>
           </div>

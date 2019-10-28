@@ -1,23 +1,15 @@
 <div class="card">
   <div class="card-header">
-    <strong>友善農民基本資料</strong>
+    <strong>農場基本資料</strong>
   </div>
   <div class="card-body card-block">
-    <%= form_for @user.farmer_profile, :url => user_profile_path(@user), :method => :patch, :html => {:class => 'form-horizontal'} do |f| %>
-      <div class="row form-group">
-        <div class="col col-md-3">
-          <%= f.label("會員編號", :class => 'form-control-label') %>
-        </div>
-        <div class="col-12 col-md-9">
-          <%= f.text_field(:user_id, :class => "form-control", :value => @user.id, :readonly => true)%>
-        </div>
-      </div>
+    <%= form_for @farm, :url => user_profile_path(@farm), :method => :patch, :html => {:class => 'form-horizontal'} do |f| %>
       <div class="row form-group">
         <div class="col col-md-3">
           <%= f.label("個人照片", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_field(:user_pic_url, :class => "form-control", :value => @user.farmer_profile.user_pic_url)%>
+          <%= f.text_field(:user_pic_url, :class => "form-control", :value => @farm.user_pic_url)%>
           <span class="btn btn-success fileinput-button">
             <span>上傳檔案</span>
             <!-- The file input field used as target for the file upload widget -->
@@ -26,39 +18,14 @@
         </div>
       </div>
       <div>
-        <%= image_tag @user.farmer_profile.user_pic_url, height: '400', id: 'user_pic_url' %>
+        <%= image_tag @farm.user_pic_url, height: '200', id: 'user_pic_url' %>
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("電子信箱", :class => 'form-control-label') %>
+          <%= f.label("農場編號", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_field(:user_email, :class => "form-control", :value => @user.email)%>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col col-md-3">
-          <%= f.label("FB Uid", :class => 'form-control-label') %>
-        </div>
-        <div class="col-12 col-md-9">
-          <%= f.text_field(:fb_uid, :class => "form-control", :value => @user.try(:authorizations).try(:first).try(:uid))%><%= link_to "查詢","#", :onclick => "window.open('https://tw.piliapp.com/facebook/id/');", :class => "btn btn-danger btn-sm" %>
-
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col col-md-3">
-          <%= f.label("FB專頁", :class => 'form-control-label') %>
-        </div>
-        <div class="col-12 col-md-9">
-          <%= f.text_field(:fb_url, :class => "form-control")%>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col col-md-3">
-          <%= f.label("產銷班", :class => 'form-control-label') %>
-        </div>
-        <div class="col-12 col-md-9">
-          <%= f.select :ps_group_id, options_for_select(@ps_groups.collect{ |c| [c.name, c.id]}, :selected => @user.farmer_profile.try(:ps_group).try(:id)), { :include_blank => '無', required: 'true'},{ :class => "form-control"} %>
+          <%= f.text_field(:user_id, :class => "form-control", :value => @farm.id, :readonly => true)%>
         </div>
       </div>
       <div class="row form-group">
@@ -71,20 +38,34 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("Facebook Fullname", :class => 'form-control-label') %>
+          <%= f.label("農場介紹", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_field(:name, :class => "form-control")%>
-          <small class="form-text" id="name" style="color: red;"></small>
+          <%= f.text_area(:introduce, :class => "form-control", rows: 5)%>
         </div>
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("顯示姓名", :class => 'form-control-label') %>
+          <%= f.label("產銷班", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_field(:front_name, :class => "form-control")%>
-          <small class="form-text" id="name" style="color: red;"></small>
+          <%= f.select :ps_group_id, options_for_select(@ps_groups.collect{ |c| [c.name, c.id]}, :selected => @farm.try(:ps_group).try(:id)), { :include_blank => '無', required: 'true'},{ :class => "form-control"} %>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("FB專頁", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:fb_url, :class => "form-control")%>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("電子信箱", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:email, :class => "form-control")%>
         </div>
       </div>
       <div class="row form-group">
@@ -105,7 +86,7 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("住址", :class => 'form-control-label') %>
+          <%= f.label("農場地址", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
           <%= f.text_field(:address, :class => "form-control")%>
@@ -113,15 +94,7 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("驗證機構", :class => 'form-control-label') %>
-        </div>
-        <div class="col-12 col-md-9">
-          <%= f.text_field(:certification_body, :class => "form-control")%>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col col-md-3">
-          <%= f.label("驗證作物種類", :class => 'form-control-label') %>
+          <%= f.label("作物種類", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
           <%= f.text_field :category, 'data-tokeninput' => { collection: @los_farms, options: { theme: 'facebook',prePopulate: @default} }.to_json %>
@@ -129,17 +102,12 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("農作名稱", :class => 'form-control-label') %>
-        </div>
-        <div class="col-12 col-md-9">
-          <%= f.text_field(:crop_name, :class => "form-control")%>
-        </div>
-      </div>
-      <div class="row form-group">
-        <div class="col col-md-3">
-          <%= f.label("田區代號", :class => 'form-control-label') %>
+          <%= f.label("田區與代號", :class => 'form-control-label') %>
         </div>
         <div id="number" style="display:none"></div>
+        <div class="col-12 col-md-9">
+          格式：地段_地號_代碼_作物品種
+        </div>
         <div class="col-12 col-md-9">
           <div id="filed">
             <%= render_row(@filed_code)%>
@@ -153,43 +121,19 @@
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("自我介紹", :class => 'form-control-label') %>
+          <%= f.label("驗證狀態", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_area(:introduce, :class => "form-control", rows: 5)%>
+          <%= f.select :verification_status, options_for_select([["轉型期", "1"], ["驗證通過", "2"],["無","3"]],@farm.verification_status), {},{ :class => "form-control"}%>
         </div>
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
-          <%= f.label("有機證書", :class => 'form-control-label') %>
+          <%= f.label("驗證機構", :class => 'form-control-label') %>
         </div>
         <div class="col-12 col-md-9">
-          <%= f.text_field(:certificate_photo, :class => "form-control", :value => @user.farmer_profile.certificate_photo, :readonly => true)%>
-          <span class="btn btn-success fileinput-button">
-            <span>上傳檔案</span>
-            <!-- The file input field used as target for the file upload widget -->
-            <input id="fileupload" type="file" name="files[]">
-          </span>
+          <%= f.text_field(:certification_body, :class => "form-control")%>
         </div>
-      </div>
-      <div>
-        <%= image_tag @user.farmer_profile.certificate_photo, height: '400', id: 'pic_1' %>
-      </div>
-      <div class="row form-group">
-        <div class="col col-md-3">
-          <%= f.label("有機證書2", :class => 'form-control-label') %>
-        </div>
-        <div class="col-12 col-md-9">
-          <%= f.text_field(:certificate_photo_2, :class => "form-control", :value => @user.farmer_profile.certificate_photo_2, :readonly => true)%>
-          <span class="btn btn-success fileinput-button">
-            <span>上傳檔案</span>
-            <!-- The file input field used as target for the file upload widget -->
-            <input id="fileupload_2" type="file" name="files[]">
-          </span>
-        </div>
-      </div>
-      <div>
-        <%= image_tag @user.farmer_profile.certificate_photo_2, height: '400', id: 'pic_2' %>
       </div>
       <div class="row form-group">
         <div class="col col-md-3">
@@ -207,6 +151,22 @@
           <%= f.datetime_local_field(:validity_period, :class => "form-control")%>
         </div>
       </div>
+      <div class="row form-group">
+        <div class="col col-md-3">
+          <%= f.label("有機證書", :class => 'form-control-label') %>
+        </div>
+        <div class="col-12 col-md-9">
+          <%= f.text_field(:certificate_photo, :class => "form-control", :value => @farm.certificate_photo, :readonly => true)%>
+          <span class="btn btn-success fileinput-button">
+            <span>上傳檔案</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files[]">
+          </span>
+        </div>
+      </div>
+      <div>
+        <%= image_tag @farm.certificate_photo, height: '400', id: 'pic_1' %>
+      </div>      
       <div class="card-footer">
         <button type="button" class="btn btn-primary btn-sm" id="from_submit">
           <i class="fa fa-dot-circle-o"></i> Submit

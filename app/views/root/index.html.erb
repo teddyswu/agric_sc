@@ -54,7 +54,7 @@
       <div class="row no-gutters">
         <% @work_walls.each do |ww|%>
           <div class="col-6 col-md-4 col-lg-2">
-            <%= link_to farmer_mobile_img_path(ww.work_diary.owner_id,ww.work_diary_id), :class => "card card-wall" do %>
+            <%= link_to farm_mobile_img_path(ww.work_diary.owner_id,ww.work_diary_id), :class => "card card-wall" do %>
               <img class="card-img" src="<%= ww.cover_url%>">
               <div class="card-img-overlay">
                 <%= ww.work_diary.comment%>

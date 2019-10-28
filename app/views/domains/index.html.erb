@@ -14,8 +14,8 @@
           <div class="page-title">
             <ol class="breadcrumb text-right">
               <li><a href="#">Dashboard</a></li>
-              <li><a href="#">資料</a></li>
-              <li class="active">會員</li>
+              <li><a href="#">網頁內容</a></li>
+              <li class="active">站台設定</li>
             </ol>
           </div>
         </div>
@@ -27,35 +27,32 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
-                <strong class="card-title">Table List</strong>
-                <%= link_to "產銷班管理", ps_groups_path, :class => "btn btn-secondary"%>
+                <strong class="card-title">Table List</strong> 
+                <% if @domain.present? %>
+                  <%= link_to "編輯", edit_domain_path(@domain.id) %>
+                <% else %>
+                  <%= link_to "新增", new_domain_path%>
+                <% end %>
               </div>
                 <div class="card-body">
                   <table class="table">
                     <thead class="thead-dark">
                       <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Email</th>
-                        <th scope='col'>Full Name</th>
-                        <th scope='col'>顯示姓名</th>
-                        <th scope="col">是否審核</th>
-                        <th scpoe="col">編輯</th>
+                        <th scope="col">名稱</th>
+                        <th scope="col">定義</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <% @users.each do |user|%>
-                        <tr>
-                          <th scope="row"><%= user.id %></th>
-                          <td><%= user.email%></td>
-                          <td><%= user.try(:farmer_profile).try(:name)%></td>
-                          <td><%= user.try(:farmer_profile).try(:front_name)%></td>
-                          <td><%= render_is_true(user.is_check_farmer) %></td>
-                          <td><%= link_to "[edit]", edit_user_manage_path(user.id)%></td>
-                        </tr>
-                      <% end %>
+                      <tr>
+                        <th scope="row">季節</th>
+                        <th><%= @domain.def_season if @domain.present? %></th>
+                      </tr>
+                      <tr>
+                        <th scope="row">星期</th>
+                        <th><%= @domain.def_week if @domain.present? %></th>
+                      </tr>
                     </tbody>
                   </table>
-                  <%= will_paginate @users %>
                 </div>
             </div>
           </div>

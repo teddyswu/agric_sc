@@ -56,7 +56,7 @@
                     <% end %>
                   </tbody>
                 </table>
-                <%= will_paginate @message_pushes %>
+                <%= will_paginate @message_pushes, :renderer => WillPaginateRenderer::WebPageRenderer %>
               </div>
             </div>
           </div>

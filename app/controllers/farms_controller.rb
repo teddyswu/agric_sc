@@ -1,4 +1,4 @@
-class FarmersController < ApplicationController
+class FarmsController < ApplicationController
 
 	def show
 		@farmer = User.joins(:farmer_profile).find_by_id_and_is_farmer_and_is_check_farmer(params[:id], true ,true)

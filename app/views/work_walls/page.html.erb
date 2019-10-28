@@ -130,7 +130,7 @@
                     <div class="media col">
                       <img class="img-fluid rounded-circle" src="<%= bh.work_diary.user.farmer_profile.user_pic_url.present? ? bh.work_diary.user.farmer_profile.user_pic_url : "https://graph.facebook.com/#{bh.work_diary.user.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
                       <div class="media-body align-self-center ml-3">
-                        <%= link_to bh.work_diary.user.farmer_profile.front_name, farmer_path(bh.work_diary.user.id) %>
+                        <%= link_to bh.work_diary.user.farmer_profile.front_name, farm_path(bh.work_diary.user.id) %>
                       </div>
                     </div>
                     <div class="col text-right">
@@ -143,7 +143,7 @@
                             <i class="fas fa-fw fa-lg fa-share"></i>
                           </a>
                           <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
-                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(bh.work_diary.user.id, bh.work_diary.id )}" + "\"" %>)">
+                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farm_mobile_img_path(bh.work_diary.user.id, bh.work_diary.id )}" + "\"" %>)">
                               <i class="fab fa-fw fa-2x fa-facebook"></i>
                             </a>
                             <a class="text-line" href="#" style="display:none">
@@ -243,7 +243,7 @@
                     <div class="media col">
                       <img class="img-fluid rounded-circle" src="<%= sr.work_diary.user.farmer_profile.user_pic_url.present? ? sr.work_diary.user.farmer_profile.user_pic_url : "https://graph.facebook.com/#{sr.work_diary.user.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
                       <div class="media-body align-self-center ml-3">
-                        <%= link_to sr.work_diary.user.farmer_profile.front_name, farmer_path(sr.work_diary.user.id) %>
+                        <%= link_to sr.work_diary.user.farmer_profile.front_name, farm_path(sr.work_diary.user.id) %>
                       </div>
                     </div>
                     <div class="col text-right">
@@ -256,7 +256,7 @@
                             <i class="fas fa-fw fa-lg fa-share"></i>
                           </a>
                           <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
-                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(sr.work_diary.user.id, sr.work_diary.id )}" + "\"" %>)">
+                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farm_mobile_img_path(sr.work_diary.user.id, sr.work_diary.id )}" + "\"" %>)">
                               <i class="fab fa-fw fa-2x fa-facebook"></i>
                             </a>
                             <a class="text-line" href="#" style="display:none">
@@ -356,7 +356,7 @@
                     <div class="media col">
                       <img class="img-fluid rounded-circle" src="<%= sb.work_diary.user.farmer_profile.user_pic_url.present? ? sb.work_diary.user.farmer_profile.user_pic_url : "https://graph.facebook.com/#{sb.work_diary.user.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
                       <div class="media-body align-self-center ml-3">
-                        <%= link_to sb.work_diary.user.farmer_profile.front_name, farmer_path(sb.work_diary.user.id) %>
+                        <%= link_to sb.work_diary.user.farmer_profile.front_name, farm_path(sb.work_diary.user.id) %>
                       </div>
                     </div>
                     <div class="col text-right">
@@ -369,7 +369,7 @@
                             <i class="fas fa-fw fa-lg fa-share"></i>
                           </a>
                           <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
-                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(sb.work_diary.user.id, sb.work_diary.id )}" + "\"" %>)">
+                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farm_mobile_img_path(sb.work_diary.user.id, sb.work_diary.id )}" + "\"" %>)">
                               <i class="fab fa-fw fa-2x fa-facebook"></i>
                             </a>
                             <a class="text-line" href="#" style="display:none">
@@ -469,7 +469,7 @@
                     <div class="media col">
                       <img class="img-fluid rounded-circle" src="<%= bar.work_diary.user.farmer_profile.user_pic_url.present? ? bar.work_diary.user.farmer_profile.user_pic_url : "https://graph.facebook.com/#{bar.work_diary.user.authorizations[0].uid}/picture"%>" alt="" style="width: 50px">
                       <div class="media-body align-self-center ml-3">
-                        <%= link_to bar.work_diary.user.farmer_profile.front_name, farmer_path(bar.work_diary.user.id) %>
+                        <%= link_to bar.work_diary.user.farmer_profile.front_name, farm_path(bar.work_diary.user.id) %>
                       </div>
                     </div>
                     <div class="col text-right">
@@ -482,7 +482,7 @@
                             <i class="fas fa-fw fa-lg fa-share"></i>
                           </a>
                           <div class="dropdown-menu dropdown-menu-right p-1" style="min-width: auto;">
-                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farmer_mobile_img_path(bar.work_diary.user.id, bar.work_diary.id )}" + "\"" %>)">
+                            <a class="text-fb" href="#" onclick="fb_share_event(<%= "\"" + "#{YAML.load_file("config/customization.yml")[:root_domain]}#{farm_mobile_img_path(bar.work_diary.user.id, bar.work_diary.id )}" + "\"" %>)">
                               <i class="fab fa-fw fa-2x fa-facebook"></i>
                             </a>
                             <a class="text-line" href="#" style="display:none">
