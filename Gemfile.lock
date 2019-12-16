@@ -101,7 +101,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     erubis (2.7.0)
-    excon (0.61.0)
+    excon (0.71.0)
     execjs (2.7.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
