@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.6'
 gem "mysql2", '0.3.18' # DB 連結(類似 ODBC, JDBC)
 gem "rufus-scheduler", "2.0.24"
-gem "nokogiri",'1.6.7.1'         # 解析 html, 製作 xml 等..可用來作 xml 生成器跟爬蟲
+gem "nokogiri",'1.10.8'          # 解析 html, 製作 xml 等..可用來作 xml 生成器跟爬蟲
 gem "fog"              # 存取 AWS 服務的套件(圖片上傳至 s3, 遠端備份 DB 需要)
 gem "devise", '3.4.0' # 先定版本號, 3.1.x 版有 bug, 未來穩定之後再把版本號拿掉
 gem "cancan", '1.6.10'
