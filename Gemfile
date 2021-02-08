@@ -29,7 +29,7 @@ gem 'newrelic_rpm', '~> 5.3', '>= 5.3.0.346' # 效能監控
 gem 'prawn'
 gem 'prawn-table'
 # 圖片上傳相關
-gem "carrierwave", '0.10.0'     # 上傳圖片必要套件
+gem "carrierwave", '1.3.2'      # 上傳圖片必要套件
 gem "mini_magick", "3.6.0"      # 圖片處理的套件(縮圖、浮水印)
 gem "flash_cookie_session"      # 多圖上傳必要套件
 gem 'carrierwave-video-thumbnailer'
